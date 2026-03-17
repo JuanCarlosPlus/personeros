@@ -9,6 +9,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 import authRoutes from './routes/auth.js';
 import coverageRoutes from './routes/coverage.js';
 import personeroRoutes from './routes/personeros.js';
+import coordinadorRoutes from './routes/coordinadores.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -30,6 +31,7 @@ app.get('/api/health', (_, res) => res.json({ status: 'ok', ts: new Date().toISO
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/coverage', coverageRoutes);
 app.use('/api/v1/personeros', personeroRoutes);
+app.use('/api/v1/coordinadores', coordinadorRoutes);
 
 // Static in production
 if (config.nodeEnv === 'production') {

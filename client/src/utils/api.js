@@ -44,6 +44,21 @@ export const coverageAPI = {
     api.get(`/coverage/centros/${ubigeo}/${encodeURIComponent(idLocal)}`),
 };
 
+// Coordinadores
+export const coordinadorAPI = {
+  // Listar: nivel='region'|'provincia'|'distrito'|'local', ubigeoLike='15'
+  list: (params) => api.get('/coordinadores', { params }),
+  // Obtener uno exacto
+  getOne: (nivel, ubigeo, idLocal = '') =>
+    api.get(`/coordinadores/${nivel}/${ubigeo}`, { params: idLocal ? { idLocal } : {} }),
+  // Crear / actualizar
+  createOrUpdate: (data) => api.post('/coordinadores', data),
+  // Quitar
+  remove: (id) => api.delete(`/coordinadores/${id}`),
+  // Lookup DNI
+  dniLookup: (dni) => api.get(`/coordinadores/dni/${dni}`),
+};
+
 // Personeros
 export const personeroAPI = {
   dniLookup: (dni) => api.get(`/personeros/dni/${dni}`),
