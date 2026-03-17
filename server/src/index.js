@@ -10,6 +10,7 @@ import authRoutes from './routes/auth.js';
 import coverageRoutes from './routes/coverage.js';
 import personeroRoutes from './routes/personeros.js';
 import coordinadorRoutes from './routes/coordinadores.js';
+import './models/Ubicacion.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();

@@ -1,40 +1,61 @@
+/**
+ * coverageService.js
+ *
+ * Servicio de cobertura usando los nombres de campo del partido en MongoDB.
+ * Mesas: UBIGEO, MESA, ID_LOCAL, NOMBRE_LOCAL, DEPARTAMETO (typo), PROVINCIA,
+ *         DISTRITO, DIRECCION, ELECTORES (string), tipoUbicacion
+ *
+ * Las respuestas al frontend usan nombres "limpios" (departamento, idLocal, etc.)
+ * para no modificar el frontend.
+ */
 import Mesa from '../models/Mesa.js';
 
-// Build aggregation stats for a given match filter
+// ELECTORES es string en la BD → convertir a número en aggregation
+const toIntElectores = { $toInt: '$ELECTORES' };
+
+// Cobertura % reutilizable
+const coberturaExpr = {
+  $cond: [
+    { $gt: ['$totalMesas', 0] },
+    { $multiply: [{ $divide: ['$asignadas', '$totalMesas'] }, 100] },
+    0,
+  ],
+};
+
 async function getStats(match) {
   const [result] = await Mesa.aggregate([
     { $match: match },
     {
       $group: {
         _id: null,
-        totalMesas: { $sum: 1 },
-        totalElectores: { $sum: '$electores' },
-        asignadas: { $sum: { $cond: [{ $gte: ['$status', 1] }, 1, 0] } },
-        confirmadas: { $sum: { $cond: [{ $eq: ['$status', 2] }, 1, 0] } },
+        totalMesas:     { $sum: 1 },
+        totalElectores: { $sum: toIntElectores },
+        asignadas:      { $sum: { $cond: [{ $gte: ['$status', 1] }, 1, 0] } },
+        confirmadas:    { $sum: { $cond: [{ $eq: ['$status', 2] }, 1, 0] } },
       },
     },
   ]);
   if (!result) return { totalMesas: 0, totalElectores: 0, asignadas: 0, confirmadas: 0, cobertura: 0 };
   const cobertura = result.totalMesas > 0
-    ? Math.round((result.asignadas / result.totalMesas) * 100)
+    ? (result.asignadas / result.totalMesas) * 100
     : 0;
-  return { ...result, cobertura };
+  return { totalMesas: result.totalMesas, totalElectores: result.totalElectores,
+           asignadas: result.asignadas, confirmadas: result.confirmadas, cobertura };
 }
 
-// National summary
+// ── Nacional ─────────────────────────────────────────────────────────────────
 export async function getNational() {
   const stats = await getStats({});
 
-  // Per-region summary (departamento)
   const regions = await Mesa.aggregate([
     {
       $group: {
-        _id: '$departamento',
-        ubigeoPrefix: { $first: { $substr: ['$ubigeo', 0, 2] } },
-        totalMesas: { $sum: 1 },
-        totalElectores: { $sum: '$electores' },
-        asignadas: { $sum: { $cond: [{ $gte: ['$status', 1] }, 1, 0] } },
-        confirmadas: { $sum: { $cond: [{ $eq: ['$status', 2] }, 1, 0] } },
+        _id:            '$DEPARTAMETO',
+        ubigeoPrefix:   { $first: { $substr: ['$UBIGEO', 0, 2] } },
+        totalMesas:     { $sum: 1 },
+        totalElectores: { $sum: toIntElectores },
+        asignadas:      { $sum: { $cond: [{ $gte: ['$status', 1] }, 1, 0] } },
+        confirmadas:    { $sum: { $cond: [{ $eq: ['$status', 2] }, 1, 0] } },
       },
     },
     {
@@ -46,13 +67,7 @@ export async function getNational() {
         totalElectores: 1,
         asignadas: 1,
         confirmadas: 1,
-        cobertura: {
-          $cond: [
-            { $gt: ['$totalMesas', 0] },
-            { $multiply: [{ $divide: ['$asignadas', '$totalMesas'] }, 100] },
-            0,
-          ],
-        },
+        cobertura: coberturaExpr,
       },
     },
     { $sort: { departamento: 1 } },
@@ -61,22 +76,22 @@ export async function getNational() {
   return { ...stats, regions };
 }
 
-// Provinces of a department (ubigeo prefix = first 2 digits)
+// ── Provincias de un departamento ─────────────────────────────────────────────
 export async function getProvinces(deptCode) {
-  const match = { ubigeo: { $regex: `^${deptCode}` } };
+  const match = { UBIGEO: { $regex: `^${deptCode}` } };
   const stats = await getStats(match);
 
   const provinces = await Mesa.aggregate([
     { $match: match },
     {
       $group: {
-        _id: { $substr: ['$ubigeo', 0, 4] },
-        provincia: { $first: '$provincia' },
-        departamento: { $first: '$departamento' },
-        totalMesas: { $sum: 1 },
-        totalElectores: { $sum: '$electores' },
-        asignadas: { $sum: { $cond: [{ $gte: ['$status', 1] }, 1, 0] } },
-        confirmadas: { $sum: { $cond: [{ $eq: ['$status', 2] }, 1, 0] } },
+        _id:            { $substr: ['$UBIGEO', 0, 4] },
+        provincia:      { $first: '$PROVINCIA' },
+        departamento:   { $first: '$DEPARTAMETO' },
+        totalMesas:     { $sum: 1 },
+        totalElectores: { $sum: toIntElectores },
+        asignadas:      { $sum: { $cond: [{ $gte: ['$status', 1] }, 1, 0] } },
+        confirmadas:    { $sum: { $cond: [{ $eq: ['$status', 2] }, 1, 0] } },
       },
     },
     {
@@ -89,13 +104,7 @@ export async function getProvinces(deptCode) {
         totalElectores: 1,
         asignadas: 1,
         confirmadas: 1,
-        cobertura: {
-          $cond: [
-            { $gt: ['$totalMesas', 0] },
-            { $multiply: [{ $divide: ['$asignadas', '$totalMesas'] }, 100] },
-            0,
-          ],
-        },
+        cobertura: coberturaExpr,
       },
     },
     { $sort: { provincia: 1 } },
@@ -104,23 +113,23 @@ export async function getProvinces(deptCode) {
   return { ...stats, departamento: deptCode, provinces };
 }
 
-// Districts of a province (ubigeo prefix = first 4 digits)
+// ── Distritos de una provincia ────────────────────────────────────────────────
 export async function getDistricts(provCode) {
-  const match = { ubigeo: { $regex: `^${provCode}` } };
+  const match = { UBIGEO: { $regex: `^${provCode}` } };
   const stats = await getStats(match);
 
   const districts = await Mesa.aggregate([
     { $match: match },
     {
       $group: {
-        _id: '$ubigeo',
-        distrito: { $first: '$distrito' },
-        provincia: { $first: '$provincia' },
-        departamento: { $first: '$departamento' },
-        totalMesas: { $sum: 1 },
-        totalElectores: { $sum: '$electores' },
-        asignadas: { $sum: { $cond: [{ $gte: ['$status', 1] }, 1, 0] } },
-        confirmadas: { $sum: { $cond: [{ $eq: ['$status', 2] }, 1, 0] } },
+        _id:            '$UBIGEO',
+        distrito:       { $first: '$DISTRITO' },
+        provincia:      { $first: '$PROVINCIA' },
+        departamento:   { $first: '$DEPARTAMETO' },
+        totalMesas:     { $sum: 1 },
+        totalElectores: { $sum: toIntElectores },
+        asignadas:      { $sum: { $cond: [{ $gte: ['$status', 1] }, 1, 0] } },
+        confirmadas:    { $sum: { $cond: [{ $eq: ['$status', 2] }, 1, 0] } },
       },
     },
     {
@@ -134,13 +143,7 @@ export async function getDistricts(provCode) {
         totalElectores: 1,
         asignadas: 1,
         confirmadas: 1,
-        cobertura: {
-          $cond: [
-            { $gt: ['$totalMesas', 0] },
-            { $multiply: [{ $divide: ['$asignadas', '$totalMesas'] }, 100] },
-            0,
-          ],
-        },
+        cobertura: coberturaExpr,
       },
     },
     { $sort: { distrito: 1 } },
@@ -149,26 +152,26 @@ export async function getDistricts(provCode) {
   return { ...stats, provincia: provCode, districts };
 }
 
-// Voting centers (locales) of a district (ubigeo = full 6 digits)
+// ── Centros de votación (locales) de un distrito ──────────────────────────────
 export async function getCentros(ubigeo) {
-  const match = { ubigeo };
+  const match = { UBIGEO: ubigeo };
   const stats = await getStats(match);
 
   const centros = await Mesa.aggregate([
     { $match: match },
     {
       $group: {
-        _id: '$idLocal',
-        nombreLocal: { $first: '$nombreLocal' },
-        direccion: { $first: '$direccion' },
-        ubigeo: { $first: '$ubigeo' },
-        distrito: { $first: '$distrito' },
-        provincia: { $first: '$provincia' },
-        departamento: { $first: '$departamento' },
-        totalMesas: { $sum: 1 },
-        totalElectores: { $sum: '$electores' },
-        asignadas: { $sum: { $cond: [{ $gte: ['$status', 1] }, 1, 0] } },
-        confirmadas: { $sum: { $cond: [{ $eq: ['$status', 2] }, 1, 0] } },
+        _id:            '$ID_LOCAL',
+        nombreLocal:    { $first: '$NOMBRE_LOCAL' },
+        direccion:      { $first: '$DIRECCION' },
+        ubigeo:         { $first: '$UBIGEO' },
+        distrito:       { $first: '$DISTRITO' },
+        provincia:      { $first: '$PROVINCIA' },
+        departamento:   { $first: '$DEPARTAMETO' },
+        totalMesas:     { $sum: 1 },
+        totalElectores: { $sum: toIntElectores },
+        asignadas:      { $sum: { $cond: [{ $gte: ['$status', 1] }, 1, 0] } },
+        confirmadas:    { $sum: { $cond: [{ $eq: ['$status', 2] }, 1, 0] } },
       },
     },
     {
@@ -185,13 +188,7 @@ export async function getCentros(ubigeo) {
         totalElectores: 1,
         asignadas: 1,
         confirmadas: 1,
-        cobertura: {
-          $cond: [
-            { $gt: ['$totalMesas', 0] },
-            { $multiply: [{ $divide: ['$asignadas', '$totalMesas'] }, 100] },
-            0,
-          ],
-        },
+        cobertura: coberturaExpr,
       },
     },
     { $sort: { nombreLocal: 1 } },
@@ -200,25 +197,25 @@ export async function getCentros(ubigeo) {
   return { ...stats, ubigeo, centros };
 }
 
-// Mesas of a voting center
+// ── Mesas de un centro de votación ───────────────────────────────────────────
 export async function getMesasDelCentro(ubigeo, idLocal) {
-  const mesas = await Mesa.find({ ubigeo, idLocal })
+  const mesas = await Mesa.find({ UBIGEO: ubigeo, ID_LOCAL: idLocal })
     .populate('personeroId', 'nombres apellidoPaterno apellidoMaterno dni telefono correo assignmentStatus')
-    .sort({ mesa: 1 })
+    .sort({ MESA: 1 })
     .lean();
 
   return mesas.map(m => ({
-    id: m._id,
-    mesa: m.mesa,
-    ubigeo: m.ubigeo,
-    idLocal: m.idLocal,
-    nombreLocal: m.nombreLocal,
-    direccion: m.direccion,
-    distrito: m.distrito,
-    provincia: m.provincia,
-    departamento: m.departamento,
-    electores: m.electores,
-    status: m.status,
-    personero: m.personeroId || null,
+    id:           m._id,
+    mesa:         m.MESA,
+    ubigeo:       m.UBIGEO,
+    idLocal:      m.ID_LOCAL,
+    nombreLocal:  m.NOMBRE_LOCAL,
+    direccion:    m.DIRECCION,
+    distrito:     m.DISTRITO,
+    provincia:    m.PROVINCIA,
+    departamento: m.DEPARTAMETO,
+    electores:    parseInt(m.ELECTORES) || 0,
+    status:       m.status,
+    personero:    m.personeroId || null,
   }));
 }

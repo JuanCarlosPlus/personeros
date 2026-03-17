@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 export default function LoginForm() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -14,7 +14,7 @@ export default function LoginForm() {
     setError('');
     setLoading(true);
     try {
-      await login(form.email, form.password);
+      await login(form.username, form.password);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.error || 'Error al iniciar sesión');
@@ -32,15 +32,16 @@ export default function LoginForm() {
 
         <form onSubmit={handleSubmit} style={s.form}>
           <div style={s.field}>
-            <label style={s.label}>Correo electrónico</label>
+            <label style={s.label}>Usuario</label>
             <input
-              type="email"
-              value={form.email}
-              onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-              placeholder="usuario@partido.pe"
+              type="text"
+              value={form.username}
+              onChange={e => setForm(f => ({ ...f, username: e.target.value }))}
+              placeholder="administrador"
               style={s.input}
               required
               autoFocus
+              autoComplete="username"
             />
           </div>
           <div style={s.field}>

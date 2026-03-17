@@ -10,7 +10,7 @@ export async function protect(req, res, next) {
     }
     const token = auth.split(' ')[1];
     const decoded = jwt.verify(token, config.jwtSecret);
-    const user = await User.findById(decoded.id).select('+active');
+    const user = await User.findById(decoded.id);
     if (!user || !user.active) {
       return res.status(401).json({ error: 'Usuario no encontrado o inactivo' });
     }
@@ -21,6 +21,7 @@ export async function protect(req, res, next) {
   }
 }
 
+// authorize(...roles) — usa el virtual 'role' del User (admin | coordinator | supervisor | viewer)
 export function authorize(...roles) {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

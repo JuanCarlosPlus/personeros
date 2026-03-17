@@ -1,32 +1,51 @@
+/**
+ * Colección: mesas
+ * Campos del partido (en MAYÚSCULA, tal como están en su BD) + extras nuestros.
+ *
+ * NOTA: "ID LOCAL" y "NOMBRE LOCAL" del CSV original tienen espacios.
+ * Los almacenamos como ID_LOCAL y NOMBRE_LOCAL (underscore) para compatibilidad MongoDB.
+ * NOTA: "DEPARTAMETO" mantiene el typo original del partido (sin la N).
+ * NOTA: "ELECTORES" es string en su BD (lo mantenemos así).
+ */
 import mongoose from 'mongoose';
 
-// A Mesa represents one voting table at a voting center (local de votación)
 const mesaSchema = new mongoose.Schema({
-  // Identificadores
-  ubigeo:       { type: String, required: true },
-  idLocal:      { type: String, required: true },
-  mesa:         { type: String, required: true, unique: true },
+  // ── Campos del partido (exactos, incluido typo) ─────────────────────
+  UBIGEO:       { type: String, required: true },
+  MESA:         { type: String, required: true, unique: true },
+  ID_LOCAL:     { type: String, default: '' },     // "ID LOCAL" en su CSV
+  NOMBRE_LOCAL: { type: String, default: '' },     // "NOMBRE LOCAL" en su CSV
+  DEPARTAMETO:  { type: String, default: '' },     // ⚠️ typo original: sin la N
+  PROVINCIA:    { type: String, default: '' },
+  DISTRITO:     { type: String, default: '' },
+  DIRECCION:    { type: String, default: '' },
+  ELECTORES:    { type: String, default: '0' },    // string en su BD
+  tipoUbicacion:{ type: String, default: 'Nacional' },
 
-  // Ubicación
-  departamento: { type: String },
-  provincia:    { type: String },
-  distrito:     { type: String },
-  nombreLocal:  { type: String },
-  direccion:    { type: String },
-  electores:    { type: Number, default: 0 },
-
-  // Estado de asignación
-  // 0 = sin personero, 1 = asignado, 2 = confirmado
-  status:       { type: Number, enum: [0, 1, 2], default: 0 },
-
-  // Referencia al personero asignado
-  personeroId:  { type: mongoose.Schema.Types.ObjectId, ref: 'Personero', default: null },
-  assignedAt:   { type: Date },
-  confirmedAt:  { type: Date },
+  // ── Campos que agregamos nosotros ───────────────────────────────────
+  status:      { type: Number, enum: [0, 1, 2], default: 0 },
+  //   0 = sin personero asignado
+  //   1 = asignado (pendiente de confirmación)
+  //   2 = confirmado
+  personeroId: { type: mongoose.Schema.Types.ObjectId, ref: 'Personero', default: null },
+  assignedAt:  { type: Date, default: null },
+  confirmedAt: { type: Date, default: null },
 }, { collection: 'mesas', timestamps: true });
 
-mesaSchema.index({ ubigeo: 1, status: 1 });
-mesaSchema.index({ ubigeo: 1, idLocal: 1 });
-mesaSchema.index({ departamento: 1 });
+// Índices
+mesaSchema.index({ UBIGEO: 1, status: 1 });
+mesaSchema.index({ UBIGEO: 1, ID_LOCAL: 1 });
+mesaSchema.index({ DEPARTAMETO: 1 });
+
+// Virtuals para compatibilidad con código legacy
+mesaSchema.virtual('ubigeo').get(function ()      { return this.UBIGEO; });
+mesaSchema.virtual('mesa').get(function ()        { return this.MESA; });
+mesaSchema.virtual('idLocal').get(function ()     { return this.ID_LOCAL; });
+mesaSchema.virtual('nombreLocal').get(function () { return this.NOMBRE_LOCAL; });
+mesaSchema.virtual('departamento').get(function (){ return this.DEPARTAMETO; });
+mesaSchema.virtual('provincia').get(function ()   { return this.PROVINCIA; });
+mesaSchema.virtual('distrito').get(function ()    { return this.DISTRITO; });
+mesaSchema.virtual('direccion').get(function ()   { return this.DIRECCION; });
+mesaSchema.virtual('electores').get(function ()   { return parseInt(this.ELECTORES) || 0; });
 
 export default mongoose.model('Mesa', mesaSchema);

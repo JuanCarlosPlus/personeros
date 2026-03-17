@@ -29,7 +29,7 @@ export default api;
 
 // Auth
 export const authAPI = {
-  login: (email, password) => api.post('/auth/login', { email, password }),
+  login: (username, password) => api.post('/auth/login', { username, password }),
   getMe: () => api.get('/auth/me'),
   seed: () => api.post('/auth/seed'),
 };
