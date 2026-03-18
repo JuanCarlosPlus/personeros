@@ -18,7 +18,8 @@ import Personero from '../models/Personero.js';
 import Ubicacion from '../models/Ubicacion.js';
 import mongoose from 'mongoose';
 
-const CSV_DIR = 'C:/Users/Acer2025/Tema polìtico/mongo';
+// Ruta a los CSVs — configurable por variable de entorno para deploy en VPS
+const CSV_DIR = process.env.CSV_DIR || 'C:/Users/Acer2025/Tema polìtico/mongo';
 
 function readCsv(filename) {
   const filepath = path.join(CSV_DIR, filename);
