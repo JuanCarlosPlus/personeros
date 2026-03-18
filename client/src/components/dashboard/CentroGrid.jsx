@@ -106,12 +106,12 @@ export default function CentroGrid() {
       ) : (
         <ListView
           columns={[
-            { header: 'Local',       key: c => c.nombreLocal },
+            { header: 'Local',       key: c => c.nombreLocal,                    sortKey: 'nombreLocal' },
             { header: 'Dirección',   key: c => c.direccion },
-            { header: 'Mesas',       key: c => c.totalMesas },
-            { header: 'Asignadas',   key: c => c.asignadas },
-            { header: 'Cobertura',   key: c => <CoverageBar value={c.cobertura} /> },
-            { header: 'Electores',   key: c => c.totalElectores?.toLocaleString() },
+            { header: 'Mesas',       key: c => c.totalMesas,                     sortKey: 'totalMesas' },
+            { header: 'Asignadas',   key: c => c.asignadas,                      sortKey: 'asignadas' },
+            { header: 'Cobertura',   key: c => <CoverageBar value={c.cobertura} />, sortKey: 'cobertura' },
+            { header: 'Electores',   key: c => c.totalElectores?.toLocaleString(), sortKey: 'totalElectores' },
             { header: 'Coordinador', key: c => (
               <CoordinadorBadge
                 coord={coordMap[c.idLocal] || null}

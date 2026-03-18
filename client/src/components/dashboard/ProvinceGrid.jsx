@@ -96,11 +96,11 @@ export default function ProvinceGrid() {
       ) : (
         <ListView
           columns={[
-            { header: 'Provincia',   key: p => p.provincia },
-            { header: 'Mesas',       key: p => p.totalMesas?.toLocaleString() },
-            { header: 'Asignadas',   key: p => p.asignadas?.toLocaleString() },
-            { header: 'Cobertura',   key: p => <CoverageBar value={p.cobertura} /> },
-            { header: 'Electores',   key: p => p.totalElectores?.toLocaleString() },
+            { header: 'Provincia',   key: p => p.provincia,                    sortKey: 'provincia' },
+            { header: 'Mesas',       key: p => p.totalMesas?.toLocaleString(),  sortKey: 'totalMesas' },
+            { header: 'Asignadas',   key: p => p.asignadas?.toLocaleString(),   sortKey: 'asignadas' },
+            { header: 'Cobertura',   key: p => <CoverageBar value={p.cobertura} />, sortKey: 'cobertura' },
+            { header: 'Electores',   key: p => p.totalElectores?.toLocaleString(), sortKey: 'totalElectores' },
             { header: 'Coordinador', key: p => (
               <CoordinadorBadge
                 coord={coordMap[p.ubigeoPrefix] || null}

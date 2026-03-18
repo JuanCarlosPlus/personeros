@@ -2,7 +2,8 @@ import * as svc from '../services/coverageService.js';
 
 export async function national(req, res, next) {
   try {
-    res.json(await svc.getNational());
+    const tipo = req.query.tipo || 'Nacional'; // 'Nacional' | 'Extranjero' | 'all'
+    res.json(await svc.getNational(tipo));
   } catch (err) { next(err); }
 }
 

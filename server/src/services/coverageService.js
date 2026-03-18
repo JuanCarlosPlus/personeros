@@ -44,10 +44,13 @@ async function getStats(match) {
 }
 
 // ── Nacional ─────────────────────────────────────────────────────────────────
-export async function getNational() {
-  const stats = await getStats({});
+// tipo: 'Nacional' (Perú) | 'Extranjero' | 'all' (sin filtro)
+export async function getNational(tipo = 'Nacional') {
+  const match = tipo === 'all' ? {} : { tipoUbicacion: tipo };
+  const stats = await getStats(match);
 
   const regions = await Mesa.aggregate([
+    { $match: match },
     {
       $group: {
         _id:            '$DEPARTAMETO',
@@ -73,7 +76,7 @@ export async function getNational() {
     { $sort: { departamento: 1 } },
   ]);
 
-  return { ...stats, regions };
+  return { ...stats, tipo, regions };
 }
 
 // ── Provincias de un departamento ─────────────────────────────────────────────

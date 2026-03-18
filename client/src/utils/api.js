@@ -36,7 +36,7 @@ export const authAPI = {
 
 // Coverage drill-down
 export const coverageAPI = {
-  national: () => api.get('/coverage/national'),
+  national: (tipo = 'Nacional') => api.get('/coverage/national', { params: { tipo } }),
   provinces: (deptCode) => api.get(`/coverage/dept/${deptCode}`),
   districts: (provCode) => api.get(`/coverage/prov/${provCode}`),
   centros: (ubigeo) => api.get(`/coverage/dist/${ubigeo}`),

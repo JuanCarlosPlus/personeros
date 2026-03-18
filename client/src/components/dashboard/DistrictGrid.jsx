@@ -100,12 +100,12 @@ export default function DistrictGrid() {
       ) : (
         <ListView
           columns={[
-            { header: 'Distrito',    key: d => d.distrito },
-            { header: 'Ubigeo',      key: d => d.ubigeo },
-            { header: 'Mesas',       key: d => d.totalMesas?.toLocaleString() },
-            { header: 'Asignadas',   key: d => d.asignadas?.toLocaleString() },
-            { header: 'Cobertura',   key: d => <CoverageBar value={d.cobertura} /> },
-            { header: 'Electores',   key: d => d.totalElectores?.toLocaleString() },
+            { header: 'Distrito',    key: d => d.distrito,                      sortKey: 'distrito' },
+            { header: 'Ubigeo',      key: d => d.ubigeo,                        sortKey: 'ubigeo' },
+            { header: 'Mesas',       key: d => d.totalMesas?.toLocaleString(),   sortKey: 'totalMesas' },
+            { header: 'Asignadas',   key: d => d.asignadas?.toLocaleString(),    sortKey: 'asignadas' },
+            { header: 'Cobertura',   key: d => <CoverageBar value={d.cobertura} />, sortKey: 'cobertura' },
+            { header: 'Electores',   key: d => d.totalElectores?.toLocaleString(), sortKey: 'totalElectores' },
             { header: 'Coordinador', key: d => (
               <CoordinadorBadge
                 coord={coordMap[d.ubigeo] || null}
