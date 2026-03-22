@@ -27,6 +27,22 @@ api.interceptors.response.use(
 
 export default api;
 
+// Instancia separada para personero (usa personeroToken)
+const personeroAxios = axios.create({ baseURL: '/api/v1', timeout: 30000 });
+personeroAxios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('personeroToken');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// Instancia separada para jefe de local (usa jefeLocalToken)
+const jefeLocalAxios = axios.create({ baseURL: '/api/v1', timeout: 30000 });
+jefeLocalAxios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('jefeLocalToken');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
 // Auth
 export const authAPI = {
   login: (username, password) => api.post('/auth/login', { username, password }),
@@ -76,7 +92,7 @@ export const personeroAPI = {
   bulkCreate: (personeros) => api.post('/personeros/bulk', { personeros }),
   registerPublic: (data) => api.post('/personeros/registro-publico', data),
   login: (dni, codigoTel) => api.post('/personeros/login', { dni, codigoTel }),
-  miEstado: () => api.get('/personeros/mi-estado'),
+  miEstado: () => personeroAxios.get('/personeros/mi-estado'),
 };
 
 // Cargos
@@ -120,9 +136,9 @@ export const whatsappAPI = {
 export const jefeLocalAPI = {
   solicitarCodigo: (telefono) => api.post('/jefe-local/solicitar-codigo', { telefono }),
   verificarCodigo: (telefono, codigo) => api.post('/jefe-local/verificar-codigo', { telefono, codigo }),
-  miLocal: () => api.get('/jefe-local/mi-local'),
-  asignar: (personeroId, mesaCodigo) => api.post('/jefe-local/asignar', { personeroId, mesaCodigo }),
-  desasignar: (mesaCodigo) => api.post('/jefe-local/desasignar', { mesaCodigo }),
+  miLocal: () => jefeLocalAxios.get('/jefe-local/mi-local'),
+  asignar: (personeroId, mesaCodigo) => jefeLocalAxios.post('/jefe-local/asignar', { personeroId, mesaCodigo }),
+  desasignar: (mesaCodigo) => jefeLocalAxios.post('/jefe-local/desasignar', { mesaCodigo }),
   // Admin
   list: () => api.get('/jefe-local'),
   crear: (data) => api.post('/jefe-local/crear', data),

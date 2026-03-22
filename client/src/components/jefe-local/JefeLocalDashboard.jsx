@@ -23,14 +23,14 @@ export default function JefeLocalDashboard() {
   const load = useCallback(() => {
     jefeLocalAPI.miLocal()
       .then(r => setData(r.data))
-      .catch(() => { localStorage.removeItem('token'); localStorage.removeItem('jefeLocal'); navigate('/jefe-local/login'); })
+      .catch(() => { localStorage.removeItem('jefeLocalToken'); localStorage.removeItem('jefeLocal'); navigate('/jefe-local/login'); })
       .finally(() => setLoading(false));
   }, [navigate]);
 
   useEffect(() => { load(); }, [load]);
 
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('jefeLocalToken');
     localStorage.removeItem('jefeLocal');
     navigate('/jefe-local/login');
   };

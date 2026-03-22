@@ -15,7 +15,7 @@ export default function PersoneroLogin() {
     setLoading(true);
     try {
       const { data } = await personeroAPI.login(dni, codigoTel);
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('personeroToken', data.token);
       localStorage.setItem('personeroUser', JSON.stringify(data.personero));
       navigate('/personero/dashboard');
     } catch (err) {

@@ -29,7 +29,7 @@ export default function JefeLocalLogin() {
     setLoading(true);
     try {
       const { data } = await jefeLocalAPI.verificarCodigo(telefono, codigo);
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('jefeLocalToken', data.token);
       localStorage.setItem('jefeLocal', JSON.stringify(data.jefeLocal));
       navigate('/jefe-local/dashboard');
     } catch (err) {

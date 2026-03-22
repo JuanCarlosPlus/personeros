@@ -17,12 +17,12 @@ export default function PersoneroDashboard() {
 
     personeroAPI.miEstado()
       .then(r => setData(r.data))
-      .catch(() => { localStorage.removeItem('token'); localStorage.removeItem('personeroUser'); navigate('/personero/login'); })
+      .catch(() => { localStorage.removeItem('personeroToken'); localStorage.removeItem('personeroUser'); navigate('/personero/login'); })
       .finally(() => setLoading(false));
   }, [navigate]);
 
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('personeroToken');
     localStorage.removeItem('personeroUser');
     navigate('/personero/login');
   };
