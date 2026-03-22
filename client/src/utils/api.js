@@ -140,6 +140,8 @@ export const jefeLocalAPI = {
   miLocal: () => jefeLocalAxios.get('/jefe-local/mi-local'),
   asignar: (personeroId, mesaCodigo) => jefeLocalAxios.post('/jefe-local/asignar', { personeroId, mesaCodigo }),
   desasignar: (mesaCodigo) => jefeLocalAxios.post('/jefe-local/desasignar', { mesaCodigo }),
+  dniLookup: (dni) => jefeLocalAxios.get(`/jefe-local/dni/${dni}`),
+  registrarPersonero: (data) => jefeLocalAxios.post('/jefe-local/registrar-personero', data),
   // Admin
   list: () => api.get('/jefe-local'),
   crear: (data) => api.post('/jefe-local/crear', data),

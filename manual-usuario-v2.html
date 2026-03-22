@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Usuario - Sistema de Personeros | Elecciones 2026</title>
+<style>
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:15px}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f1f5f9;color:#1e293b;line-height:1.6}
+a{color:#2563eb;text-decoration:none}
+a:hover{text-decoration:underline}
+button{cursor:pointer;font-family:inherit}
+input,select,textarea{font-family:inherit;font-size:inherit}
+
+/* ===== TOP NAV ===== */
+.topbar{background:linear-gradient(135deg,#1e3a5f 0%,#0f2744 100%);color:#fff;padding:0;position:sticky;top:0;z-index:1000;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.topbar-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem}
+.topbar .logo{display:flex;align-items:center;gap:.6rem;font-size:1.15rem;font-weight:700;letter-spacing:-.3px}
+.topbar .logo-icon{font-size:1.6rem}
+.topbar-links{display:flex;gap:.25rem;flex-wrap:wrap}
+.topbar-links a{color:rgba(255,255,255,.8);padding:.4rem .7rem;border-radius:6px;font-size:.82rem;font-weight:500;transition:all .15s}
+.topbar-links a:hover,.topbar-links a.active{background:rgba(255,255,255,.15);color:#fff;text-decoration:none}
+
+/* ===== HERO ===== */
+.hero{background:linear-gradient(135deg,#1e3a5f 0%,#2563eb 100%);color:#fff;padding:3.5rem 1.5rem 3rem;text-align:center}
+.hero h1{font-size:2.2rem;font-weight:800;margin-bottom:.5rem;letter-spacing:-.5px}
+.hero .sub{font-size:1.05rem;opacity:.85;max-width:640px;margin:0 auto .5rem}
+.hero .version-badge{display:inline-block;background:rgba(255,255,255,.2);padding:.25rem .75rem;border-radius:20px;font-size:.78rem;font-weight:600;margin-top:.75rem}
+
+/* ===== LAYOUT ===== */
+.container{max-width:1280px;margin:0 auto;padding:2rem 1.5rem}
+.section{margin-bottom:3rem}
+.section-title{font-size:1.5rem;font-weight:700;color:#1e3a5f;margin-bottom:.25rem;display:flex;align-items:center;gap:.5rem;padding-top:4rem;margin-top:-3rem}
+.section-title .num{background:#2563eb;color:#fff;width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0}
+.section-desc{color:#64748b;margin-bottom:1.5rem;font-size:.92rem}
+
+/* ===== CARDS ===== */
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.5rem;margin-bottom:1.25rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.card-title{font-size:1.05rem;font-weight:700;color:#1e293b;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+
+/* ===== PROFILE TABS ===== */
+.profile-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.5rem;background:#fff;padding:.5rem;border-radius:12px;border:1px solid #e2e8f0}
+.profile-tab{padding:.6rem 1rem;border-radius:8px;border:none;background:transparent;font-size:.82rem;font-weight:600;color:#64748b;transition:all .15s;white-space:nowrap}
+.profile-tab:hover{background:#f1f5f9;color:#1e293b}
+.profile-tab.active{background:#2563eb;color:#fff}
+.profile-content{display:none}
+.profile-content.active{display:block}
+
+/* ===== SIMULATED UI ===== */
+.sim-browser{border:1px solid #cbd5e1;border-radius:12px;overflow:hidden;margin:1rem 0;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.sim-toolbar{background:#f1f5f9;padding:.5rem .75rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid #e2e8f0}
+.sim-dots{display:flex;gap:5px}
+.sim-dot{width:10px;height:10px;border-radius:50%}
+.sim-dot.r{background:#ef4444}.sim-dot.y{background:#eab308}.sim-dot.g{background:#22c55e}
+.sim-url{flex:1;background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:.25rem .6rem;font-size:.75rem;color:#64748b;font-family:'Courier New',monospace}
+.sim-body{background:#f8fafc;padding:0;min-height:300px}
+
+/* Login sim */
+.sim-login{display:flex;align-items:center;justify-content:center;padding:2rem;min-height:360px;background:linear-gradient(135deg,#1e3a5f 0%,#0f2744 100%)}
+.sim-login-card{background:#fff;border-radius:12px;padding:2rem;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.sim-login-card h3{text-align:center;font-size:1.15rem;color:#1e293b;margin-bottom:.25rem}
+.sim-login-card .sub{text-align:center;font-size:.8rem;color:#64748b;margin-bottom:1.25rem}
+.sim-field{margin-bottom:1rem}
+.sim-field label{display:block;font-size:.8rem;font-weight:600;color:#475569;margin-bottom:.25rem}
+.sim-field input{width:100%;padding:.5rem .75rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem;outline:none;transition:border .15s}
+.sim-field input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.sim-btn{width:100%;padding:.6rem;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:.9rem;font-weight:600;transition:background .15s}
+.sim-btn:hover{background:#1d4ed8}
+.sim-btn.green{background:#25d366}.sim-btn.green:hover{background:#1da851}
+.sim-btn.gray{background:#64748b}.sim-btn.gray:hover{background:#475569}
+.sim-btn.red{background:#ef4444}.sim-btn.red:hover{background:#dc2626}
+.sim-btn.outline{background:transparent;border:2px solid #2563eb;color:#2563eb}.sim-btn.outline:hover{background:#eff6ff}
+.sim-btn-sm{padding:.4rem .75rem;font-size:.78rem;border-radius:6px;font-weight:600;border:none;color:#fff;background:#2563eb;cursor:pointer}
+.sim-btn-sm:hover{background:#1d4ed8}
+.sim-btn-sm.green{background:#16a34a}.sim-btn-sm.green:hover{background:#15803d}
+.sim-btn-sm.red{background:#ef4444}.sim-btn-sm.red:hover{background:#dc2626}
+.sim-btn-sm.gray{background:#94a3b8;color:#fff}.sim-btn-sm.gray:hover{background:#64748b}
+.sim-error{background:#fef2f2;color:#dc2626;padding:.5rem .75rem;border-radius:8px;font-size:.8rem;margin-bottom:.75rem;text-align:center}
+.sim-success{background:#f0fdf4;color:#16a34a;padding:.5rem .75rem;border-radius:8px;font-size:.8rem;margin-bottom:.75rem;text-align:center}
+
+/* Dashboard sim */
+.sim-dash{padding:1.25rem}
+.sim-sidebar{width:220px;background:#1e3a5f;min-height:400px;padding:1rem 0;flex-shrink:0;border-right:1px solid rgba(255,255,255,.1)}
+.sim-sidebar a{display:flex;align-items:center;gap:.5rem;padding:.55rem 1rem;color:rgba(255,255,255,.7);font-size:.82rem;transition:all .12s;text-decoration:none}
+.sim-sidebar a:hover,.sim-sidebar a.active{background:rgba(255,255,255,.1);color:#fff}
+.sim-sidebar .nav-title{color:rgba(255,255,255,.4);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:.75rem 1rem .35rem}
+.sim-layout{display:flex}
+.sim-main{flex:1;background:#f8fafc;padding:1.25rem;overflow-x:auto}
+
+/* Stat cards */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin-bottom:1.25rem}
+.stat-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem;text-align:center}
+.stat-card .num{font-size:1.8rem;font-weight:700;color:#1e293b}
+.stat-card .label{font-size:.75rem;color:#64748b;margin-top:.15rem}
+.stat-card.blue .num{color:#2563eb}
+.stat-card.green .num{color:#16a34a}
+.stat-card.amber .num{color:#d97706}
+.stat-card.red .num{color:#ef4444}
+
+/* Table */
+.sim-table{width:100%;border-collapse:collapse;font-size:.82rem;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0}
+.sim-table th{background:#f8fafc;font-weight:600;text-align:left;padding:.6rem .75rem;color:#475569;border-bottom:2px solid #e2e8f0;white-space:nowrap}
+.sim-table td{padding:.55rem .75rem;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.sim-table tr:hover td{background:#f8fafc}
+.sim-table .badge{display:inline-block;padding:.15rem .5rem;border-radius:20px;font-size:.72rem;font-weight:600}
+.badge-green{background:#dcfce7;color:#16a34a}
+.badge-blue{background:#dbeafe;color:#2563eb}
+.badge-amber{background:#fef3c7;color:#d97706}
+.badge-red{background:#fee2e2;color:#ef4444}
+.badge-gray{background:#f1f5f9;color:#64748b}
+
+/* Coverage bar */
+.coverage-bar{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;width:100%}
+.coverage-fill{height:100%;border-radius:4px;transition:width .3s}
+.coverage-fill.high{background:#16a34a}
+.coverage-fill.mid{background:#d97706}
+.coverage-fill.low{background:#ef4444}
+
+/* ===== PERMISSION MATRIX ===== */
+.matrix-wrap{overflow-x:auto;margin:1rem 0}
+.matrix{border-collapse:collapse;font-size:.78rem;width:100%;min-width:800px}
+.matrix th,.matrix td{padding:.5rem .6rem;border:1px solid #e2e8f0;text-align:center;white-space:nowrap}
+.matrix th{background:#1e3a5f;color:#fff;font-weight:600;position:sticky;top:0}
+.matrix th:first-child{text-align:left;min-width:200px}
+.matrix td:first-child{text-align:left;font-weight:600;background:#f8fafc;color:#334155}
+.matrix tr:hover td{background:#eff6ff}
+.matrix .yes{color:#16a34a;font-weight:700;font-size:1rem}
+.matrix .no{color:#cbd5e1;font-size:.9rem}
+.matrix .partial{color:#d97706;font-weight:600;font-size:.85rem}
+
+/* ===== UBIGEO DIAGRAM ===== */
+.ubigeo-tree{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.ubigeo-node{border:2px solid #e2e8f0;border-radius:10px;padding:.75rem 1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.75rem;background:#fff}
+.ubigeo-node:hover{border-color:#2563eb;box-shadow:0 2px 8px rgba(37,99,235,.15)}
+.ubigeo-node.active{border-color:#2563eb;background:#eff6ff}
+.ubigeo-node .code{background:#1e3a5f;color:#fff;padding:.2rem .5rem;border-radius:6px;font-family:'Courier New',monospace;font-size:.82rem;font-weight:700;min-width:70px;text-align:center}
+.ubigeo-node .info{flex:1}
+.ubigeo-node .title{font-weight:700;font-size:.9rem;color:#1e293b}
+.ubigeo-node .desc{font-size:.78rem;color:#64748b}
+.ubigeo-children{margin-left:2rem;border-left:2px solid #2563eb;padding-left:1rem;display:none}
+.ubigeo-children.open{display:flex;flex-direction:column;gap:.5rem}
+.ubigeo-arrow{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:#94a3b8;transition:transform .2s;font-size:.9rem}
+.ubigeo-arrow.open{transform:rotate(90deg);color:#2563eb}
+
+/* ===== MODAL ===== */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;padding:1.75rem;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:modalIn .2s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal h3{font-size:1.1rem;color:#1e293b;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.modal-close{margin-left:auto;background:none;border:none;font-size:1.3rem;color:#94a3b8;cursor:pointer;padding:.25rem}
+.modal-close:hover{color:#ef4444}
+
+/* ===== TABS INSIDE SIMS ===== */
+.inner-tabs{display:flex;gap:.25rem;margin-bottom:1rem;border-bottom:2px solid #e2e8f0;padding-bottom:0}
+.inner-tab{padding:.5rem 1rem;border:none;background:none;font-size:.82rem;font-weight:600;color:#64748b;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.inner-tab:hover{color:#1e293b}
+.inner-tab.active{color:#2563eb;border-bottom-color:#2563eb}
+.inner-content{display:none}.inner-content.active{display:block}
+
+/* ===== CHAT SIM ===== */
+.chat-container{display:flex;height:360px;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff}
+.chat-channels{width:200px;background:#1e3a5f;padding:.75rem 0;overflow-y:auto;flex-shrink:0}
+.chat-channels .ch{padding:.45rem .75rem;color:rgba(255,255,255,.7);font-size:.8rem;cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:.4rem}
+.chat-channels .ch:hover,.chat-channels .ch.active{background:rgba(255,255,255,.1);color:#fff}
+.chat-channels .ch-title{color:rgba(255,255,255,.4);font-size:.68rem;font-weight:700;text-transform:uppercase;padding:.5rem .75rem .25rem;letter-spacing:.5px}
+.chat-body{flex:1;display:flex;flex-direction:column}
+.chat-header{padding:.6rem .75rem;border-bottom:1px solid #e2e8f0;font-weight:600;font-size:.85rem;color:#1e293b}
+.chat-messages{flex:1;padding:.75rem;overflow-y:auto;display:flex;flex-direction:column;gap:.5rem}
+.chat-msg{max-width:75%;padding:.45rem .7rem;border-radius:10px;font-size:.8rem;line-height:1.5}
+.chat-msg.sent{align-self:flex-end;background:#2563eb;color:#fff;border-bottom-right-radius:3px}
+.chat-msg.received{align-self:flex-start;background:#f1f5f9;color:#1e293b;border-bottom-left-radius:3px}
+.chat-msg .sender{font-weight:700;font-size:.72rem;margin-bottom:.15rem}
+.chat-msg .time{font-size:.65rem;opacity:.7;margin-top:.15rem;text-align:right}
+.chat-input-row{display:flex;gap:.4rem;padding:.5rem .75rem;border-top:1px solid #e2e8f0;background:#f8fafc}
+.chat-input-row input{flex:1;border:1px solid #e2e8f0;border-radius:8px;padding:.4rem .6rem;font-size:.8rem;outline:none}
+.chat-input-row button{background:#2563eb;color:#fff;border:none;border-radius:8px;padding:.4rem .75rem;font-size:.8rem;font-weight:600}
+
+/* ===== WhatsApp Queue ===== */
+.wa-queue-item{display:flex;align-items:center;gap:.75rem;padding:.65rem;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:.5rem;background:#fff;font-size:.82rem}
+.wa-queue-item .type-badge{padding:.15rem .5rem;border-radius:4px;font-size:.7rem;font-weight:700;text-transform:uppercase}
+.wa-queue-item .phone{font-family:'Courier New',monospace;font-weight:600;color:#334155}
+.wa-queue-item .status{margin-left:auto;display:flex;gap:.35rem}
+
+/* ===== TOC ===== */
+.toc{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.5rem;margin-bottom:2rem}
+.toc h3{font-size:1rem;font-weight:700;color:#1e3a5f;margin-bottom:.75rem}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.5rem}
+.toc a{display:flex;align-items:center;gap:.5rem;padding:.45rem .7rem;border-radius:8px;font-size:.85rem;color:#334155;transition:all .12s;text-decoration:none}
+.toc a:hover{background:#eff6ff;color:#2563eb}
+.toc a .toc-num{background:#e2e8f0;color:#475569;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+
+/* ===== FLOWCHART ===== */
+.flow-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap}
+.flow-step{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:.6rem 1rem;font-size:.82rem;font-weight:600;color:#334155;text-align:center;min-width:120px}
+.flow-arrow{color:#2563eb;font-size:1.2rem;font-weight:700}
+.flow-step.highlight{border-color:#2563eb;background:#eff6ff;color:#2563eb}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .topbar-links{display:none}
+  .hero h1{font-size:1.5rem}
+  .sim-layout{flex-direction:column}
+  .sim-sidebar{width:100%;min-height:auto;display:flex;overflow-x:auto;padding:.5rem}
+  .sim-sidebar a{white-space:nowrap;padding:.4rem .6rem;font-size:.75rem}
+  .sim-sidebar .nav-title{display:none}
+  .chat-channels{width:140px}
+  .stat-row{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ===== PRINT ===== */
+@media print{
+  .topbar,.profile-tabs,.sim-btn,.sim-btn-sm,.modal-overlay{display:none!important}
+  .sim-browser{break-inside:avoid}
+  body{background:#fff}
+}
+
+/* ===== MISC ===== */
+.text-muted{color:#64748b;font-size:.85rem}
+.mt-1{margin-top:.5rem}.mt-2{margin-top:1rem}.mb-1{margin-bottom:.5rem}.mb-2{margin-bottom:1rem}
+.flex-between{display:flex;justify-content:space-between;align-items:center}
+.gap-sm{gap:.5rem}
+.tip-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:.75rem 1rem;margin:1rem 0;font-size:.85rem;color:#1e40af;display:flex;gap:.5rem;align-items:flex-start}
+.tip-box .tip-icon{flex-shrink:0;font-size:1.1rem}
+.warn-box{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:.75rem 1rem;margin:1rem 0;font-size:.85rem;color:#92400e;display:flex;gap:.5rem;align-items:flex-start}
+.info-grid{display:grid;grid-template-columns:140px 1fr;gap:.35rem .75rem;font-size:.85rem;margin:.75rem 0}
+.info-grid dt{font-weight:600;color:#475569}
+.info-grid dd{color:#1e293b}
+.toggle-group{display:inline-flex;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:1rem}
+.toggle-opt{padding:.4rem .9rem;font-size:.8rem;font-weight:600;border:none;background:#fff;color:#64748b;cursor:pointer;transition:all .12s}
+.toggle-opt.active{background:#2563eb;color:#fff}
+.breadcrumbs{display:flex;gap:.25rem;font-size:.78rem;color:#64748b;margin-bottom:1rem;align-items:center}
+.breadcrumbs span{padding:.15rem .35rem;border-radius:4px;cursor:pointer}
+.breadcrumbs span:hover{background:#e2e8f0}
+.breadcrumbs .sep{color:#cbd5e1}
+.breadcrumbs .current{color:#2563eb;font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- ===== TOP NAV ===== -->
+<nav class="topbar">
+  <div class="topbar-inner">
+    <div class="logo"><span class="logo-icon">&#x1F5F3;</span> Sistema de Personeros</div>
+    <div class="topbar-links">
+      <a href="#intro" class="active">Inicio</a>
+      <a href="#perfiles">Perfiles</a>
+      <a href="#admin">Admin</a>
+      <a href="#directivo">Directivo</a>
+      <a href="#jefe-local">Jefe Local</a>
+      <a href="#personero">Personero</a>
+      <a href="#invitado">Invitado</a>
+      <a href="#whatsapp">WhatsApp Bot</a>
+      <a href="#permisos">Permisos</a>
+      <a href="#ubigeo">Ubigeo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero" id="intro">
+  <h1>Manual de Usuario</h1>
+  <p class="sub">Guia completa del Sistema de Personeros para las Elecciones Generales Peru 2026</p>
+  <span class="version-badge">Version 2.0 &mdash; Marzo 2026</span>
+</header>
+
+<!-- ===== CONTAINER ===== -->
+<div class="container">
+
+<!-- TOC -->
+<div class="toc">
+  <h3>Contenido</h3>
+  <div class="toc-grid">
+    <a href="#perfiles"><span class="toc-num">1</span> Perfiles de Usuario</a>
+    <a href="#admin"><span class="toc-num">2</span> Administrador del Sistema</a>
+    <a href="#directivo"><span class="toc-num">3</span> Directivo del Partido</a>
+    <a href="#jefe-local"><span class="toc-num">4</span> Jefe de Local de Votacion</a>
+    <a href="#personero"><span class="toc-num">5</span> Personero Auto-registrado</a>
+    <a href="#invitado"><span class="toc-num">6</span> Invitado (Pre-personero)</a>
+    <a href="#whatsapp"><span class="toc-num">7</span> Robot WhatsApp</a>
+    <a href="#permisos"><span class="toc-num">8</span> Matriz de Permisos</a>
+    <a href="#ubigeo"><span class="toc-num">9</span> Ambito Geografico (Ubigeo)</a>
+    <a href="#flujos"><span class="toc-num">10</span> Flujos Principales</a>
+  </div>
+</div>
+
+<!-- ===== SECTION 1: PERFILES ===== -->
+<section class="section" id="perfiles">
+  <h2 class="section-title"><span class="num">1</span> Perfiles de Usuario</h2>
+  <p class="section-desc">El sistema cuenta con 6 perfiles diferenciados. Seleccione cada perfil para ver sus caracteristicas y pantallas.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem">
+    <div class="card" style="border-left:4px solid #2563eb">
+      <div class="card-title">&#x1F6E1; Administrador</div>
+      <p class="text-muted">Acceso total al sistema. Gestiona cargos, directivos, jefes locales, personeros y reportes.</p>
+      <dl class="info-grid"><dt>Login</dt><dd>Usuario + Password</dd><dt>Credenciales</dt><dd>admin / Admin2026</dd></dl>
+    </div>
+    <div class="card" style="border-left:4px solid #7c3aed">
+      <div class="card-title">&#x1F3DB; Directivo</div>
+      <p class="text-muted">Accede solo a su ambito geografico (ubigeo). Invita personeros, crea sub-directivos.</p>
+      <dl class="info-grid"><dt>Login</dt><dd>DNI + Password</dd><dt>Ambito</dt><dd>Segun su ubigeo</dd></dl>
+    </div>
+    <div class="card" style="border-left:4px solid #16a34a">
+      <div class="card-title">&#x1F3EB; Jefe de Local</div>
+      <p class="text-muted">Gestiona las mesas de su local de votacion. Registra y asigna personeros.</p>
+      <dl class="info-grid"><dt>Login</dt><dd>Telefono + OTP</dd><dt>Ambito</dt><dd>Solo su local</dd></dl>
+    </div>
+    <div class="card" style="border-left:4px solid #d97706">
+      <div class="card-title">&#x1F9D1; Personero</div>
+      <p class="text-muted">Solo lectura. Ve su estado, mesa asignada, local y direccion.</p>
+      <dl class="info-grid"><dt>Login</dt><dd>DNI + 3 dig. celular</dd><dt>Acceso</dt><dd>Solo su estado</dd></dl>
+    </div>
+    <div class="card" style="border-left:4px solid #ec4899">
+      <div class="card-title">&#x1F4E9; Invitado</div>
+      <p class="text-muted">Pre-personero. Recibe link por WhatsApp y completa su auto-registro.</p>
+      <dl class="info-grid"><dt>Acceso</dt><dd>Link unico</dd><dt>Resultado</dt><dd>Se registra</dd></dl>
+    </div>
+    <div class="card" style="border-left:4px solid #25d366">
+      <div class="card-title">&#x1F916; Robot WhatsApp</div>
+      <p class="text-muted">Servicio interno. Procesa cola de mensajes: invitaciones, OTP, bienvenidas.</p>
+      <dl class="info-grid"><dt>Tipo</dt><dd>Servicio API</dd><dt>Endpoint</dt><dd>GET /api/v1/whatsapp/cola</dd></dl>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 2: ADMINISTRADOR ===== -->
+<section class="section" id="admin">
+  <h2 class="section-title"><span class="num">2</span> Administrador del Sistema</h2>
+  <p class="section-desc">El administrador tiene acceso completo a todas las funciones del sistema.</p>
+
+  <!-- Admin Login Sim -->
+  <div class="card">
+    <div class="card-title">&#x1F511; Inicio de Sesion - Administrador</div>
+    <div class="sim-browser">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div></div>
+        <div class="sim-url">https://personeros.partido.pe/login</div>
+      </div>
+      <div class="sim-body">
+        <div class="sim-login">
+          <div class="sim-login-card">
+            <div style="text-align:center;font-size:2rem;margin-bottom:.5rem">&#x1F5F3;</div>
+            <h3>Sistema de Personeros</h3>
+            <div class="sub">Elecciones 2026</div>
+            <div id="admin-login-error" class="sim-error" style="display:none"></div>
+            <div id="admin-login-success" class="sim-success" style="display:none"></div>
+            <div class="sim-field">
+              <label>Usuario</label>
+              <input type="text" id="admin-user" placeholder="administrador" value="">
+            </div>
+            <div class="sim-field">
+              <label>Contrasena</label>
+              <input type="password" id="admin-pass" placeholder="********" value="">
+            </div>
+            <button class="sim-btn" onclick="simAdminLogin()">Ingresar</button>
+            <div style="margin-top:1rem;text-align:center;font-size:.78rem;color:#94a3b8">
+              <a href="#directivo" style="font-size:.78rem">Portal Directivo</a> &middot;
+              <a href="#personero" style="font-size:.78rem">Portal Personero</a> &middot;
+              <a href="#jefe-local" style="font-size:.78rem">Portal Jefe Local</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box"><span class="tip-icon">&#x1F4A1;</span> Ingrese <strong>admin</strong> y <strong>Admin2026</strong> para ver la simulacion del dashboard.</div>
+  </div>
+
+  <!-- Admin Dashboard Sim -->
+  <div class="card" id="admin-dashboard-card" style="display:none">
+    <div class="card-title">&#x1F4CA; Dashboard Nacional</div>
+
+    <!-- Admin inner tabs -->
+    <div class="inner-tabs">
+      <button class="inner-tab active" onclick="switchAdminTab(this,'admin-tab-dashboard')">Dashboard</button>
+      <button class="inner-tab" onclick="switchAdminTab(this,'admin-tab-cargos')">Cargos</button>
+      <button class="inner-tab" onclick="switchAdminTab(this,'admin-tab-directivos')">Directivos</button>
+      <button class="inner-tab" onclick="switchAdminTab(this,'admin-tab-jefes')">Jefes Local</button>
+      <button class="inner-tab" onclick="switchAdminTab(this,'admin-tab-registro')">Registro Masivo</button>
+      <button class="inner-tab" onclick="switchAdminTab(this,'admin-tab-personeros')">Lista Personeros</button>
+      <button class="inner-tab" onclick="switchAdminTab(this,'admin-tab-reportes')">Reportes</button>
+      <button class="inner-tab" onclick="switchAdminTab(this,'admin-tab-chat')">Chat</button>
+    </div>
+
+    <!-- TAB: Dashboard -->
+    <div class="inner-content active" id="admin-tab-dashboard">
+      <div class="sim-browser">
+        <div class="sim-toolbar">
+          <div class="sim-dots"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div></div>
+          <div class="sim-url">https://personeros.partido.pe/</div>
+        </div>
+        <div class="sim-body">
+          <div class="sim-layout">
+            <div class="sim-sidebar">
+              <div style="padding:.75rem 1rem;color:#fff;font-weight:700;font-size:.9rem;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:.5rem">&#x1F5F3; Personeros</div>
+              <a class="active">&#x1F4CA; Dashboard</a>
+              <a>&#x1F4CB; Personeros</a>
+              <a>&#x1F4E5; Registro Masivo</a>
+              <div class="nav-title">Configuracion</div>
+              <a>&#x1F3F7; Cargos</a>
+              <a>&#x1F464; Directivos</a>
+              <a>&#x1F3EB; Jefes de Local</a>
+              <a>&#x1F4C8; Reportes</a>
+              <a>&#x1F4AC; Chat</a>
+            </div>
+            <div class="sim-main">
+              <div class="flex-between mb-1">
+                <div class="breadcrumbs">
+                  <span class="current">Nacional</span>
+                </div>
+                <div class="toggle-group">
+                  <button class="toggle-opt active" onclick="toggleMode(this,'nacional')">&#x1F1F5;&#x1F1EA; Nacional</button>
+                  <button class="toggle-opt" onclick="toggleMode(this,'extranjero')">&#x1F30D; Extranjero</button>
+                </div>
+              </div>
+              <div class="stat-row">
+                <div class="stat-card blue"><div class="num">85,432</div><div class="label">Total Mesas</div></div>
+                <div class="stat-card green"><div class="num">42,187</div><div class="label">Asignadas</div></div>
+                <div class="stat-card amber"><div class="num">12,356</div><div class="label">Personeros Reg.</div></div>
+                <div class="stat-card"><div class="num">49.4%</div><div class="label">Cobertura</div></div>
+              </div>
+              <div style="margin-bottom:.75rem;display:flex;justify-content:space-between;align-items:center">
+                <input placeholder="Buscar departamento..." style="padding:.4rem .75rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.8rem;width:220px;outline:none">
+                <div style="display:flex;gap:.35rem">
+                  <button class="sim-btn-sm" onclick="alert('Vista Cards activa')">&#x25A6; Cards</button>
+                  <button class="sim-btn-sm gray" onclick="alert('Vista Lista activa')">&#x2630; Lista</button>
+                  <button class="sim-btn-sm green" onclick="alert('Exportando CSV...')">&#x1F4E5; CSV</button>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.65rem" id="regions-grid">
+                <!-- Regions generated by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tip-box"><span class="tip-icon">&#x1F4A1;</span> Haga clic en una region para simular el drill-down a provincias, distritos, centros y mesas.</div>
+    </div>
+
+    <!-- TAB: Cargos -->
+    <div class="inner-content" id="admin-tab-cargos">
+      <div class="card-title">&#x1F3F7; Gestion de Cargos</div>
+      <p class="text-muted mb-1">Cargos jerarquicos con niveles y permisos. Los cargos definen la estructura organizativa del partido.</p>
+      <div style="margin-bottom:.75rem"><button class="sim-btn-sm" onclick="openModal('modal-cargo')">+ Nuevo Cargo</button></div>
+      <table class="sim-table">
+        <thead><tr><th>Cargo</th><th>Nivel</th><th>Ambito</th><th>Permisos</th><th>Acciones</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Coordinador Nacional</strong></td><td><span class="badge badge-blue">1</span></td><td>Nacional</td><td>Todos</td><td><button class="sim-btn-sm" onclick="openModal('modal-cargo')">Editar</button> <button class="sim-btn-sm red" onclick="alert('Cargo eliminado')">Eliminar</button></td></tr>
+          <tr><td><strong>Coordinador Regional</strong></td><td><span class="badge badge-blue">2</span></td><td>Departamento</td><td>Invitar, Ver region</td><td><button class="sim-btn-sm" onclick="openModal('modal-cargo')">Editar</button> <button class="sim-btn-sm red" onclick="alert('Cargo eliminado')">Eliminar</button></td></tr>
+          <tr><td><strong>Coordinador Provincial</strong></td><td><span class="badge badge-green">3</span></td><td>Provincia</td><td>Invitar, Ver provincia</td><td><button class="sim-btn-sm" onclick="openModal('modal-cargo')">Editar</button> <button class="sim-btn-sm red" onclick="alert('Cargo eliminado')">Eliminar</button></td></tr>
+          <tr><td><strong>Coordinador Distrital</strong></td><td><span class="badge badge-amber">4</span></td><td>Distrito</td><td>Invitar</td><td><button class="sim-btn-sm" onclick="openModal('modal-cargo')">Editar</button> <button class="sim-btn-sm red" onclick="alert('Cargo eliminado')">Eliminar</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TAB: Directivos -->
+    <div class="inner-content" id="admin-tab-directivos">
+      <div class="card-title">&#x1F464; Gestion de Directivos</div>
+      <p class="text-muted mb-1">Busque por DNI para autocompletar datos desde la API Factiliza (RENIEC).</p>
+      <div style="display:flex;gap:.5rem;margin-bottom:1rem;align-items:center">
+        <input id="directivo-dni-input" placeholder="Buscar por DNI..." style="padding:.4rem .75rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.82rem;width:180px;outline:none" maxlength="8">
+        <button class="sim-btn-sm" onclick="simDniLookup('directivo')">Buscar DNI</button>
+        <button class="sim-btn-sm green" onclick="openModal('modal-directivo')">+ Nuevo Directivo</button>
+      </div>
+      <div id="directivo-dni-result" style="display:none" class="sim-success mb-1"></div>
+      <table class="sim-table">
+        <thead><tr><th>DNI</th><th>Nombres</th><th>Cargo</th><th>Ubigeo</th><th>Link</th><th>Acciones</th></tr></thead>
+        <tbody>
+          <tr><td>45678912</td><td>Carlos Rodriguez Mendoza</td><td><span class="badge badge-blue">Coord. Regional</span></td><td>15 (Lima)</td><td><code style="font-size:.72rem;background:#f1f5f9;padding:.15rem .35rem;border-radius:4px">abc123</code></td><td><button class="sim-btn-sm" onclick="openModal('modal-directivo')">Editar</button> <button class="sim-btn-sm red">Eliminar</button></td></tr>
+          <tr><td>78912345</td><td>Maria Lopez Torres</td><td><span class="badge badge-green">Coord. Provincial</span></td><td>1501 (Lima Prov.)</td><td><code style="font-size:.72rem;background:#f1f5f9;padding:.15rem .35rem;border-radius:4px">def456</code></td><td><button class="sim-btn-sm" onclick="openModal('modal-directivo')">Editar</button> <button class="sim-btn-sm red">Eliminar</button></td></tr>
+          <tr><td>12345678</td><td>Juan Perez Gutierrez</td><td><span class="badge badge-amber">Coord. Distrital</span></td><td>150101 (Lima distrito)</td><td><code style="font-size:.72rem;background:#f1f5f9;padding:.15rem .35rem;border-radius:4px">ghi789</code></td><td><button class="sim-btn-sm" onclick="openModal('modal-directivo')">Editar</button> <button class="sim-btn-sm red">Eliminar</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TAB: Jefes Local -->
+    <div class="inner-content" id="admin-tab-jefes">
+      <div class="card-title">&#x1F3EB; Gestion de Jefes de Local</div>
+      <p class="text-muted mb-1">Cada jefe de local esta asociado a un local de votacion especifico (ubigeo + idLocal).</p>
+      <div style="margin-bottom:.75rem"><button class="sim-btn-sm green" onclick="openModal('modal-jefe')">+ Nuevo Jefe de Local</button></div>
+      <table class="sim-table">
+        <thead><tr><th>Nombre</th><th>Telefono</th><th>Ubigeo</th><th>ID Local</th><th>Local</th><th>Acciones</th></tr></thead>
+        <tbody>
+          <tr><td>Pedro Sanchez V.</td><td>987654321</td><td>150101</td><td>087773</td><td>I.E. Jose Olaya</td><td><button class="sim-btn-sm" onclick="openModal('modal-jefe')">Editar</button> <button class="sim-btn-sm red">Eliminar</button></td></tr>
+          <tr><td>Ana Torres M.</td><td>912345678</td><td>150102</td><td>087801</td><td>I.E. San Martin</td><td><button class="sim-btn-sm" onclick="openModal('modal-jefe')">Editar</button> <button class="sim-btn-sm red">Eliminar</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TAB: Registro Masivo -->
+    <div class="inner-content" id="admin-tab-registro">
+      <div class="card-title">&#x1F4E5; Registro Masivo de Personeros</div>
+      <p class="text-muted mb-1">Ingrese DNIs rapidamente. Cada DNI se consulta automaticamente en la API Factiliza (RENIEC). Presione Enter despues de cada DNI.</p>
+      <div class="sim-browser">
+        <div class="sim-toolbar">
+          <div class="sim-dots"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div></div>
+          <div class="sim-url">https://personeros.partido.pe/personeros/registro-masivo</div>
+        </div>
+        <div class="sim-body" style="padding:1.25rem">
+          <div style="display:flex;gap:.5rem;margin-bottom:1rem;align-items:center">
+            <input id="masivo-dni" placeholder="Ingrese DNI y presione Enter" style="padding:.5rem .75rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.9rem;width:260px;outline:none;font-family:'Courier New',monospace" maxlength="8" onkeydown="if(event.key==='Enter'){simMasivoDni();}">
+            <button class="sim-btn-sm" onclick="simMasivoDni()">Consultar</button>
+            <span class="text-muted" style="font-size:.78rem">Filas: <strong id="masivo-count">0</strong></span>
+          </div>
+          <table class="sim-table" id="masivo-table">
+            <thead><tr><th>#</th><th>DNI</th><th>Apellido Paterno</th><th>Apellido Materno</th><th>Nombres</th><th>Telefono</th><th>Estado</th></tr></thead>
+            <tbody id="masivo-body"></tbody>
+          </table>
+          <div style="margin-top:1rem;display:flex;gap:.5rem">
+            <button class="sim-btn-sm green" onclick="alert('3 personeros guardados exitosamente')" id="masivo-save" style="display:none">Guardar Todos</button>
+            <button class="sim-btn-sm gray" onclick="document.getElementById('masivo-body').innerHTML='';document.getElementById('masivo-count').textContent='0';document.getElementById('masivo-save').style.display='none'">Limpiar</button>
+          </div>
+        </div>
+      </div>
+      <div class="tip-box"><span class="tip-icon">&#x1F4A1;</span> Pruebe ingresando cualquier DNI de 8 digitos (ej: 45678901) y presione Enter. El sistema simulara la consulta a Factiliza.</div>
+    </div>
+
+    <!-- TAB: Lista Personeros -->
+    <div class="inner-content" id="admin-tab-personeros">
+      <div class="card-title">&#x1F4CB; Lista de Personeros</div>
+      <p class="text-muted mb-1">Todos los personeros registrados en el sistema. Puede filtrar, buscar y eliminar.</p>
+      <div style="display:flex;gap:.5rem;margin-bottom:.75rem;align-items:center;flex-wrap:wrap">
+        <input placeholder="Buscar por nombre o DNI..." style="padding:.4rem .75rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.82rem;width:220px;outline:none">
+        <select style="padding:.4rem .6rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.82rem;outline:none">
+          <option>Todos los estados</option><option>Pendiente</option><option>Asignado</option><option>Confirmado</option>
+        </select>
+        <button class="sim-btn-sm green" onclick="alert('CSV exportado')">&#x1F4E5; Exportar</button>
+      </div>
+      <table class="sim-table">
+        <thead><tr><th>DNI</th><th>Nombres</th><th>Telefono</th><th>Estado</th><th>Mesa</th><th>Local</th><th>Acciones</th></tr></thead>
+        <tbody>
+          <tr><td>45612378</td><td>Roberto Diaz Flores</td><td>912345678</td><td><span class="badge badge-green">Confirmado</span></td><td>087773-001</td><td>I.E. Jose Olaya</td><td><button class="sim-btn-sm red" onclick="if(confirm('Eliminar a Roberto Diaz?'))alert('Personero eliminado')">Eliminar</button></td></tr>
+          <tr><td>78945612</td><td>Lucia Campos Vega</td><td>923456789</td><td><span class="badge badge-blue">Asignado</span></td><td>087773-002</td><td>I.E. Jose Olaya</td><td><button class="sim-btn-sm red" onclick="if(confirm('Eliminar a Lucia Campos?'))alert('Personero eliminado')">Eliminar</button></td></tr>
+          <tr><td>32178945</td><td>Fernando Huaman R.</td><td>934567890</td><td><span class="badge badge-amber">Pendiente</span></td><td>&mdash;</td><td>&mdash;</td><td><button class="sim-btn-sm red" onclick="if(confirm('Eliminar a Fernando Huaman?'))alert('Personero eliminado')">Eliminar</button></td></tr>
+          <tr><td>65432198</td><td>Gabriela Quispe T.</td><td>945678901</td><td><span class="badge badge-green">Confirmado</span></td><td>087801-005</td><td>I.E. San Martin</td><td><button class="sim-btn-sm red" onclick="if(confirm('Eliminar a Gabriela Quispe?'))alert('Personero eliminado')">Eliminar</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TAB: Reportes -->
+    <div class="inner-content" id="admin-tab-reportes">
+      <div class="card-title">&#x1F4C8; Reportes Analiticos</div>
+      <p class="text-muted mb-1">KPIs de cobertura, ranking por region y estado de personeros.</p>
+      <div class="stat-row">
+        <div class="stat-card blue"><div class="num">12,356</div><div class="label">Personeros Registrados</div></div>
+        <div class="stat-card green"><div class="num">8,924</div><div class="label">Mesas Cubiertas</div></div>
+        <div class="stat-card"><div class="num">49.4%</div><div class="label">Cobertura Nacional</div></div>
+        <div class="stat-card amber"><div class="num">3,432</div><div class="label">Pendientes Asignar</div></div>
+      </div>
+      <!-- Simulated chart -->
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem;margin-bottom:1rem">
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:.75rem">Ranking de Cobertura por Departamento (Top 10)</div>
+        <div id="ranking-chart"></div>
+      </div>
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem">
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:.75rem">Distribucion por Estado</div>
+        <div style="display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:.5rem"><div style="width:16px;height:16px;background:#16a34a;border-radius:3px"></div><span style="font-size:.82rem">Confirmados: 5,234 (42.3%)</span></div>
+          <div style="display:flex;align-items:center;gap:.5rem"><div style="width:16px;height:16px;background:#2563eb;border-radius:3px"></div><span style="font-size:.82rem">Asignados: 3,690 (29.9%)</span></div>
+          <div style="display:flex;align-items:center;gap:.5rem"><div style="width:16px;height:16px;background:#d97706;border-radius:3px"></div><span style="font-size:.82rem">Pendientes: 3,432 (27.8%)</span></div>
+        </div>
+        <!-- Simulated bar -->
+        <div style="margin-top:.75rem;height:32px;border-radius:8px;overflow:hidden;display:flex">
+          <div style="width:42.3%;background:#16a34a"></div>
+          <div style="width:29.9%;background:#2563eb"></div>
+          <div style="width:27.8%;background:#d97706"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Chat -->
+    <div class="inner-content" id="admin-tab-chat">
+      <div class="card-title">&#x1F4AC; Chat Interno</div>
+      <p class="text-muted mb-1">Comunicacion interna entre administradores, directivos y jefes de local.</p>
+      <div class="chat-container">
+        <div class="chat-channels">
+          <div class="ch-title">Canales</div>
+          <div class="ch active" onclick="switchChannel(this,'general')">&#x1F4E2; general</div>
+          <div class="ch" onclick="switchChannel(this,'coordinacion')">&#x1F4CB; coordinacion</div>
+          <div class="ch" onclick="switchChannel(this,'reportes-ch')">&#x1F4C8; reportes</div>
+          <div class="ch" onclick="switchChannel(this,'urgentes')">&#x1F6A8; urgentes</div>
+          <div class="ch-title">Directos</div>
+          <div class="ch" onclick="switchChannel(this,'carlos')">&#x1F464; Carlos R.</div>
+          <div class="ch" onclick="switchChannel(this,'maria')">&#x1F464; Maria L.</div>
+        </div>
+        <div class="chat-body">
+          <div class="chat-header" id="chat-header-text"># general</div>
+          <div class="chat-messages" id="chat-messages">
+            <div class="chat-msg received"><div class="sender">Carlos Rodriguez</div>Lima ya tiene 65% de cobertura. Avanzamos bien.<div class="time">10:32 AM</div></div>
+            <div class="chat-msg received"><div class="sender">Maria Lopez</div>Excelente! En provincia estamos al 45%, necesitamos mas personeros en Huarochiri.<div class="time">10:35 AM</div></div>
+            <div class="chat-msg sent"><div class="sender">Admin</div>Coordinaremos envio de invitaciones masivas para Huarochiri esta semana.<div class="time">10:38 AM</div></div>
+          </div>
+          <div class="chat-input-row">
+            <input placeholder="Escribe un mensaje..." id="chat-input" onkeydown="if(event.key==='Enter')sendChatMsg()">
+            <button onclick="sendChatMsg()">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 3: DIRECTIVO ===== -->
+<section class="section" id="directivo">
+  <h2 class="section-title"><span class="num">3</span> Directivo del Partido</h2>
+  <p class="section-desc">Los directivos acceden al sistema con su DNI y contrasena. Solo ven datos de su ambito geografico (ubigeo).</p>
+
+  <!-- Directivo Login -->
+  <div class="card">
+    <div class="card-title">&#x1F511; Inicio de Sesion - Directivo</div>
+    <div class="sim-browser">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div></div>
+        <div class="sim-url">https://personeros.partido.pe/directivo/login</div>
+      </div>
+      <div class="sim-body">
+        <div class="sim-login" style="background:linear-gradient(135deg,#4c1d95 0%,#7c3aed 100%)">
+          <div class="sim-login-card">
+            <div style="text-align:center;font-size:2rem;margin-bottom:.5rem">&#x1F3DB;</div>
+            <h3>Portal Directivo</h3>
+            <div class="sub">Ingrese con su DNI y contrasena</div>
+            <div id="dir-login-error" class="sim-error" style="display:none"></div>
+            <div id="dir-login-success" class="sim-success" style="display:none"></div>
+            <div class="sim-field"><label>DNI</label><input type="text" id="dir-dni" placeholder="12345678" maxlength="8"></div>
+            <div class="sim-field"><label>Contrasena</label><input type="password" id="dir-pass" placeholder="********"></div>
+            <button class="sim-btn" style="background:#7c3aed" onclick="simDirectivoLogin()">Ingresar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box"><span class="tip-icon">&#x1F4A1;</span> Ingrese DNI <strong>45678912</strong> y cualquier contrasena para simular el acceso al portal directivo.</div>
+  </div>
+
+  <!-- Directivo Dashboard -->
+  <div class="card" id="directivo-dashboard-card" style="display:none">
+    <div class="card-title">&#x1F4CA; Portal del Directivo</div>
+    <div class="inner-tabs">
+      <button class="inner-tab active" onclick="switchDirTab(this,'dir-tab-dash')">Dashboard</button>
+      <button class="inner-tab" onclick="switchDirTab(this,'dir-tab-invitar')">Invitar Personeros</button>
+      <button class="inner-tab" onclick="switchDirTab(this,'dir-tab-subdirectivos')">Sub-directivos</button>
+    </div>
+
+    <!-- Tab: Dashboard -->
+    <div class="inner-content active" id="dir-tab-dash">
+      <div class="sim-browser">
+        <div class="sim-toolbar">
+          <div class="sim-dots"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div></div>
+          <div class="sim-url">https://personeros.partido.pe/directivo/dashboard</div>
+        </div>
+        <div class="sim-body" style="padding:1.25rem">
+          <h3 style="font-size:1.1rem;color:#1e293b;margin-bottom:.15rem">Bienvenido, Carlos Rodriguez Mendoza</h3>
+          <p class="text-muted" style="margin-bottom:1.25rem">Coordinador Regional Lima</p>
+
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem;margin-bottom:1.25rem">
+            <div style="font-weight:600;font-size:.9rem;margin-bottom:.5rem">Tu link de invitacion</div>
+            <p class="text-muted" style="font-size:.8rem;margin-bottom:.5rem">Comparte este link con las personas que quieres invitar como personeros:</p>
+            <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+              <code style="flex:1;background:#f8fafc;padding:.45rem .7rem;border-radius:6px;font-size:.75rem;color:#334155;border:1px solid #e2e8f0;word-break:break-all">https://personeros.partido.pe/registro/abc123</code>
+              <button class="sim-btn-sm" onclick="this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
+              <button class="sim-btn-sm green" onclick="alert('Abriendo WhatsApp con link de invitacion...')">WhatsApp</button>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <div class="stat-card blue"><div class="num">48</div><div class="label">Invitados</div></div>
+            <div class="stat-card green"><div class="num">32</div><div class="label">Registrados</div></div>
+            <div class="stat-card amber"><div class="num">16</div><div class="label">Pendientes</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Invitar -->
+    <div class="inner-content" id="dir-tab-invitar">
+      <div class="card-title">&#x1F4E9; Invitar Personeros</div>
+      <p class="text-muted mb-1">Registre la persona y genere un link de WhatsApp para que se auto-registre.</p>
+      <div class="sim-browser">
+        <div class="sim-toolbar">
+          <div class="sim-dots"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div></div>
+          <div class="sim-url">https://personeros.partido.pe/directivo/invitar</div>
+        </div>
+        <div class="sim-body" style="padding:1.25rem">
+          <div style="max-width:400px">
+            <div class="sim-field"><label>Nombre completo</label><input placeholder="Juan Perez Garcia" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem"></div>
+            <div class="sim-field"><label>Telefono (WhatsApp)</label><input placeholder="912345678" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem"></div>
+            <button class="sim-btn" style="background:#7c3aed;max-width:200px" onclick="openModal('modal-invitacion-ok')">Registrar e Invitar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Sub-directivos -->
+    <div class="inner-content" id="dir-tab-subdirectivos">
+      <div class="card-title">&#x1F465; Sub-directivos</div>
+      <p class="text-muted mb-1">Cree directivos de nivel inferior dentro de su ambito. Ej: Si es Coordinador Regional, puede crear Coordinadores Provinciales.</p>
+      <table class="sim-table">
+        <thead><tr><th>DNI</th><th>Nombre</th><th>Cargo</th><th>Ubigeo</th><th>Invitados</th></tr></thead>
+        <tbody>
+          <tr><td>78912345</td><td>Maria Lopez Torres</td><td><span class="badge badge-green">Coord. Provincial</span></td><td>1501</td><td>15</td></tr>
+          <tr><td>12345678</td><td>Juan Perez Gutierrez</td><td><span class="badge badge-amber">Coord. Distrital</span></td><td>150101</td><td>8</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 4: JEFE DE LOCAL ===== -->
+<section class="section" id="jefe-local">
+  <h2 class="section-title"><span class="num">4</span> Jefe de Local de Votacion</h2>
+  <p class="section-desc">Los jefes de local inician sesion con su telefono y un codigo OTP enviado por WhatsApp. Solo ven las mesas de su local asignado.</p>
+
+  <!-- Login OTP -->
+  <div class="card">
+    <div class="card-title">&#x1F511; Inicio de Sesion en 2 Pasos (OTP)</div>
+    <div class="sim-browser">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div></div>
+        <div class="sim-url">https://personeros.partido.pe/jefe-local/login</div>
+      </div>
+      <div class="sim-body">
+        <div class="sim-login" style="background:linear-gradient(135deg,#065f46 0%,#16a34a 100%)">
+          <div class="sim-login-card">
+            <div style="text-align:center;font-size:2rem;margin-bottom:.5rem">&#x1F3EB;</div>
+            <h3>Portal Jefe de Local</h3>
+            <div class="sub" id="jefe-login-subtitle">Paso 1: Ingrese su telefono registrado</div>
+            <div id="jefe-login-error" class="sim-error" style="display:none"></div>
+            <div id="jefe-step1" >
+              <div class="sim-field"><label>Telefono</label><input type="text" id="jefe-tel" placeholder="987654321" maxlength="9"></div>
+              <button class="sim-btn green" onclick="simJefeStep1()">Enviar Codigo OTP</button>
+            </div>
+            <div id="jefe-step2" style="display:none">
+              <div class="sim-success mb-1">Codigo OTP enviado por WhatsApp a su telefono</div>
+              <div class="sim-field"><label>Codigo OTP (6 digitos)</label><input type="text" id="jefe-otp" placeholder="123456" maxlength="6"></div>
+              <button class="sim-btn green" onclick="simJefeStep2()">Verificar y Entrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box"><span class="tip-icon">&#x1F4A1;</span> Ingrese <strong>987654321</strong> como telefono. Luego cualquier codigo de 6 digitos para simular el OTP.</div>
+  </div>
+
+  <!-- Jefe Dashboard -->
+  <div class="card" id="jefe-dashboard-card" style="display:none">
+    <div class="card-title">&#x1F3EB; Dashboard del Local - I.E. Jose Olaya</div>
+    <div class="inner-tabs">
+      <button class="inner-tab active" onclick="switchJefeTab(this,'jefe-tab-mesas')">Mesas</button>
+      <button class="inner-tab" onclick="switchJefeTab(this,'jefe-tab-registrar')">Registrar Personero</button>
+    </div>
+
+    <!-- Tab: Mesas -->
+    <div class="inner-content active" id="jefe-tab-mesas">
+      <div class="stat-row">
+        <div class="stat-card blue"><div class="num">12</div><div class="label">Total Mesas</div></div>
+        <div class="stat-card green"><div class="num">8</div><div class="label">Asignadas</div></div>
+        <div class="stat-card amber"><div class="num">5</div><div class="label">Confirmadas</div></div>
+        <div class="stat-card"><div class="num">66.7%</div><div class="label">Cobertura</div></div>
+      </div>
+      <table class="sim-table">
+        <thead><tr><th>Mesa</th><th>Personero</th><th>Telefono</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody>
+          <tr><td><strong>087773-001</strong></td><td>Roberto Diaz F.</td><td>912345678</td><td><span class="badge badge-green">Confirmado</span></td><td><button class="sim-btn-sm red" onclick="alert('Personero quitado de la mesa')">Quitar</button></td></tr>
+          <tr><td><strong>087773-002</strong></td><td>Lucia Campos V.</td><td>923456789</td><td><span class="badge badge-blue">Asignado</span></td><td><button class="sim-btn-sm red" onclick="alert('Personero quitado de la mesa')">Quitar</button></td></tr>
+          <tr><td><strong>087773-003</strong></td><td>Miguel Torres A.</td><td>934567890</td><td><span class="badge badge-green">Confirmado</span></td><td><button class="sim-btn-sm red" onclick="alert('Personero quitado de la mesa')">Quitar</button></td></tr>
+          <tr><td><strong>087773-004</strong></td><td>&mdash;</td><td>&mdash;</td><td><span class="badge badge-gray">Libre</span></td><td><button class="sim-btn-sm" onclick="openModal('modal-asignar')">Asignar</button></td></tr>
+          <tr><td><strong>087773-005</strong></td><td>&mdash;</td><td>&mdash;</td><td><span class="badge badge-gray">Libre</span></td><td><button class="sim-btn-sm" onclick="openModal('modal-asignar')">Asignar</button></td></tr>
+          <tr><td><strong>087773-006</strong></td><td>Rosa Mendez P.</td><td>956789012</td><td><span class="badge badge-blue">Asignado</span></td><td><button class="sim-btn-sm red" onclick="alert('Personero quitado de la mesa')">Quitar</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tab: Registrar -->
+    <div class="inner-content" id="jefe-tab-registrar">
+      <div class="card-title">&#x1F4DD; Registrar Personero en mi Local</div>
+      <p class="text-muted mb-1">Busque por DNI (API Factiliza), llene el telefono y registre. Se asignara automaticamente a su local.</p>
+      <div class="sim-browser">
+        <div class="sim-toolbar">
+          <div class="sim-dots"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div></div>
+          <div class="sim-url">https://personeros.partido.pe/jefe-local/dashboard#registrar</div>
+        </div>
+        <div class="sim-body" style="padding:1.25rem">
+          <div style="max-width:420px">
+            <div style="display:flex;gap:.5rem;margin-bottom:1rem;align-items:flex-end">
+              <div style="flex:1">
+                <label style="display:block;font-size:.8rem;font-weight:600;color:#475569;margin-bottom:.25rem">DNI</label>
+                <input id="jefe-reg-dni" placeholder="Ingrese DNI de 8 digitos" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem;font-family:'Courier New',monospace" maxlength="8">
+              </div>
+              <button class="sim-btn-sm" onclick="simJefeRegDni()">Buscar</button>
+            </div>
+            <div id="jefe-reg-result" style="display:none">
+              <div class="sim-success mb-1" id="jefe-reg-name"></div>
+              <div class="sim-field"><label>Nombres</label><input id="jefe-reg-nombres" readonly style="width:100%;padding:.45rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;background:#f8fafc"></div>
+              <div class="sim-field"><label>Apellidos</label><input id="jefe-reg-apellidos" readonly style="width:100%;padding:.45rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;background:#f8fafc"></div>
+              <div class="sim-field"><label>Telefono *</label><input id="jefe-reg-tel" placeholder="912345678" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem"></div>
+              <div class="sim-field"><label>Correo</label><input id="jefe-reg-correo" placeholder="personero@email.com" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem"></div>
+              <button class="sim-btn green" style="max-width:250px" onclick="alert('Personero registrado y asignado a su local exitosamente');document.getElementById('jefe-reg-result').style.display='none'">Registrar y Asignar a mi Local</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 5: PERSONERO ===== -->
+<section class="section" id="personero">
+  <h2 class="section-title"><span class="num">5</span> Personero Auto-registrado</h2>
+  <p class="section-desc">El personero solo puede ver su propio estado. No puede modificar nada. Acceso de solo lectura.</p>
+
+  <div class="card">
+    <div class="card-title">&#x1F511; Inicio de Sesion - Personero</div>
+    <div class="sim-browser">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div></div>
+        <div class="sim-url">https://personeros.partido.pe/personero/login</div>
+      </div>
+      <div class="sim-body">
+        <div class="sim-login" style="background:linear-gradient(135deg,#92400e 0%,#d97706 100%)">
+          <div class="sim-login-card">
+            <div style="text-align:center;font-size:2rem;margin-bottom:.5rem">&#x1F9D1;</div>
+            <h3>Portal del Personero</h3>
+            <div class="sub">Consulta tu estado como personero</div>
+            <div id="per-login-error" class="sim-error" style="display:none"></div>
+            <div class="sim-field"><label>DNI</label><input type="text" id="per-dni" placeholder="45612378" maxlength="8"></div>
+            <div class="sim-field"><label>Ultimos 3 digitos de tu celular</label><input type="text" id="per-code" placeholder="678" maxlength="3"></div>
+            <button class="sim-btn" style="background:#d97706" onclick="simPersoneroLogin()">Consultar mi Estado</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box"><span class="tip-icon">&#x1F4A1;</span> Ingrese DNI <strong>45612378</strong> y codigo <strong>678</strong> para simular el acceso.</div>
+  </div>
+
+  <!-- Personero Dashboard -->
+  <div class="card" id="personero-dashboard-card" style="display:none">
+    <div class="card-title">&#x1F4CB; Mi Estado como Personero</div>
+    <div class="sim-browser">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div></div>
+        <div class="sim-url">https://personeros.partido.pe/personero/dashboard</div>
+      </div>
+      <div class="sim-body" style="padding:0">
+        <div style="background:linear-gradient(135deg,#92400e 0%,#d97706 100%);padding:1.5rem;color:#fff;text-align:center">
+          <div style="font-size:2rem;margin-bottom:.35rem">&#x1F5F3;</div>
+          <h3 style="font-size:1.15rem;margin-bottom:.15rem;font-weight:700">Mi Estado como Personero</h3>
+          <p style="font-size:.82rem;opacity:.8">Elecciones 2026</p>
+        </div>
+        <div style="padding:1.25rem;max-width:480px;margin:0 auto">
+          <div style="display:flex;align-items:center;gap:.75rem;padding:1rem;background:#f8fafc;border-radius:10px;margin-bottom:1rem;border:1px solid #e2e8f0">
+            <div style="width:48px;height:48px;background:#e2e8f0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0">&#x1F464;</div>
+            <div>
+              <div style="font-weight:700;font-size:1rem;color:#1e293b">Roberto Diaz Flores</div>
+              <div style="font-size:.82rem;color:#64748b">DNI: 45612378</div>
+            </div>
+          </div>
+          <div style="padding:1rem;border:2px solid #16a34a;border-radius:10px;background:#f0fdf4;margin-bottom:1rem;text-align:center">
+            <div style="font-size:1.5rem;margin-bottom:.25rem">&#x2705;</div>
+            <div style="font-weight:700;font-size:1rem;color:#16a34a">Confirmado</div>
+            <div style="font-size:.82rem;color:#64748b;margin-top:.25rem">Tu asignacion ha sido confirmada</div>
+          </div>
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem">
+            <div style="font-weight:600;font-size:.9rem;color:#1e293b;margin-bottom:.75rem">Datos de tu Mesa</div>
+            <dl class="info-grid">
+              <dt>Mesa</dt><dd>087773-001</dd>
+              <dt>Local</dt><dd>I.E. Jose Olaya</dd>
+              <dt>Direccion</dt><dd>Av. Grau 234, Lima</dd>
+              <dt>Distrito</dt><dd>Lima (150101)</dd>
+            </dl>
+          </div>
+          <button class="sim-btn red" style="margin-top:1rem;max-width:120px" onclick="document.getElementById('personero-dashboard-card').style.display='none'">Salir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 6: INVITADO ===== -->
+<section class="section" id="invitado">
+  <h2 class="section-title"><span class="num">6</span> Invitado (Pre-personero)</h2>
+  <p class="section-desc">El invitado recibe un link por WhatsApp del directivo que lo invito. Completa un formulario publico para auto-registrarse.</p>
+
+  <div class="card">
+    <div class="card-title">&#x1F4F1; Flujo de Auto-registro</div>
+    <div class="flow-row">
+      <div class="flow-step">Directivo invita por WhatsApp</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step highlight">Invitado recibe link</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Verifica telefono</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Ingresa DNI (Factiliza)</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Completa correo</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step highlight">Registrado!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#x1F4DD; Formulario de Auto-registro</div>
+    <div class="sim-browser">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div></div>
+        <div class="sim-url">https://personeros.partido.pe/registro/abc123</div>
+      </div>
+      <div class="sim-body">
+        <div style="background:linear-gradient(135deg,#1e3a5f 0%,#2563eb 100%);padding:1.5rem;color:#fff;text-align:center">
+          <div style="font-size:2rem;margin-bottom:.35rem">&#x1F5F3;</div>
+          <h3 style="font-size:1.15rem;margin-bottom:.15rem;font-weight:700">Registro como Personero</h3>
+          <p style="font-size:.82rem;opacity:.8">Invitado por: Carlos Rodriguez Mendoza</p>
+        </div>
+        <div style="padding:1.5rem;max-width:420px;margin:0 auto">
+          <div id="inv-step-phone">
+            <p style="font-size:.85rem;color:#64748b;margin-bottom:1rem">Paso 1: Verifica tu numero de telefono para confirmar tu invitacion.</p>
+            <div class="sim-field"><label>Telefono (el que recibio la invitacion)</label><input type="text" id="inv-phone" placeholder="912345678" maxlength="9"></div>
+            <button class="sim-btn" onclick="simInvStep1()">Verificar Invitacion</button>
+          </div>
+          <div id="inv-step-form" style="display:none">
+            <div class="sim-success mb-1">Invitacion verificada correctamente</div>
+            <p style="font-size:.85rem;color:#64748b;margin-bottom:1rem">Paso 2: Completa tus datos para registrarte como personero.</p>
+            <div class="sim-field">
+              <label>DNI</label>
+              <div style="display:flex;gap:.5rem">
+                <input type="text" id="inv-dni" placeholder="12345678" maxlength="8" style="flex:1;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem">
+                <button class="sim-btn-sm" onclick="simInvDni()">Consultar</button>
+              </div>
+            </div>
+            <div id="inv-nombres-section" style="display:none">
+              <div class="sim-field"><label>Nombres</label><input id="inv-nombres" readonly style="width:100%;padding:.45rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;background:#f8fafc"></div>
+              <div class="sim-field"><label>Apellido Paterno</label><input id="inv-ap" readonly style="width:100%;padding:.45rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;background:#f8fafc"></div>
+              <div class="sim-field"><label>Apellido Materno</label><input id="inv-am" readonly style="width:100%;padding:.45rem .7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;background:#f8fafc"></div>
+              <div class="sim-field"><label>Correo electronico *</label><input type="email" placeholder="tu@correo.com" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem"></div>
+              <button class="sim-btn" onclick="openModal('modal-registro-ok')">Registrarme como Personero</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="warn-box"><span class="tip-icon">&#x26A0;</span> Al registrarse, se envia notificacion por WhatsApp al directivo invitador y mensaje de bienvenida al nuevo personero.</div>
+  </div>
+</section>
+
+<!-- ===== SECTION 7: ROBOT WHATSAPP ===== -->
+<section class="section" id="whatsapp">
+  <h2 class="section-title"><span class="num">7</span> Robot WhatsApp (Servicio Interno)</h2>
+  <p class="section-desc">El robot de WhatsApp consume la API para procesar mensajes pendientes. No tiene interfaz grafica propia &mdash; opera mediante endpoints REST.</p>
+
+  <div class="card">
+    <div class="card-title">&#x1F4E1; Endpoints del Robot</div>
+    <table class="sim-table">
+      <thead><tr><th>Metodo</th><th>Endpoint</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/v1/whatsapp/cola</code></td><td>Obtener cola de mensajes pendientes</td></tr>
+        <tr><td><span class="badge badge-green">PATCH</span></td><td><code>/api/v1/whatsapp/:id/enviado</code></td><td>Marcar mensaje como enviado exitosamente</td></tr>
+        <tr><td><span class="badge badge-red">PATCH</span></td><td><code>/api/v1/whatsapp/:id/error</code></td><td>Marcar mensaje como error de envio</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#x1F4E8; Tipos de Mensaje</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-bottom:1rem">
+      <div style="background:#dcfce7;border:1px solid #86efac;border-radius:10px;padding:1rem;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:.35rem">&#x1F4E9;</div>
+        <div style="font-weight:700;font-size:.85rem;color:#166534">Invitacion</div>
+        <div style="font-size:.75rem;color:#166534;margin-top:.25rem">Link de registro para nuevos personeros</div>
+      </div>
+      <div style="background:#dbeafe;border:1px solid #93c5fd;border-radius:10px;padding:1rem;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:.35rem">&#x1F44B;</div>
+        <div style="font-weight:700;font-size:.85rem;color:#1e40af">Bienvenida</div>
+        <div style="font-size:.75rem;color:#1e40af;margin-top:.25rem">Confirmacion tras auto-registro exitoso</div>
+      </div>
+      <div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:10px;padding:1rem;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:.35rem">&#x1F514;</div>
+        <div style="font-weight:700;font-size:.85rem;color:#92400e">Notificacion</div>
+        <div style="font-size:.75rem;color:#92400e;margin-top:.25rem">Aviso al invitador de nuevo registro</div>
+      </div>
+      <div style="background:#fce7f3;border:1px solid #f9a8d4;border-radius:10px;padding:1rem;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:.35rem">&#x1F510;</div>
+        <div style="font-weight:700;font-size:.85rem;color:#9d174d">OTP</div>
+        <div style="font-size:.75rem;color:#9d174d;margin-top:.25rem">Codigo de verificacion para Jefe de Local</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#x1F4CB; Simulacion de Cola de Mensajes</div>
+    <div id="wa-queue">
+      <div class="wa-queue-item">
+        <span class="type-badge" style="background:#dcfce7;color:#166534">invitacion</span>
+        <span class="phone">+51 912 345 678</span>
+        <span class="text-muted" style="font-size:.78rem;flex:1">Te invito a registrarte como personero...</span>
+        <span class="status">
+          <button class="sim-btn-sm green" onclick="this.parentElement.parentElement.style.opacity='.4';this.parentElement.innerHTML='<span class=\'badge badge-green\'>Enviado</span>'">Enviado</button>
+          <button class="sim-btn-sm red" onclick="this.parentElement.parentElement.style.opacity='.4';this.parentElement.innerHTML='<span class=\'badge badge-red\'>Error</span>'">Error</button>
+        </span>
+      </div>
+      <div class="wa-queue-item">
+        <span class="type-badge" style="background:#fce7f3;color:#9d174d">otp</span>
+        <span class="phone">+51 987 654 321</span>
+        <span class="text-muted" style="font-size:.78rem;flex:1">Tu codigo de acceso es: 847293</span>
+        <span class="status">
+          <button class="sim-btn-sm green" onclick="this.parentElement.parentElement.style.opacity='.4';this.parentElement.innerHTML='<span class=\'badge badge-green\'>Enviado</span>'">Enviado</button>
+          <button class="sim-btn-sm red" onclick="this.parentElement.parentElement.style.opacity='.4';this.parentElement.innerHTML='<span class=\'badge badge-red\'>Error</span>'">Error</button>
+        </span>
+      </div>
+      <div class="wa-queue-item">
+        <span class="type-badge" style="background:#dbeafe;color:#1e40af">bienvenida</span>
+        <span class="phone">+51 923 456 789</span>
+        <span class="text-muted" style="font-size:.78rem;flex:1">Bienvenido! Ya estas registrado como personero...</span>
+        <span class="status">
+          <button class="sim-btn-sm green" onclick="this.parentElement.parentElement.style.opacity='.4';this.parentElement.innerHTML='<span class=\'badge badge-green\'>Enviado</span>'">Enviado</button>
+          <button class="sim-btn-sm red" onclick="this.parentElement.parentElement.style.opacity='.4';this.parentElement.innerHTML='<span class=\'badge badge-red\'>Error</span>'">Error</button>
+        </span>
+      </div>
+      <div class="wa-queue-item">
+        <span class="type-badge" style="background:#fef3c7;color:#92400e">notificacion</span>
+        <span class="phone">+51 945 678 012</span>
+        <span class="text-muted" style="font-size:.78rem;flex:1">Tu invitado Juan Perez se ha registrado...</span>
+        <span class="status">
+          <button class="sim-btn-sm green" onclick="this.parentElement.parentElement.style.opacity='.4';this.parentElement.innerHTML='<span class=\'badge badge-green\'>Enviado</span>'">Enviado</button>
+          <button class="sim-btn-sm red" onclick="this.parentElement.parentElement.style.opacity='.4';this.parentElement.innerHTML='<span class=\'badge badge-red\'>Error</span>'">Error</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 8: PERMISOS ===== -->
+<section class="section" id="permisos">
+  <h2 class="section-title"><span class="num">8</span> Matriz de Permisos</h2>
+  <p class="section-desc">Resumen de acceso por perfil. Pase el cursor sobre cada celda para resaltar la fila y columna.</p>
+
+  <div class="matrix-wrap">
+    <table class="matrix" id="permission-matrix">
+      <thead>
+        <tr>
+          <th>Funcionalidad</th>
+          <th>&#x1F6E1; Admin</th>
+          <th>&#x1F3DB; Directivo</th>
+          <th>&#x1F3EB; Jefe Local</th>
+          <th>&#x1F9D1; Personero</th>
+          <th>&#x1F4E9; Invitado</th>
+          <th>&#x1F916; WhatsApp Bot</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Dashboard nacional</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Drill-down regiones/provincias/distritos</td><td class="yes">&#x2705;</td><td class="partial">&#x1F7E1; Su region</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>CRUD Cargos</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>CRUD Directivos</td><td class="yes">&#x2705;</td><td class="partial">&#x1F7E1; Crear sub-nivel</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>CRUD Jefes de Local</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Registro masivo</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Lista de personeros</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="partial">&#x1F7E1; Su local</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Eliminar personeros</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Reportes analiticos</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Chat interno</td><td class="yes">&#x2705;</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Invitar personeros (link WhatsApp)</td><td class="no">&#x2716;</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Ver solo su region (ubigeo)</td><td class="no">&#x2716;</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Ver solo su local</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Ver solo su estado personal</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Registrar personero en su local</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Asignar/quitar personeros de mesas</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Auto-registro publico</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td></tr>
+        <tr><td>Consumir cola de mensajes</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="yes">&#x2705;</td></tr>
+        <tr><td>Toggle Nacional/Extranjero</td><td class="yes">&#x2705;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td><td class="no">&#x2716;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== SECTION 9: UBIGEO ===== -->
+<section class="section" id="ubigeo">
+  <h2 class="section-title"><span class="num">9</span> Ambito Geografico (Ubigeo)</h2>
+  <p class="section-desc">El ubigeo controla que datos puede ver cada usuario. Haga clic en cada nivel para expandir y ver el drill-down.</p>
+
+  <div class="card">
+    <div class="card-title">&#x1F30E; Jerarquia de Ubigeo - Drill-down Interactivo</div>
+    <div class="ubigeo-tree">
+      <!-- Level 0: Nacional -->
+      <div class="ubigeo-node active" onclick="toggleUbigeo('ub-peru')">
+        <div class="ubigeo-arrow open" id="arrow-ub-peru">&#x25B6;</div>
+        <div class="code" style="background:#2563eb">PERU</div>
+        <div class="info">
+          <div class="title">Administrador del Sistema</div>
+          <div class="desc">Ubigeo: sin filtro &mdash; ve todo el territorio nacional + extranjero</div>
+        </div>
+        <span class="badge badge-blue" style="font-size:.7rem">Acceso total</span>
+      </div>
+      <div class="ubigeo-children open" id="ub-peru">
+        <!-- Level 1: Region -->
+        <div class="ubigeo-node" onclick="toggleUbigeo('ub-lima');event.stopPropagation()">
+          <div class="ubigeo-arrow" id="arrow-ub-lima">&#x25B6;</div>
+          <div class="code" style="background:#7c3aed">15</div>
+          <div class="info">
+            <div class="title">Coordinador Regional Lima</div>
+            <div class="desc">Ubigeo "15" &mdash; ve todas las provincias, distritos y mesas de Lima</div>
+          </div>
+          <span class="badge badge-blue" style="font-size:.7rem;background:#ede9fe;color:#7c3aed">Departamento</span>
+        </div>
+        <div class="ubigeo-children" id="ub-lima">
+          <!-- Level 2: Provincia -->
+          <div class="ubigeo-node" onclick="toggleUbigeo('ub-lima-prov');event.stopPropagation()">
+            <div class="ubigeo-arrow" id="arrow-ub-lima-prov">&#x25B6;</div>
+            <div class="code" style="background:#16a34a">1501</div>
+            <div class="info">
+              <div class="title">Coordinador Provincial Lima</div>
+              <div class="desc">Ubigeo "1501" &mdash; ve todos los distritos y mesas de provincia Lima</div>
+            </div>
+            <span class="badge badge-green" style="font-size:.7rem">Provincia</span>
+          </div>
+          <div class="ubigeo-children" id="ub-lima-prov">
+            <!-- Level 3: Distrito -->
+            <div class="ubigeo-node" onclick="toggleUbigeo('ub-lima-dist');event.stopPropagation()">
+              <div class="ubigeo-arrow" id="arrow-ub-lima-dist">&#x25B6;</div>
+              <div class="code" style="background:#d97706">150101</div>
+              <div class="info">
+                <div class="title">Coordinador Distrital Lima Cercado</div>
+                <div class="desc">Ubigeo "150101" &mdash; ve todos los locales y mesas del distrito</div>
+              </div>
+              <span class="badge badge-amber" style="font-size:.7rem">Distrito</span>
+            </div>
+            <div class="ubigeo-children" id="ub-lima-dist">
+              <!-- Level 4: Local -->
+              <div class="ubigeo-node" onclick="event.stopPropagation()">
+                <div style="width:24px"></div>
+                <div class="code" style="background:#ec4899">087773</div>
+                <div class="info">
+                  <div class="title">Jefe de Local - I.E. Jose Olaya</div>
+                  <div class="desc">Ubigeo "150101" + idLocal "087773" &mdash; SOLO las mesas de este local</div>
+                </div>
+                <span class="badge" style="font-size:.7rem;background:#fce7f3;color:#ec4899">Local</span>
+              </div>
+              <div class="ubigeo-node" onclick="event.stopPropagation()">
+                <div style="width:24px"></div>
+                <div class="code" style="background:#ec4899">087801</div>
+                <div class="info">
+                  <div class="title">Jefe de Local - I.E. San Martin</div>
+                  <div class="desc">Ubigeo "150101" + idLocal "087801" &mdash; SOLO las mesas de este local</div>
+                </div>
+                <span class="badge" style="font-size:.7rem;background:#fce7f3;color:#ec4899">Local</span>
+              </div>
+            </div>
+          </div>
+          <div class="ubigeo-node" onclick="event.stopPropagation()">
+            <div style="width:24px"></div>
+            <div class="code" style="background:#16a34a">1502</div>
+            <div class="info">
+              <div class="title">Coordinador Provincial Barranca</div>
+              <div class="desc">Ubigeo "1502" &mdash; solo provincia Barranca</div>
+            </div>
+            <span class="badge badge-green" style="font-size:.7rem">Provincia</span>
+          </div>
+        </div>
+        <!-- Another region -->
+        <div class="ubigeo-node" onclick="event.stopPropagation()">
+          <div style="width:24px"></div>
+          <div class="code" style="background:#7c3aed">04</div>
+          <div class="info">
+            <div class="title">Coordinador Regional Arequipa</div>
+            <div class="desc">Ubigeo "04" &mdash; ve todo el departamento de Arequipa</div>
+          </div>
+          <span class="badge badge-blue" style="font-size:.7rem;background:#ede9fe;color:#7c3aed">Departamento</span>
+        </div>
+        <div class="ubigeo-node" onclick="event.stopPropagation()">
+          <div style="width:24px"></div>
+          <div class="code" style="background:#7c3aed">13</div>
+          <div class="info">
+            <div class="title">Coordinador Regional La Libertad</div>
+            <div class="desc">Ubigeo "13" &mdash; ve todo el departamento de La Libertad</div>
+          </div>
+          <span class="badge badge-blue" style="font-size:.7rem;background:#ede9fe;color:#7c3aed">Departamento</span>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box"><span class="tip-icon">&#x1F4A1;</span> El sistema filtra automaticamente los datos segun el ubigeo del usuario. Un Coordinador Regional con ubigeo "15" solo puede ver datos de las provincias, distritos, locales y mesas que comiencen con "15".</div>
+  </div>
+</section>
+
+<!-- ===== SECTION 10: FLUJOS ===== -->
+<section class="section" id="flujos">
+  <h2 class="section-title"><span class="num">10</span> Flujos Principales del Sistema</h2>
+  <p class="section-desc">Resumen de los procesos clave del sistema.</p>
+
+  <div class="card">
+    <div class="card-title">&#x1F504; Flujo 1: Registro por Invitacion</div>
+    <div class="flow-row">
+      <div class="flow-step">Admin crea Directivo</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Directivo invita (WhatsApp)</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step highlight">Bot envia link</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Invitado se registra</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step highlight">Personero creado</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#x1F504; Flujo 2: Registro por Jefe de Local</div>
+    <div class="flow-row">
+      <div class="flow-step">Admin crea Jefe Local</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Jefe inicia sesion (OTP)</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step highlight">Busca DNI (Factiliza)</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Registra personero</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step highlight">Asigna a mesa</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#x1F504; Flujo 3: Registro Masivo (Admin)</div>
+    <div class="flow-row">
+      <div class="flow-step">Admin abre Registro Masivo</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step highlight">DNI + Enter (API Factiliza)</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Datos auto-completados</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Repite N veces</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step highlight">Guardar todos</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#x1F504; Flujo 4: Login Jefe de Local (2 pasos)</div>
+    <div class="flow-row">
+      <div class="flow-step">Ingresa telefono</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step highlight">Bot envia OTP por WhatsApp</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Ingresa codigo OTP</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step highlight">Acceso al dashboard del local</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<footer style="background:#1e3a5f;color:rgba(255,255,255,.7);text-align:center;padding:2rem 1rem;margin-top:2rem">
+  <p style="font-size:.85rem;margin-bottom:.25rem">Sistema de Personeros &mdash; Elecciones Generales Peru 2026</p>
+  <p style="font-size:.75rem;opacity:.6">Manual de Usuario v2.0 &mdash; Documento confidencial del Partido</p>
+</footer>
+
+<!-- ===== MODALS ===== -->
+
+<!-- Modal: Nuevo Cargo -->
+<div class="modal-overlay" id="modal-cargo" onclick="if(event.target===this)closeModal('modal-cargo')">
+  <div class="modal">
+    <h3>&#x1F3F7; Cargo <button class="modal-close" onclick="closeModal('modal-cargo')">&times;</button></h3>
+    <div class="sim-field"><label>Nombre del cargo</label><input placeholder="Ej: Coordinador Regional" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem"></div>
+    <div class="sim-field"><label>Nivel jerarquico</label>
+      <select style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem">
+        <option>1 - Nacional</option><option>2 - Regional</option><option>3 - Provincial</option><option>4 - Distrital</option>
+      </select>
+    </div>
+    <div class="sim-field"><label>Permisos</label>
+      <div style="display:flex;flex-direction:column;gap:.35rem;font-size:.82rem;margin-top:.25rem">
+        <label><input type="checkbox" checked> Invitar personeros</label>
+        <label><input type="checkbox" checked> Ver dashboard de su ambito</label>
+        <label><input type="checkbox"> Crear sub-directivos</label>
+        <label><input type="checkbox"> Chat interno</label>
+      </div>
+    </div>
+    <button class="sim-btn" onclick="closeModal('modal-cargo');alert('Cargo guardado exitosamente')">Guardar Cargo</button>
+  </div>
+</div>
+
+<!-- Modal: Nuevo Directivo -->
+<div class="modal-overlay" id="modal-directivo" onclick="if(event.target===this)closeModal('modal-directivo')">
+  <div class="modal">
+    <h3>&#x1F464; Directivo <button class="modal-close" onclick="closeModal('modal-directivo')">&times;</button></h3>
+    <div class="sim-field">
+      <label>DNI</label>
+      <div style="display:flex;gap:.5rem">
+        <input placeholder="12345678" maxlength="8" style="flex:1;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem;font-family:'Courier New',monospace">
+        <button class="sim-btn-sm" onclick="alert('Datos obtenidos de Factiliza/RENIEC')">Buscar</button>
+      </div>
+    </div>
+    <div class="sim-field"><label>Nombres</label><input placeholder="Juan Carlos" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem"></div>
+    <div class="sim-field"><label>Apellido Paterno</label><input placeholder="Perez" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem"></div>
+    <div class="sim-field"><label>Apellido Materno</label><input placeholder="Garcia" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem"></div>
+    <div class="sim-field"><label>Cargo</label>
+      <select style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem">
+        <option>Coordinador Nacional</option><option>Coordinador Regional</option><option>Coordinador Provincial</option><option>Coordinador Distrital</option>
+      </select>
+    </div>
+    <div class="sim-field"><label>Ubigeo</label><input placeholder="15, 1501, 150101..." style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem;font-family:'Courier New',monospace"></div>
+    <div class="sim-field"><label>Contrasena</label><input type="password" placeholder="********" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem"></div>
+    <button class="sim-btn" onclick="closeModal('modal-directivo');alert('Directivo guardado exitosamente')">Guardar Directivo</button>
+  </div>
+</div>
+
+<!-- Modal: Nuevo Jefe Local -->
+<div class="modal-overlay" id="modal-jefe" onclick="if(event.target===this)closeModal('modal-jefe')">
+  <div class="modal">
+    <h3>&#x1F3EB; Jefe de Local <button class="modal-close" onclick="closeModal('modal-jefe')">&times;</button></h3>
+    <div class="sim-field"><label>Nombre completo</label><input placeholder="Pedro Sanchez" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem"></div>
+    <div class="sim-field"><label>Telefono (WhatsApp)</label><input placeholder="987654321" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem"></div>
+    <div class="sim-field"><label>Ubigeo del local</label><input placeholder="150101" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem;font-family:'Courier New',monospace"></div>
+    <div class="sim-field"><label>ID del Local (ONPE)</label><input placeholder="087773" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem;font-family:'Courier New',monospace"></div>
+    <div class="sim-field"><label>Nombre del Local</label><input placeholder="I.E. Jose Olaya" style="width:100%;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem"></div>
+    <button class="sim-btn" onclick="closeModal('modal-jefe');alert('Jefe de Local guardado exitosamente')">Guardar Jefe de Local</button>
+  </div>
+</div>
+
+<!-- Modal: Asignar personero a mesa -->
+<div class="modal-overlay" id="modal-asignar" onclick="if(event.target===this)closeModal('modal-asignar')">
+  <div class="modal">
+    <h3>&#x1F4CB; Asignar Personero a Mesa <button class="modal-close" onclick="closeModal('modal-asignar')">&times;</button></h3>
+    <p class="text-muted mb-1">Busque un personero por DNI para asignarlo a esta mesa.</p>
+    <div class="sim-field">
+      <label>DNI del personero</label>
+      <div style="display:flex;gap:.5rem">
+        <input placeholder="12345678" maxlength="8" style="flex:1;padding:.45rem .7rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.85rem;font-family:'Courier New',monospace">
+        <button class="sim-btn-sm" onclick="document.getElementById('asignar-result').style.display='block'">Buscar</button>
+      </div>
+    </div>
+    <div id="asignar-result" style="display:none">
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;margin-bottom:.75rem">
+        <div style="width:40px;height:40px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center">&#x1F464;</div>
+        <div>
+          <div style="font-weight:600;font-size:.9rem">Fernando Huaman R.</div>
+          <div style="font-size:.78rem;color:#64748b">DNI: 32178945 &mdash; Estado: Pendiente</div>
+        </div>
+      </div>
+      <button class="sim-btn green" onclick="closeModal('modal-asignar');alert('Personero asignado a la mesa exitosamente')">Asignar a esta Mesa</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Invitacion exitosa -->
+<div class="modal-overlay" id="modal-invitacion-ok" onclick="if(event.target===this)closeModal('modal-invitacion-ok')">
+  <div class="modal" style="text-align:center">
+    <div style="font-size:3rem;margin-bottom:.5rem">&#x2705;</div>
+    <h3 style="justify-content:center">Invitacion Registrada</h3>
+    <p class="text-muted mb-1">Se ha enviado un mensaje de invitacion por WhatsApp con el link de registro.</p>
+    <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:1rem;margin:1rem 0;text-align:left;font-size:.82rem">
+      <p><strong>Destinatario:</strong> Juan Perez Garcia</p>
+      <p><strong>Telefono:</strong> 912345678</p>
+      <p><strong>Link:</strong> personeros.partido.pe/registro/abc123</p>
+      <p><strong>Estado:</strong> <span class="badge badge-amber">Pendiente de registro</span></p>
+    </div>
+    <button class="sim-btn" onclick="closeModal('modal-invitacion-ok')">Cerrar</button>
+  </div>
+</div>
+
+<!-- Modal: Auto-registro exitoso -->
+<div class="modal-overlay" id="modal-registro-ok" onclick="if(event.target===this)closeModal('modal-registro-ok')">
+  <div class="modal" style="text-align:center">
+    <div style="font-size:3rem;margin-bottom:.5rem">&#x1F389;</div>
+    <h3 style="justify-content:center">Registro Exitoso!</h3>
+    <p class="text-muted mb-1">Ya estas registrado como personero para las Elecciones 2026.</p>
+    <div style="background:#eff6ff;border:1px solid #93c5fd;border-radius:10px;padding:1rem;margin:1rem 0;text-align:left;font-size:.82rem">
+      <p>&#x2705; Tu registro ha sido confirmado</p>
+      <p>&#x2705; Se notifico al directivo que te invito</p>
+      <p>&#x2705; Recibiras un mensaje de bienvenida por WhatsApp</p>
+      <p style="margin-top:.5rem"><strong>Para consultar tu estado:</strong> Ingresa a <a href="#personero">Portal del Personero</a> con tu DNI y los ultimos 3 digitos de tu celular.</p>
+    </div>
+    <button class="sim-btn" onclick="closeModal('modal-registro-ok')">Entendido</button>
+  </div>
+</div>
+
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+// ===== MODAL =====
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+
+// ===== ADMIN LOGIN =====
+function simAdminLogin(){
+  var u=document.getElementById('admin-user').value.trim();
+  var p=document.getElementById('admin-pass').value.trim();
+  var errEl=document.getElementById('admin-login-error');
+  var okEl=document.getElementById('admin-login-success');
+  errEl.style.display='none';okEl.style.display='none';
+  if(u==='admin'&&p==='Admin2026'){
+    okEl.textContent='Acceso concedido. Redirigiendo al dashboard...';
+    okEl.style.display='block';
+    setTimeout(function(){document.getElementById('admin-dashboard-card').style.display='block';okEl.style.display='none';document.getElementById('admin-dashboard-card').scrollIntoView({behavior:'smooth'})},800);
+  }else{
+    errEl.textContent='Credenciales incorrectas. Use admin / Admin2026';
+    errEl.style.display='block';
+  }
+}
+
+// ===== ADMIN TABS =====
+function switchAdminTab(btn,tabId){
+  btn.parentElement.querySelectorAll('.inner-tab').forEach(function(t){t.classList.remove('active')});
+  btn.classList.add('active');
+  document.querySelectorAll('#admin-dashboard-card .inner-content').forEach(function(c){c.classList.remove('active')});
+  document.getElementById(tabId).classList.add('active');
+}
+
+// ===== TOGGLE MODE =====
+function toggleMode(btn,mode){
+  btn.parentElement.querySelectorAll('.toggle-opt').forEach(function(t){t.classList.remove('active')});
+  btn.classList.add('active');
+}
+
+// ===== REGIONS GRID =====
+var regions=[
+  {name:'Amazonas',code:'01',mesas:1245,asignadas:623,pct:50.0},
+  {name:'Ancash',code:'02',mesas:3456,asignadas:2100,pct:60.8},
+  {name:'Apurimac',code:'03',mesas:1102,asignadas:442,pct:40.1},
+  {name:'Arequipa',code:'04',mesas:4567,asignadas:3200,pct:70.1},
+  {name:'Ayacucho',code:'05',mesas:1890,asignadas:756,pct:40.0},
+  {name:'Cajamarca',code:'06',mesas:4123,asignadas:2474,pct:60.0},
+  {name:'Callao',code:'07',mesas:3210,asignadas:2568,pct:80.0},
+  {name:'Cusco',code:'08',mesas:3789,asignadas:2273,pct:60.0},
+  {name:'Huancavelica',code:'09',mesas:1340,asignadas:402,pct:30.0},
+  {name:'Huanuco',code:'10',mesas:2156,asignadas:863,pct:40.0},
+  {name:'Ica',code:'11',mesas:2890,asignadas:1734,pct:60.0},
+  {name:'Junin',code:'12',mesas:3456,asignadas:2073,pct:60.0},
+  {name:'La Libertad',code:'13',mesas:5678,asignadas:3975,pct:70.0},
+  {name:'Lambayeque',code:'14',mesas:3890,asignadas:2723,pct:70.0},
+  {name:'Lima',code:'15',mesas:28901,asignadas:17341,pct:60.0},
+  {name:'Loreto',code:'16',mesas:2340,asignadas:702,pct:30.0},
+  {name:'Madre de Dios',code:'17',mesas:456,asignadas:228,pct:50.0},
+  {name:'Moquegua',code:'18',mesas:678,asignadas:475,pct:70.0},
+  {name:'Pasco',code:'19',mesas:890,asignadas:356,pct:40.0},
+  {name:'Piura',code:'20',mesas:5432,asignadas:2716,pct:50.0},
+  {name:'Puno',code:'21',mesas:3780,asignadas:1890,pct:50.0},
+  {name:'San Martin',code:'22',mesas:2345,asignadas:1172,pct:50.0},
+  {name:'Tacna',code:'23',mesas:1234,asignadas:864,pct:70.0},
+  {name:'Tumbes',code:'24',mesas:789,asignadas:473,pct:60.0},
+  {name:'Ucayali',code:'25',mesas:1456,asignadas:583,pct:40.0}
+];
+
+function renderRegions(){
+  var grid=document.getElementById('regions-grid');
+  if(!grid)return;
+  var html='';
+  regions.forEach(function(r){
+    var color=r.pct>=70?'#16a34a':r.pct>=50?'#d97706':'#ef4444';
+    var colorClass=r.pct>=70?'high':r.pct>=50?'mid':'low';
+    html+='<div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.85rem;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor=\'#2563eb\';this.style.boxShadow=\'0 2px 8px rgba(37,99,235,.15)\'" onmouseout="this.style.borderColor=\'#e2e8f0\';this.style.boxShadow=\'none\'" onclick="openModal(\'modal-drilldown\')">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.35rem">';
+    html+='<span style="font-weight:700;font-size:.85rem;color:#1e293b">'+r.name+'</span>';
+    html+='<span style="font-size:.72rem;color:#64748b;font-family:monospace">'+r.code+'</span></div>';
+    html+='<div style="display:flex;justify-content:space-between;font-size:.75rem;color:#64748b;margin-bottom:.35rem">';
+    html+='<span>'+r.asignadas.toLocaleString()+' / '+r.mesas.toLocaleString()+'</span>';
+    html+='<span style="color:'+color+';font-weight:700">'+r.pct+'%</span></div>';
+    html+='<div class="coverage-bar"><div class="coverage-fill '+colorClass+'" style="width:'+r.pct+'%"></div></div>';
+    html+='</div>';
+  });
+  grid.innerHTML=html;
+}
+renderRegions();
+
+// Ranking chart
+function renderRanking(){
+  var el=document.getElementById('ranking-chart');
+  if(!el)return;
+  var sorted=regions.slice().sort(function(a,b){return b.pct-a.pct}).slice(0,10);
+  var html='';
+  sorted.forEach(function(r){
+    var color=r.pct>=70?'#16a34a':r.pct>=50?'#d97706':'#ef4444';
+    html+='<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem">';
+    html+='<span style="width:100px;font-size:.78rem;font-weight:600;color:#334155;text-align:right">'+r.name+'</span>';
+    html+='<div style="flex:1;height:20px;background:#f1f5f9;border-radius:4px;overflow:hidden">';
+    html+='<div style="height:100%;width:'+r.pct+'%;background:'+color+';border-radius:4px;transition:width .5s"></div></div>';
+    html+='<span style="width:40px;font-size:.78rem;font-weight:700;color:'+color+'">'+r.pct+'%</span>';
+    html+='</div>';
+  });
+  el.innerHTML=html;
+}
+renderRanking();
+
+// ===== DRILL-DOWN MODAL =====
+// We reuse modal-cargo but let's add a simple one
+var ddModal=document.createElement('div');
+ddModal.className='modal-overlay';ddModal.id='modal-drilldown';
+ddModal.onclick=function(e){if(e.target===ddModal)closeModal('modal-drilldown')};
+ddModal.innerHTML='<div class="modal"><h3>&#x1F4CD; Drill-down: Provincias <button class="modal-close" onclick="closeModal(\'modal-drilldown\')">&times;</button></h3><p class="text-muted mb-1">Al hacer clic en una region del dashboard, se navega al detalle de provincias, luego distritos, centros y finalmente mesas.</p><div class="breadcrumbs mb-1"><span>Nacional</span><span class="sep">/</span><span class="current">Lima</span></div><table class="sim-table"><thead><tr><th>Provincia</th><th>Mesas</th><th>Asignadas</th><th>Cobertura</th></tr></thead><tbody><tr><td><strong>Lima</strong></td><td>18,432</td><td>12,902</td><td><span style="color:#16a34a;font-weight:700">70.0%</span></td></tr><tr><td><strong>Callao</strong></td><td>3,210</td><td>2,568</td><td><span style="color:#16a34a;font-weight:700">80.0%</span></td></tr><tr><td><strong>Huarochiri</strong></td><td>1,234</td><td>494</td><td><span style="color:#ef4444;font-weight:700">40.0%</span></td></tr><tr><td><strong>Canete</strong></td><td>987</td><td>592</td><td><span style="color:#d97706;font-weight:700">60.0%</span></td></tr><tr><td><strong>Barranca</strong></td><td>567</td><td>340</td><td><span style="color:#d97706;font-weight:700">60.0%</span></td></tr></tbody></table></div>';
+document.body.appendChild(ddModal);
+
+// ===== DIRECTIVO LOGIN =====
+function simDirectivoLogin(){
+  var dni=document.getElementById('dir-dni').value.trim();
+  var err=document.getElementById('dir-login-error');
+  var ok=document.getElementById('dir-login-success');
+  err.style.display='none';ok.style.display='none';
+  if(dni.length===8){
+    ok.textContent='Acceso concedido. Bienvenido, Coordinador.';
+    ok.style.display='block';
+    setTimeout(function(){document.getElementById('directivo-dashboard-card').style.display='block';ok.style.display='none';document.getElementById('directivo-dashboard-card').scrollIntoView({behavior:'smooth'})},800);
+  }else{
+    err.textContent='Ingrese un DNI valido de 8 digitos';err.style.display='block';
+  }
+}
+
+function switchDirTab(btn,tabId){
+  btn.parentElement.querySelectorAll('.inner-tab').forEach(function(t){t.classList.remove('active')});
+  btn.classList.add('active');
+  document.querySelectorAll('#directivo-dashboard-card .inner-content').forEach(function(c){c.classList.remove('active')});
+  document.getElementById(tabId).classList.add('active');
+}
+
+// ===== JEFE LOCAL LOGIN =====
+function simJefeStep1(){
+  var tel=document.getElementById('jefe-tel').value.trim();
+  var err=document.getElementById('jefe-login-error');err.style.display='none';
+  if(tel.length>=9){
+    document.getElementById('jefe-step1').style.display='none';
+    document.getElementById('jefe-step2').style.display='block';
+    document.getElementById('jefe-login-subtitle').textContent='Paso 2: Ingrese el codigo OTP';
+  }else{
+    err.textContent='Ingrese un telefono valido de 9 digitos';err.style.display='block';
+  }
+}
+
+function simJefeStep2(){
+  var otp=document.getElementById('jefe-otp').value.trim();
+  var err=document.getElementById('jefe-login-error');err.style.display='none';
+  if(otp.length>=4){
+    document.getElementById('jefe-dashboard-card').style.display='block';
+    document.getElementById('jefe-dashboard-card').scrollIntoView({behavior:'smooth'});
+  }else{
+    err.textContent='Ingrese un codigo OTP valido';err.style.display='block';
+  }
+}
+
+function switchJefeTab(btn,tabId){
+  btn.parentElement.querySelectorAll('.inner-tab').forEach(function(t){t.classList.remove('active')});
+  btn.classList.add('active');
+  document.querySelectorAll('#jefe-dashboard-card .inner-content').forEach(function(c){c.classList.remove('active')});
+  document.getElementById(tabId).classList.add('active');
+}
+
+// ===== JEFE REG DNI =====
+function simJefeRegDni(){
+  var dni=document.getElementById('jefe-reg-dni').value.trim();
+  if(dni.length!==8){alert('Ingrese un DNI valido de 8 digitos');return}
+  var names=['Ana Maria','Jose Luis','Carmen Rosa','Miguel Angel','Rosa Elena'];
+  var aps=['Garcia','Torres','Quispe','Huaman','Mendoza'];
+  var ams=['Lopez','Flores','Ramos','Diaz','Vargas'];
+  var i=parseInt(dni.charAt(7))%5;
+  document.getElementById('jefe-reg-nombres').value=names[i];
+  document.getElementById('jefe-reg-apellidos').value=aps[i]+' '+ams[i];
+  document.getElementById('jefe-reg-name').textContent='DNI encontrado: '+names[i]+' '+aps[i]+' '+ams[i];
+  document.getElementById('jefe-reg-result').style.display='block';
+}
+
+// ===== PERSONERO LOGIN =====
+function simPersoneroLogin(){
+  var dni=document.getElementById('per-dni').value.trim();
+  var code=document.getElementById('per-code').value.trim();
+  var err=document.getElementById('per-login-error');err.style.display='none';
+  if(dni.length===8&&code.length===3){
+    document.getElementById('personero-dashboard-card').style.display='block';
+    document.getElementById('personero-dashboard-card').scrollIntoView({behavior:'smooth'});
+  }else{
+    err.textContent='Ingrese un DNI de 8 digitos y los ultimos 3 digitos de su celular';err.style.display='block';
+  }
+}
+
+// ===== INVITADO STEPS =====
+function simInvStep1(){
+  var phone=document.getElementById('inv-phone').value.trim();
+  if(phone.length>=9){
+    document.getElementById('inv-step-phone').style.display='none';
+    document.getElementById('inv-step-form').style.display='block';
+  }else{alert('Ingrese un telefono valido')}
+}
+
+function simInvDni(){
+  var dni=document.getElementById('inv-dni').value.trim();
+  if(dni.length!==8){alert('Ingrese un DNI valido de 8 digitos');return}
+  var names=['Pedro','Laura','Ricardo','Sofia','Diego'];
+  var aps=['Ramirez','Castillo','Vargas','Morales','Espinoza'];
+  var ams=['Silva','Cruz','Rojas','Herrera','Ponce'];
+  var i=parseInt(dni.charAt(7))%5;
+  document.getElementById('inv-nombres').value=names[i];
+  document.getElementById('inv-ap').value=aps[i];
+  document.getElementById('inv-am').value=ams[i];
+  document.getElementById('inv-nombres-section').style.display='block';
+}
+
+// ===== REGISTRO MASIVO =====
+var masivoCount=0;
+function simMasivoDni(){
+  var input=document.getElementById('masivo-dni');
+  var dni=input.value.trim();
+  if(!/^\d{8}$/.test(dni)){alert('Ingrese un DNI valido de 8 digitos');return}
+  masivoCount++;
+  var names=['Ana Maria','Jose Luis','Carmen Rosa','Miguel Angel','Rosa Elena','Pedro','Laura','Ricardo','Sofia','Diego'];
+  var aps=['Garcia','Torres','Quispe','Huaman','Mendoza','Ramirez','Castillo','Vargas','Morales','Espinoza'];
+  var ams=['Lopez','Flores','Ramos','Diaz','Vargas','Silva','Cruz','Rojas','Herrera','Ponce'];
+  var i=parseInt(dni.charAt(7))%10;
+  var row='<tr><td>'+masivoCount+'</td><td style="font-family:monospace">'+dni+'</td><td>'+aps[i]+'</td><td>'+ams[i]+'</td><td>'+names[i]+'</td><td><input placeholder="912345678" style="padding:.25rem .5rem;border:1px solid #e2e8f0;border-radius:6px;font-size:.8rem;width:110px"></td><td><span class="badge badge-green">OK</span></td></tr>';
+  document.getElementById('masivo-body').insertAdjacentHTML('beforeend',row);
+  document.getElementById('masivo-count').textContent=masivoCount;
+  document.getElementById('masivo-save').style.display='inline-block';
+  input.value='';input.focus();
+}
+
+// ===== DNI LOOKUP SIM =====
+function simDniLookup(prefix){
+  var el=document.getElementById(prefix+'-dni-input');
+  if(!el)return;
+  var dni=el.value.trim();
+  if(!/^\d{8}$/.test(dni)){alert('Ingrese un DNI valido de 8 digitos');return}
+  var result=document.getElementById(prefix+'-dni-result');
+  result.textContent='DNI encontrado: Juan Carlos Perez Garcia (datos obtenidos de API Factiliza)';
+  result.style.display='block';
+  setTimeout(function(){result.style.display='none'},4000);
+}
+
+// ===== UBIGEO TREE =====
+function toggleUbigeo(id){
+  var children=document.getElementById(id);
+  var arrow=document.getElementById('arrow-'+id);
+  if(!children)return;
+  children.classList.toggle('open');
+  if(arrow)arrow.classList.toggle('open');
+}
+
+// ===== CHAT =====
+function switchChannel(el,ch){
+  el.parentElement.querySelectorAll('.ch').forEach(function(c){c.classList.remove('active')});
+  el.classList.add('active');
+  var header=document.getElementById('chat-header-text');
+  var chNames={general:'# general',coordinacion:'# coordinacion','reportes-ch':'# reportes',urgentes:'# urgentes',carlos:'Carlos Rodriguez',maria:'Maria Lopez'};
+  header.textContent=chNames[ch]||'# '+ch;
+}
+
+function sendChatMsg(){
+  var input=document.getElementById('chat-input');
+  var text=input.value.trim();
+  if(!text)return;
+  var msgs=document.getElementById('chat-messages');
+  var now=new Date();
+  var time=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+  var div=document.createElement('div');
+  div.className='chat-msg sent';
+  div.innerHTML='<div class="sender">Admin</div>'+text.replace(/</g,'&lt;')+'<div class="time">'+time+'</div>';
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  input.value='';
+  // Simulated reply
+  setTimeout(function(){
+    var replies=['Entendido, coordinare con el equipo.','Perfecto, lo revisamos.','De acuerdo, avanzamos con eso.','Ok, ya estamos en ello.'];
+    var reply=replies[Math.floor(Math.random()*replies.length)];
+    var div2=document.createElement('div');
+    div2.className='chat-msg received';
+    div2.innerHTML='<div class="sender">Carlos Rodriguez</div>'+reply+'<div class="time">'+time+'</div>';
+    msgs.appendChild(div2);
+    msgs.scrollTop=msgs.scrollHeight;
+  },1200);
+}
+
+// ===== PERMISSION MATRIX HOVER =====
+(function(){
+  var matrix=document.getElementById('permission-matrix');
+  if(!matrix)return;
+  var cells=matrix.querySelectorAll('td, th');
+  matrix.addEventListener('mouseover',function(e){
+    var cell=e.target.closest('td,th');
+    if(!cell)return;
+    var row=cell.parentElement;
+    var idx=Array.from(row.children).indexOf(cell);
+    row.style.background='#eff6ff';
+    matrix.querySelectorAll('tr').forEach(function(r){
+      if(r.children[idx])r.children[idx].style.background='#eff6ff';
+    });
+    cell.style.background='#dbeafe';
+  });
+  matrix.addEventListener('mouseout',function(){
+    matrix.querySelectorAll('tr').forEach(function(r){
+      r.style.background='';
+      Array.from(r.children).forEach(function(c){c.style.background=''});
+    });
+  });
+})();
+
+// ===== SMOOTH SCROLL NAV =====
+document.querySelectorAll('.topbar-links a').forEach(function(a){
+  a.addEventListener('click',function(e){
+    document.querySelectorAll('.topbar-links a').forEach(function(l){l.classList.remove('active')});
+    this.classList.add('active');
+  });
+});
+
+// ===== HIGHLIGHT ACTIVE NAV ON SCROLL =====
+var sections=document.querySelectorAll('section[id]');
+window.addEventListener('scroll',function(){
+  var scrollPos=window.scrollY+100;
+  sections.forEach(function(sec){
+    if(sec.offsetTop<=scrollPos&&sec.offsetTop+sec.offsetHeight>scrollPos){
+      var id=sec.getAttribute('id');
+      document.querySelectorAll('.topbar-links a').forEach(function(a){
+        a.classList.toggle('active',a.getAttribute('href')==='#'+id);
+      });
+    }
+  });
+},{ passive: true });
+</script>
+
+</body>
+</html>

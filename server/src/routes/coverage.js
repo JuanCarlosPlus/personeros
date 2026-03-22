@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { protect } from '../middleware/auth.js';
+import { protectDual } from '../middleware/auth.js';
 import {
   national,
   provinces,
@@ -9,7 +9,7 @@ import {
 } from '../controllers/coverageController.js';
 
 const router = Router();
-router.use(protect);
+router.use(protectDual);
 router.get('/national', national);
 router.get('/dept/:deptCode', provinces);
 router.get('/prov/:provCode', districts);

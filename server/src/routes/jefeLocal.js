@@ -3,6 +3,7 @@ import { protect, authorize, protectJefeLocal } from '../middleware/auth.js';
 import {
   solicitarCodigo, verificarCodigo, miLocal,
   asignarJefeLocal, desasignarJefeLocal,
+  dniLookupJefeLocal, registrarPersoneroJefeLocal,
   listJefesLocal, crearJefeLocal, deleteJefeLocal,
 } from '../controllers/jefeLocalController.js';
 
@@ -16,6 +17,8 @@ router.post('/verificar-codigo', verificarCodigo);
 router.get('/mi-local', protectJefeLocal, miLocal);
 router.post('/asignar', protectJefeLocal, asignarJefeLocal);
 router.post('/desasignar', protectJefeLocal, desasignarJefeLocal);
+router.get('/dni/:dni', protectJefeLocal, dniLookupJefeLocal);
+router.post('/registrar-personero', protectJefeLocal, registrarPersoneroJefeLocal);
 
 // Admin only
 router.get('/', protect, authorize('admin'), listJefesLocal);

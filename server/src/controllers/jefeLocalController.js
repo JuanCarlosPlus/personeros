@@ -3,6 +3,7 @@ import JefeLocal from '../models/JefeLocal.js';
 import Mesa from '../models/Mesa.js';
 import Personero from '../models/Personero.js';
 import MensajeWhatsapp from '../models/MensajeWhatsapp.js';
+import { lookupDni } from '../services/dniService.js';
 import { config } from '../config/env.js';
 
 function generateOTP() {
@@ -169,6 +170,67 @@ export async function desasignarJefeLocal(req, res, next) {
     await mesa.save();
 
     res.json({ message: 'Desasignación exitosa' });
+  } catch (err) { next(err); }
+}
+
+// GET /api/v1/jefe-local/dni/:dni (protegido jefe_local) — buscar persona por DNI
+export async function dniLookupJefeLocal(req, res, next) {
+  try {
+    const { dni } = req.params;
+    if (!/^\d{8}$/.test(dni)) return res.status(400).json({ error: 'DNI debe tener 8 dígitos' });
+
+    const existing = await Personero.findOne({ dni }).lean();
+    const reniec = await lookupDni(dni);
+
+    res.json({ registered: !!existing, personero: existing || null, reniec: reniec || null });
+  } catch (err) { next(err); }
+}
+
+// POST /api/v1/jefe-local/registrar-personero (protegido jefe_local)
+// Registra un personero nuevo y lo asigna automáticamente al local del jefe
+export async function registrarPersoneroJefeLocal(req, res, next) {
+  try {
+    const jefe = req.jefeLocal;
+    const { dni, nombres, apellidoPaterno, apellidoMaterno, telefono, correo } = req.body;
+
+    if (!dni || !/^\d{8}$/.test(dni)) return res.status(400).json({ error: 'DNI inválido' });
+    if (!nombres || !apellidoPaterno) return res.status(400).json({ error: 'Nombres y apellido requeridos' });
+    if (!telefono) return res.status(400).json({ error: 'Teléfono requerido' });
+
+    // Verificar si ya existe
+    let personero = await Personero.findOne({ dni });
+    if (personero) {
+      // Si ya existe pero no está asignado, actualizar su asignación al local
+      if (['asignado', 'confirmado'].includes(personero.assignmentStatus)) {
+        return res.status(400).json({ error: 'Este personero ya está asignado a otra mesa' });
+      }
+      personero.telefono = telefono;
+      if (correo) personero.correo = correo;
+    } else {
+      personero = new Personero({
+        dni, nombres, apellidoPaterno,
+        apellidoMaterno: apellidoMaterno || '',
+        telefono, correo: correo || '',
+        source: 'jefe_local',
+        active: true,
+        assignmentStatus: 'pendiente',
+      });
+    }
+
+    // Asignar al local del jefe (sin mesa específica aún)
+    personero.assignedLocalId = jefe.idLocal;
+    personero.assignedUbigeo = jefe.ubigeo;
+    personero.assignedAt = new Date();
+    await personero.save();
+
+    res.status(201).json({
+      message: 'Personero registrado y asignado a su local',
+      personero: {
+        _id: personero._id, dni: personero.dni,
+        nombres: personero.nombres, apellidoPaterno: personero.apellidoPaterno,
+        telefono: personero.telefono, assignmentStatus: personero.assignmentStatus,
+      },
+    });
   } catch (err) { next(err); }
 }
 
