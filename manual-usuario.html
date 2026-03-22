@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Manual Interactivo — Sistema de Personeros 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#1e293b;background:#f8fafc;line-height:1.6}
+
+/* Navigation bar */
+.topnav{background:#1e3a5f;color:#fff;padding:0.5rem 1rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:300;flex-wrap:wrap}
+.topnav-title{font-weight:700;font-size:0.9rem;margin-right:auto;white-space:nowrap}
+.topnav button{background:rgba(255,255,255,0.15);color:#fff;border:none;border-radius:6px;padding:0.35rem 0.7rem;font-size:0.78rem;cursor:pointer;white-space:nowrap}
+.topnav button:hover{background:rgba(255,255,255,0.25)}
+.topnav button.active{background:#2563eb}
+.topnav .sep{color:rgba(255,255,255,0.3);font-size:0.8rem}
+
+/* Manual text */
+.manual-section{display:none;max-width:960px;margin:0 auto;padding:1.5rem}
+.manual-section.active{display:block}
+.doc-title{font-size:1.4rem;color:#1e3a5f;margin-bottom:0.5rem;border-bottom:2px solid #2563eb;padding-bottom:0.4rem}
+.doc-text{margin-bottom:0.75rem;font-size:0.9rem}
+.doc-step{background:#f8fafc;border-left:4px solid #2563eb;padding:0.6rem 1rem;margin:0.6rem 0;border-radius:0 6px 6px 0;font-size:0.9rem}
+.doc-step b{background:#2563eb;color:#fff;display:inline-block;width:22px;height:22px;border-radius:50%;text-align:center;line-height:22px;font-size:0.75rem;margin-right:0.4rem}
+.doc-note{background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:0.6rem 0.8rem;margin:0.75rem 0;font-size:0.85rem}
+.doc-warn{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:0.6rem 0.8rem;margin:0.75rem 0;font-size:0.85rem}
+.doc-table{width:100%;border-collapse:collapse;font-size:0.85rem;margin:0.5rem 0}
+.doc-table th{background:#f1f5f9;text-align:left;padding:0.4rem 0.6rem;border:1px solid #e2e8f0;font-weight:600;color:#475569}
+.doc-table td{padding:0.4rem 0.6rem;border:1px solid #e2e8f0}
+.badge{display:inline-block;padding:0.1rem 0.4rem;border-radius:8px;font-size:0.75rem;font-weight:500}
+.badge-b{background:#dbeafe;color:#1d4ed8}.badge-g{background:#dcfce7;color:#16a34a}.badge-a{background:#fef3c7;color:#d97706}.badge-p{background:#f3e8ff;color:#7c3aed}.badge-gr{background:#f1f5f9;color:#64748b}
+
+/* Interactive demo frame */
+.demo-frame{border:2px solid #2563eb;border-radius:12px;overflow:hidden;margin:1rem 0;box-shadow:0 4px 20px rgba(37,99,235,0.15)}
+.demo-header{background:#2563eb;color:#fff;padding:0.4rem 0.8rem;font-size:0.78rem;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.demo-body{background:#f1f5f9;min-height:300px;position:relative}
+
+/* Reusable UI */
+.sim-page{min-height:400px;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.sim-page.gradient{background:linear-gradient(135deg,#1e3a5f 0%,#0f2440 100%)}
+.sim-card{background:#fff;border-radius:12px;padding:1.5rem;width:380px;max-width:100%;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.12)}
+.sim-field{margin-bottom:0.75rem;text-align:left}
+.sim-label{display:block;font-size:0.78rem;font-weight:600;color:#475569;margin-bottom:0.2rem}
+.sim-input{width:100%;padding:0.5rem;border:1.5px solid #e2e8f0;border-radius:6px;font-size:0.88rem;outline:none;box-sizing:border-box;font-family:inherit}
+.sim-input:focus{border-color:#2563eb}
+.sim-btn{width:100%;padding:0.6rem;background:linear-gradient(135deg,#1e3a5f,#2563eb);color:#fff;border:none;border-radius:6px;font-size:0.9rem;font-weight:600;cursor:pointer;margin-top:0.3rem}
+.sim-btn:disabled{opacity:0.5;cursor:default}
+.sim-btn-sm{padding:0.4rem 0.8rem;font-size:0.8rem;border-radius:6px;border:none;cursor:pointer;font-weight:600}
+.sim-error{background:#fef2f2;color:#dc2626;border-radius:6px;padding:0.4rem 0.6rem;font-size:0.82rem;margin-bottom:0.5rem}
+.sim-success{background:#f0fdf4;color:#16a34a;border-radius:6px;padding:0.4rem 0.6rem;font-size:0.82rem;margin-bottom:0.5rem}
+
+/* Layout sim */
+.sim-layout{display:flex;min-height:450px}
+.sim-sidebar{width:200px;background:linear-gradient(180deg,#1e3a5f 0%,#0f2440 100%);color:#fff;display:flex;flex-direction:column;flex-shrink:0}
+.sim-sidebar.dir{background:linear-gradient(180deg,#1a365d 0%,#0c1f3a 100%)}
+.sim-sb-header{padding:0.8rem;border-bottom:1px solid rgba(255,255,255,0.1);font-weight:700;font-size:0.85rem;white-space:nowrap}
+.sim-sb-nav{flex:1;padding:0.5rem 0.3rem;display:flex;flex-direction:column;gap:0.15rem}
+.sim-sb-item{display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.6rem;background:transparent;border:none;color:rgba(255,255,255,0.7);border-radius:6px;font-size:0.8rem;text-align:left;width:100%;cursor:pointer;white-space:nowrap;font-family:inherit}
+.sim-sb-item:hover{background:rgba(255,255,255,0.1)}
+.sim-sb-item.active{background:rgba(255,255,255,0.15);color:#fff;font-weight:600}
+.sim-sb-footer{padding:0.6rem;border-top:1px solid rgba(255,255,255,0.1);font-size:0.75rem}
+.sim-sb-footer .name{font-weight:600;font-size:0.8rem}
+.sim-sb-footer .role{color:rgba(255,255,255,0.5);font-size:0.7rem}
+.sim-main{flex:1;overflow:auto}
+.sim-topbar{background:#fff;padding:0.5rem 1rem;border-bottom:1px solid #e2e8f0;font-size:0.82rem;color:#64748b;display:flex;align-items:center;gap:0.5rem}
+.sim-content{padding:1rem}
+.sim-content h3{font-size:1.1rem;color:#1e293b;margin-bottom:0.75rem}
+
+/* Table sim */
+.sim-tw{overflow-x:auto;border:1px solid #e2e8f0;border-radius:8px;background:#fff}
+.sim-t{width:100%;border-collapse:collapse;font-size:0.8rem}
+.sim-t th{background:#f8fafc;padding:0.45rem 0.5rem;border-bottom:2px solid #e2e8f0;text-align:left;font-size:0.75rem;font-weight:600;color:#475569;white-space:nowrap}
+.sim-t td{padding:0.4rem 0.5rem;border-bottom:1px solid #f1f5f9}
+.sim-t input{width:100%;border:none;outline:none;padding:0.3rem;font-size:0.8rem;background:transparent;font-family:inherit;box-sizing:border-box}
+.sim-t input:focus{background:#eff6ff}
+
+/* Modal sim */
+.sim-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:10}
+.sim-modal{background:#fff;border-radius:10px;padding:1.25rem;width:440px;max-width:90%;max-height:90%;overflow:auto}
+.sim-modal h4{margin:0 0 0.75rem;font-size:1rem;color:#1e293b}
+.sim-modal .row{display:flex;gap:0.5rem;margin-bottom:0.5rem}
+.sim-modal .row>div{flex:1}
+
+/* Stats */
+.sim-stats{display:flex;gap:0.75rem;flex-wrap:wrap;margin:0.75rem 0}
+.sim-stat{flex:1;min-width:100px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem;text-align:center}
+.sim-stat .num{font-size:1.5rem;font-weight:700;color:#1e293b}
+.sim-stat .lbl{font-size:0.72rem;color:#64748b;margin-top:0.15rem}
+
+/* Link card */
+.sim-linkcard{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:0.75rem;margin:0.75rem 0;font-size:0.82rem}
+.sim-linkcard code{background:#fff;padding:0.2rem 0.4rem;border-radius:4px;font-size:0.78rem;word-break:break-all;border:1px solid #e2e8f0}
+
+/* Step indicator */
+.sim-steps{display:flex;justify-content:center;gap:0.4rem;margin-bottom:1rem}
+.sim-step-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700}
+.sim-step-line{width:20px;height:2px;align-self:center}
+
+/* Invite box */
+.sim-invite{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:0.6rem;font-size:0.85rem;color:#1e40af;margin-bottom:1rem}
+
+/* Toast */
+.sim-toast{position:absolute;top:8px;right:8px;background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:0.4rem 0.8rem;border-radius:6px;font-size:0.8rem;font-weight:500;z-index:20;animation:fadeIn 0.3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="topnav" id="topnav">
+  <span class="topnav-title">🗳️ Manual Interactivo — Personeros 2026</span>
+</div>
+
+<!-- All sections rendered by JS below -->
+<div id="app"></div>
+
+<script>
+// =============================================
+// SIMULATED DATA
+// =============================================
+const RENIEC={
+  '12345678':{nombres:'JUAN CARLOS',ap:'GARCIA',am:'LOPEZ'},
+  '87654321':{nombres:'MARIA ELENA',ap:'RODRIGUEZ',am:'SILVA'},
+  '45678901':{nombres:'PEDRO ANTONIO',ap:'MARTINEZ',am:'TORRES'},
+  '11223344':{nombres:'ANA LUCIA',ap:'FERNANDEZ',am:'DIAZ'},
+  '55667788':{nombres:'CARLOS ALBERTO',ap:'QUISPE',am:'HUAMAN'},
+  '99887766':{nombres:'ROSA MARIA',ap:'CHAVEZ',am:'MENDOZA'},
+  '22334455':{nombres:'LUIS MIGUEL',ap:'VARGAS',am:'CASTILLO'},
+  '66778899':{nombres:'CARMEN JULIA',ap:'SANCHEZ',am:'FLORES'},
+};
+const FN=['JOSE','MARIA','CARLOS','ANA','LUIS','ROSA','PEDRO','JULIA','MIGUEL','CARMEN','ROBERTO','PATRICIA'];
+const LN=['GARCIA','RODRIGUEZ','MARTINEZ','LOPEZ','GONZALEZ','HERNANDEZ','PEREZ','SANCHEZ','RAMIREZ','TORRES','FLORES','MORALES'];
+function fakeReniec(d){const s=parseInt(d)||0;return{nombres:FN[s%FN.length]+' '+FN[(s*3+7)%FN.length],ap:LN[(s*2+5)%LN.length],am:LN[(s*4+11)%LN.length]};}
+function lookupDni(d){return RENIEC[d]||fakeReniec(d);}
+
+// State
+const state={
+  cargos:[],
+  directivos:[],
+  personeros:[],
+  invitaciones:[],
+  mensajes:[],
+};
+
+const PERMISOS=[
+  {key:'directivos:crear',label:'Registrar sub-directivos'},
+  {key:'directivos:ver',label:'Ver directivos'},
+  {key:'personeros:invitar',label:'Invitar personeros'},
+  {key:'personeros:ver',label:'Ver personeros'},
+  {key:'personeros:asignar',label:'Asignar personeros a mesas'},
+  {key:'dashboard:ver',label:'Ver dashboard'},
+  {key:'reportes:exportar',label:'Exportar datos'},
+  {key:'sistema:configurar',label:'Configurar sistema'},
+];
+
+let idCounter=1;
+function uid(){return 'id_'+(idCounter++);}
+
+// =============================================
+// SECTIONS DEFINITION
+// =============================================
+const sections=[
+  {id:'login',group:'Admin',label:'Login Admin',render:renderLoginAdmin},
+  {id:'dashboard',group:'Admin',label:'Dashboard',render:renderDashboard},
+  {id:'personeros',group:'Admin',label:'Personeros',render:renderPersoneroList},
+  {id:'masivo',group:'Admin',label:'Registro Masivo',render:renderRegistroMasivo},
+  {id:'cargos',group:'Admin',label:'Cargos',render:renderCargos},
+  {id:'directivos',group:'Admin',label:'Directivos',render:renderDirectivos},
+  {id:'dir-login',group:'Directivo',label:'Login Directivo',render:renderDirectivoLogin},
+  {id:'dir-dash',group:'Directivo',label:'Dashboard Dir.',render:renderDirectivoDash},
+  {id:'dir-invitar',group:'Directivo',label:'Invitar',render:renderInvitar},
+  {id:'autoregistro',group:'Personero',label:'Auto-registro',render:renderAutoRegistro},
+  {id:'mapa',group:'Nuevas',label:'Mapa de Calor',render:renderMapaCalor},
+  {id:'chat',group:'Nuevas',label:'Chat Interno',render:renderChatInterno},
+  {id:'reportes',group:'Nuevas',label:'Reportes',render:renderReportes},
+  {id:'movil',group:'Nuevas',label:'App Movil',render:renderAppMovil},
+];
+
+let currentSection='login';
+
+function navigate(id){
+  currentSection=id;
+  renderAll();
+}
+
+function renderNav(){
+  const nav=document.getElementById('topnav');
+  let html='<span class="topnav-title">🗳️ Manual Interactivo — Personeros 2026</span>';
+  let lastGroup='';
+  sections.forEach(s=>{
+    if(s.group!==lastGroup){
+      if(lastGroup) html+='<span class="sep">|</span>';
+      lastGroup=s.group;
+    }
+    html+=`<button class="${currentSection===s.id?'active':''}" onclick="navigate('${s.id}')">${s.label}</button>`;
+  });
+  nav.innerHTML=html;
+}
+
+function renderAll(){
+  renderNav();
+  const app=document.getElementById('app');
+  let html='';
+  sections.forEach(s=>{
+    html+=`<div class="manual-section ${currentSection===s.id?'active':''}" id="sec-${s.id}"></div>`;
+  });
+  app.innerHTML=html;
+  const sec=document.getElementById('sec-'+currentSection);
+  if(sec){
+    const s=sections.find(x=>x.id===currentSection);
+    if(s) s.render(sec);
+  }
+}
+
+// =============================================
+// HELPERS
+// =============================================
+function h(tag,attrs,children){
+  let a='';
+  if(attrs)Object.entries(attrs).forEach(([k,v])=>{if(k==='style'&&typeof v==='object'){a+=` style="${Object.entries(v).map(([p,val])=>p.replace(/[A-Z]/g,m=>'-'+m.toLowerCase())+':'+val).join(';')}"`}else if(k.startsWith('on')){}else{a+=` ${k}="${v}"`}});
+  const c=Array.isArray(children)?children.join(''):children||'';
+  if(['input','br','hr','img'].includes(tag))return`<${tag}${a}/>`;
+  return`<${tag}${a}>${c}</${tag}>`;
+}
+
+function toast(container,msg){
+  const t=document.createElement('div');
+  t.className='sim-toast';
+  t.textContent=msg;
+  container.style.position='relative';
+  container.appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+}
+
+// =============================================
+// 1. LOGIN ADMIN
+// =============================================
+function renderLoginAdmin(el){
+  el.innerHTML=`
+  <h2 class="doc-title">1. Inicio de Sesion — Administrador</h2>
+  <p class="doc-text">El administrador ingresa al sistema con su usuario y contrasena. Pruebe la demo a continuacion:</p>
+  <div class="doc-step"><b>1</b> Escriba <strong>admin</strong> como usuario y <strong>admin</strong> como contrasena.</div>
+  <div class="doc-step"><b>2</b> Presione <strong>"Ingresar"</strong>. Sera redirigido al Dashboard.</div>
+  <div class="doc-note">💡 En la parte inferior hay un enlace al portal de directivos para dirigentes del partido.</div>
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Pantalla: /login</span></div>
+    <div class="demo-body">
+      <div class="sim-page gradient">
+        <div class="sim-card">
+          <div style="font-size:2.5rem;margin-bottom:0.3rem">🗳️</div>
+          <h3 style="color:#1e3a5f;margin-bottom:0.15rem">Sistema de Personeros</h3>
+          <p style="color:#64748b;font-size:0.85rem;margin-bottom:1.25rem">Elecciones 2026</p>
+          <div class="sim-field">
+            <label class="sim-label">Usuario</label>
+            <input class="sim-input" id="login-user" placeholder="administrador" value="admin"/>
+          </div>
+          <div class="sim-field">
+            <label class="sim-label">Contrasena</label>
+            <input class="sim-input" id="login-pass" type="password" placeholder="••••••••" value="admin"/>
+          </div>
+          <div id="login-error" style="display:none" class="sim-error"></div>
+          <button class="sim-btn" id="login-btn" onclick="doAdminLogin()">Ingresar</button>
+          <a href="javascript:navigate('dir-login')" style="display:inline-block;margin-top:1rem;font-size:0.78rem;color:#64748b;text-decoration:none">Acceso para directivos del partido</a>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function doAdminLogin(){
+  const u=document.getElementById('login-user').value;
+  const p=document.getElementById('login-pass').value;
+  const err=document.getElementById('login-error');
+  if(u==='admin'&&p==='admin'){
+    err.style.display='none';
+    navigate('dashboard');
+  } else {
+    err.style.display='block';
+    err.textContent='Usuario o contrasena incorrectos. Pruebe admin/admin';
+  }
+}
+
+// =============================================
+// 2. DASHBOARD
+// =============================================
+function renderDashboard(el){
+  const regions=[
+    {name:'AMAZONAS',mesas:412,asignadas:189,pct:45.9},
+    {name:'ANCASH',mesas:1834,asignadas:921,pct:50.2},
+    {name:'APURIMAC',mesas:583,asignadas:312,pct:53.5},
+    {name:'AREQUIPA',mesas:2105,asignadas:1473,pct:70.0},
+    {name:'AYACUCHO',mesas:789,asignadas:394,pct:49.9},
+    {name:'CAJAMARCA',mesas:1923,asignadas:865,pct:45.0},
+    {name:'CALLAO',mesas:1456,asignadas:1092,pct:75.0},
+    {name:'CUSCO',mesas:1678,asignadas:1007,pct:60.0},
+    {name:'HUANCAVELICA',mesas:534,asignadas:214,pct:40.1},
+    {name:'HUANUCO',mesas:945,asignadas:472,pct:50.0},
+    {name:'ICA',mesas:1123,asignadas:786,pct:70.0},
+    {name:'JUNIN',mesas:1567,asignadas:940,pct:60.0},
+    {name:'LA LIBERTAD',mesas:2345,asignadas:1641,pct:70.0},
+    {name:'LAMBAYEQUE',mesas:1678,asignadas:1175,pct:70.0},
+    {name:'LIMA',mesas:12456,asignadas:8719,pct:70.0},
+  ];
+
+  let cards='';
+  regions.forEach(r=>{
+    const color=r.pct>=70?'#16a34a':r.pct>=50?'#d97706':'#dc2626';
+    cards+=`<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem;cursor:pointer" onclick="toast(this.closest('.demo-body'),'Navegaria a ${r.name}')">
+      <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.4rem">${r.name}</div>
+      <div style="font-size:0.75rem;color:#64748b">${r.mesas} mesas · ${r.asignadas} asignadas</div>
+      <div style="background:#e2e8f0;border-radius:4px;height:8px;margin-top:0.4rem;overflow:hidden">
+        <div style="background:${color};height:100%;width:${r.pct}%;border-radius:4px"></div>
+      </div>
+      <div style="font-size:0.72rem;color:${color};font-weight:600;margin-top:0.2rem">${r.pct}%</div>
+    </div>`;
+  });
+
+  el.innerHTML=`
+  <h2 class="doc-title">2. Dashboard de Cobertura</h2>
+  <p class="doc-text">El dashboard muestra la cobertura de personeros por region. Al hacer clic en una region se navega al detalle de provincias, luego distritos, y finalmente mesas de votacion.</p>
+  <div class="doc-step"><b>1</b> Haga clic en una <strong>region</strong> para navegar al detalle.</div>
+  <div class="doc-step"><b>2</b> Use los controles superiores para alternar entre <strong>Peru</strong> y <strong>Extranjero</strong>.</div>
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Pantalla: / (Dashboard)</span></div>
+    <div class="demo-body">
+      <div class="sim-layout">
+        ${adminSidebar('dashboard')}
+        <div class="sim-main">
+          <div class="sim-topbar">📊 Dashboard › <strong>Nacional</strong></div>
+          <div class="sim-content">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem">
+              <h3 style="margin:0">Cobertura Nacional</h3>
+              <div style="display:flex;gap:0.4rem">
+                <button class="sim-btn-sm" style="background:#2563eb;color:#fff" onclick="toast(this.closest('.demo-body'),'Vista: Peru')">Peru</button>
+                <button class="sim-btn-sm" style="background:#f1f5f9;color:#475569" onclick="toast(this.closest('.demo-body'),'Vista: Extranjero')">Extranjero</button>
+              </div>
+            </div>
+            <div class="sim-stats">
+              <div class="sim-stat"><div class="num">${regions.reduce((a,r)=>a+r.mesas,0).toLocaleString()}</div><div class="lbl">Total Mesas</div></div>
+              <div class="sim-stat"><div class="num" style="color:#16a34a">${regions.reduce((a,r)=>a+r.asignadas,0).toLocaleString()}</div><div class="lbl">Asignadas</div></div>
+              <div class="sim-stat"><div class="num" style="color:#d97706">${state.personeros.length||847}</div><div class="lbl">Personeros</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.6rem;margin-top:0.75rem">
+              ${cards}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function adminSidebar(active){
+  const items=[
+    {icon:'📊',label:'Dashboard',id:'dashboard'},
+    {icon:'👥',label:'Personeros',id:'personeros'},
+    {icon:'📋',label:'Registro Masivo',id:'masivo'},
+    {icon:'🏛️',label:'Cargos',id:'cargos'},
+    {icon:'👔',label:'Directivos',id:'directivos'},
+  ];
+  let nav='';
+  items.forEach(i=>{
+    nav+=`<button class="sim-sb-item ${active===i.id?'active':''}" onclick="navigate('${i.id}')">${i.icon} ${i.label}</button>`;
+  });
+  return `<div class="sim-sidebar">
+    <div class="sim-sb-header">🗳️ Personeros 2026</div>
+    <div class="sim-sb-nav">${nav}</div>
+    <div class="sim-sb-footer"><div class="name">Administrador</div><div class="role">admin</div></div>
+  </div>`;
+}
+
+// =============================================
+// 3. PERSONERO LIST
+// =============================================
+function renderPersoneroList(el){
+  if(state.personeros.length===0){
+    // Seed some demo personeros
+    ['12345678','87654321','45678901','11223344','55667788','99887766','22334455','66778899'].forEach(d=>{
+      const r=lookupDni(d);
+      state.personeros.push({_id:uid(),dni:d,nombres:r.nombres,apellidoPaterno:r.ap,apellidoMaterno:r.am,telefono:'9'+d.slice(0,8),correo:'',assignmentStatus:['pendiente','asignado','confirmado','sin_mesa'][Math.floor(Math.random()*4)],assignedMesa:Math.random()>0.5?('0'+Math.floor(Math.random()*90000+10000)):null});
+    });
+  }
+
+  el.innerHTML=`
+  <h2 class="doc-title">3. Gestion de Personeros</h2>
+  <p class="doc-text">Lista todos los personeros registrados. Use los filtros para buscar por DNI/nombre o filtrar por estado.</p>
+  <table class="doc-table"><thead><tr><th>Estado</th><th>Color</th><th>Significado</th></tr></thead><tbody>
+    <tr><td><span class="badge badge-a">Pendiente</span></td><td>Amarillo</td><td>Sin mesa asignada</td></tr>
+    <tr><td><span class="badge badge-g">Asignado</span></td><td>Verde</td><td>Tiene mesa</td></tr>
+    <tr><td><span class="badge badge-p">Confirmado</span></td><td>Morado</td><td>Confirmó asistencia</td></tr>
+    <tr><td><span class="badge badge-gr">Sin mesa</span></td><td>Gris</td><td>No hay mesa disponible</td></tr>
+  </tbody></table>
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Pantalla: /personeros</span></div>
+    <div class="demo-body" id="personero-list-body">
+      <div class="sim-layout">
+        ${adminSidebar('personeros')}
+        <div class="sim-main">
+          <div class="sim-topbar">Dashboard › <strong>Personeros</strong></div>
+          <div class="sim-content" id="pl-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  renderPLContent();
+}
+function renderPLContent(){
+  const c=document.getElementById('pl-content');
+  if(!c)return;
+  const search=(document.getElementById('pl-search')||{}).value||'';
+  const statusF=(document.getElementById('pl-status')||{}).value||'';
+  let filtered=state.personeros.filter(p=>{
+    if(statusF&&p.assignmentStatus!==statusF)return false;
+    if(search){const re=new RegExp(search,'i');return re.test(p.dni)||re.test(p.nombres)||re.test(p.apellidoPaterno);}
+    return true;
+  });
+  const statusColors={pendiente:'badge-a',asignado:'badge-g',confirmado:'badge-p',sin_mesa:'badge-gr'};
+  let rows='';
+  filtered.forEach(p=>{
+    rows+=`<tr>
+      <td style="font-family:monospace">${p.dni}</td>
+      <td>${p.apellidoPaterno} ${p.apellidoMaterno||''}, ${p.nombres}</td>
+      <td>${p.telefono||'—'}</td>
+      <td>${p.correo||'—'}</td>
+      <td>${p.assignedMesa||'—'}</td>
+      <td><span class="badge ${statusColors[p.assignmentStatus]||'badge-gr'}">${p.assignmentStatus}</span></td>
+    </tr>`;
+  });
+  c.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem">
+      <h3 style="margin:0">👥 Personeros registrados <span class="badge badge-b">${state.personeros.length}</span></h3>
+      <button class="sim-btn-sm" style="background:#16a34a;color:#fff" onclick="toast(this.closest('.demo-body'),'Exportando CSV...')">📥 Exportar</button>
+    </div>
+    <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap">
+      <input class="sim-input" id="pl-search" placeholder="🔍 Buscar DNI o nombre..." style="max-width:250px" value="${search}" oninput="renderPLContent()"/>
+      <select class="sim-input" id="pl-status" style="max-width:180px" onchange="renderPLContent()">
+        <option value="">Todos los estados</option>
+        <option value="pendiente" ${statusF==='pendiente'?'selected':''}>Pendiente</option>
+        <option value="asignado" ${statusF==='asignado'?'selected':''}>Asignado</option>
+        <option value="confirmado" ${statusF==='confirmado'?'selected':''}>Confirmado</option>
+        <option value="sin_mesa" ${statusF==='sin_mesa'?'selected':''}>Sin mesa</option>
+      </select>
+    </div>
+    <div class="sim-tw"><table class="sim-t"><thead><tr>
+      <th>DNI</th><th>Nombre</th><th>Telefono</th><th>Correo</th><th>Mesa</th><th>Estado</th>
+    </tr></thead><tbody>${rows||'<tr><td colspan="6" style="text-align:center;color:#94a3b8">No hay resultados</td></tr>'}</tbody></table></div>
+    <div style="font-size:0.75rem;color:#64748b;margin-top:0.5rem">Mostrando ${filtered.length} de ${state.personeros.length} personeros</div>`;
+}
+
+// =============================================
+// 4. REGISTRO MASIVO
+// =============================================
+let masRows=[];
+const masSaved=new Set();
+function initMasRows(){masRows=[];for(let i=0;i<8;i++)masRows.push({dni:'',nombres:'',ap:'',am:'',tel:'',correo:'',status:'',msg:''});}
+initMasRows();
+
+function renderRegistroMasivo(el){
+  el.innerHTML=`
+  <h2 class="doc-title">4. Registro Masivo de Personeros</h2>
+  <p class="doc-text">Registre multiples personeros en una tabla estilo Excel. Escriba el DNI y presione <strong>Enter</strong> para consultar RENIEC.</p>
+  <div class="doc-step"><b>1</b> Escriba un DNI de 8 digitos y presione <strong>Enter</strong>.</div>
+  <div class="doc-step"><b>2</b> Los nombres se llenan automaticamente. Complete el <strong>Celular</strong>.</div>
+  <div class="doc-step"><b>3</b> Use <strong>Tab/Enter</strong> para navegar. Repita para cada personero.</div>
+  <div class="doc-step"><b>4</b> Presione <strong>"AGREGAR PERSONEROS"</strong> para guardar.</div>
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Pantalla: /personeros/registro-masivo</span></div>
+    <div class="demo-body" id="masivo-body">
+      <div class="sim-layout">
+        ${adminSidebar('masivo')}
+        <div class="sim-main">
+          <div class="sim-topbar">Dashboard › <strong>Registro Masivo</strong></div>
+          <div class="sim-content" id="mas-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  renderMasContent();
+}
+
+function renderMasContent(){
+  const c=document.getElementById('mas-content');if(!c)return;
+  const valid=masRows.filter(r=>/^\d{8}$/.test(r.dni)&&r.tel.length>=9&&r.status!=='exists'&&r.status!=='saved');
+  const statusColors={ok:'#16a34a',saved:'#16a34a',exists:'#d97706',error:'#dc2626',loading:'#2563eb'};
+  const rowBgs={ok:'#f0fdf4',saved:'#f0fdf4',exists:'#fffbeb',error:'#fef2f2',loading:'#eff6ff'};
+  let rows='';
+  masRows.forEach((r,i)=>{
+    rows+=`<tr style="background:${rowBgs[r.status]||'transparent'}">
+      <td style="text-align:center;color:#94a3b8;font-size:0.75rem;padding:0.3rem">${i+1}</td>
+      <td><input class="sim-t input" data-mi="${i}" data-mc="dni" value="${r.dni}" maxlength="8" placeholder="12345678" ${r.status==='saved'?'disabled':''}/></td>
+      <td><input class="sim-t input" data-mi="${i}" data-mc="nombres" value="${r.nombres}" placeholder="Nombres" ${r.status==='saved'?'disabled':''}/></td>
+      <td><input class="sim-t input" data-mi="${i}" data-mc="ap" value="${r.ap}" placeholder="Ap. Paterno" ${r.status==='saved'?'disabled':''}/></td>
+      <td><input class="sim-t input" data-mi="${i}" data-mc="am" value="${r.am}" placeholder="Ap. Materno" ${r.status==='saved'?'disabled':''}/></td>
+      <td><input class="sim-t input" data-mi="${i}" data-mc="tel" value="${r.tel}" placeholder="999999999" ${r.status==='saved'?'disabled':''}/></td>
+      <td><input class="sim-t input" data-mi="${i}" data-mc="correo" value="${r.correo}" placeholder="correo@ej.com" ${r.status==='saved'?'disabled':''}/></td>
+      <td style="font-size:0.75rem;font-weight:500;color:${statusColors[r.status]||'#94a3b8'};white-space:nowrap;padding:0.3rem">${r.status==='loading'?'⏳ ':''}${r.msg}</td>
+      <td>${r.dni&&r.status!=='saved'?'<button style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:1rem" onclick="masRemove('+i+')">×</button>':''}</td>
+    </tr>`;
+  });
+  c.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;flex-wrap:wrap;gap:0.5rem">
+      <h3 style="margin:0">Registro Masivo de Personeros</h3>
+      <div style="display:flex;gap:0.5rem">
+        <button class="sim-btn-sm" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1" onclick="initMasRows();renderMasContent()">Limpiar todo</button>
+        <button class="sim-btn-sm" style="background:#2563eb;color:#fff;opacity:${valid.length?1:0.5}" ${valid.length?'':'disabled'} onclick="masSave()">AGREGAR PERSONEROS (${valid.length})</button>
+      </div>
+    </div>
+    <div id="mas-result"></div>
+    <div class="sim-tw"><table class="sim-t"><thead><tr>
+      <th style="width:30px">#</th><th style="width:100px">DNI</th><th>Nombres</th><th>Ap. Paterno</th><th>Ap. Materno</th><th style="width:100px">Celular *</th><th>Correo</th><th style="width:100px">Estado</th><th style="width:25px"></th>
+    </tr></thead><tbody>${rows}</tbody></table></div>
+    <p style="font-size:0.75rem;color:#64748b;margin-top:0.5rem">Escriba el DNI y presione <strong>Enter</strong> para consultar. Use Tab para navegar.</p>`;
+  // Bind events
+  c.querySelectorAll('input[data-mi]').forEach(inp=>{
+    const i=parseInt(inp.dataset.mi),col=inp.dataset.mc;
+    inp.addEventListener('input',()=>{
+      if(col==='dni')masRows[i].dni=inp.value.replace(/\D/g,'');
+      else if(col==='tel')masRows[i].tel=inp.value.replace(/\D/g,'');
+      else masRows[i][col]=inp.value;
+      if(col==='dni'){masRows[i].status='';masRows[i].msg='';}
+    });
+    inp.addEventListener('keydown',e=>{
+      if(col==='dni'&&e.key==='Enter'){e.preventDefault();masLookup(i);return;}
+      if(e.key==='Enter'||e.key==='Tab'&&!e.shiftKey){
+        e.preventDefault();
+        const cols=['dni','nombres','ap','am','tel','correo'];
+        const ci=cols.indexOf(col);
+        if(ci<cols.length-1){
+          const next=c.querySelector(`input[data-mi="${i}"][data-mc="${cols[ci+1]}"]`);
+          next?.focus();
+        } else {
+          if(i>=masRows.length-2){masRows.push({dni:'',nombres:'',ap:'',am:'',tel:'',correo:'',status:'',msg:''},{dni:'',nombres:'',ap:'',am:'',tel:'',correo:'',status:'',msg:''});renderMasContent();}
+          setTimeout(()=>{const next=c.querySelector(`input[data-mi="${i+1}"][data-mc="dni"]`);next?.focus();},50);
+        }
+      }
+    });
+  });
+}
+
+function masLookup(i){
+  const d=masRows[i].dni;
+  if(!/^\d{8}$/.test(d)){masRows[i].status='error';masRows[i].msg='DNI: 8 digitos';renderMasContent();return;}
+  const dup=masRows.findIndex((r,j)=>j!==i&&r.dni===d);
+  if(dup>=0){masRows[i].status='error';masRows[i].msg='Duplicado (fila '+(dup+1)+')';renderMasContent();return;}
+  if(masSaved.has(d)){masRows[i].status='exists';masRows[i].msg='Ya registrado';const r=lookupDni(d);masRows[i].nombres=r.nombres;masRows[i].ap=r.ap;masRows[i].am=r.am;renderMasContent();return;}
+  masRows[i].status='loading';masRows[i].msg='Consultando...';renderMasContent();
+  setTimeout(()=>{
+    const r=lookupDni(d);masRows[i].nombres=r.nombres;masRows[i].ap=r.ap;masRows[i].am=r.am;masRows[i].status='ok';masRows[i].msg='RENIEC OK';
+    if(i>=masRows.length-2)masRows.push({dni:'',nombres:'',ap:'',am:'',tel:'',correo:'',status:'',msg:''},{dni:'',nombres:'',ap:'',am:'',tel:'',correo:'',status:'',msg:''});
+    renderMasContent();
+    setTimeout(()=>{const el=document.querySelector(`input[data-mi="${i}"][data-mc="tel"]`);el?.focus();},50);
+  },500);
+}
+function masRemove(i){masRows.splice(i,1);if(masRows.length<3)masRows.push({dni:'',nombres:'',ap:'',am:'',tel:'',correo:'',status:'',msg:''});renderMasContent();}
+function masSave(){
+  let created=0;
+  masRows.forEach(r=>{
+    if(/^\d{8}$/.test(r.dni)&&r.tel.length>=9&&r.status!=='exists'&&r.status!=='saved'){
+      masSaved.add(r.dni);r.status='saved';r.msg='Creado ✓';created++;
+      if(!state.personeros.find(p=>p.dni===r.dni)){
+        state.personeros.push({_id:uid(),dni:r.dni,nombres:r.nombres,apellidoPaterno:r.ap,apellidoMaterno:r.am,telefono:r.tel,correo:r.correo,assignmentStatus:'pendiente',assignedMesa:null});
+      }
+    }
+  });
+  renderMasContent();
+  const res=document.getElementById('mas-result');
+  if(res)res.innerHTML=`<div class="sim-success" style="margin-bottom:0.5rem">${created} creado${created!==1?'s':''}</div>`;
+}
+
+// =============================================
+// 5. CARGOS
+// =============================================
+let cargoModal=null;
+function renderCargos(el){
+  el.innerHTML=`
+  <h2 class="doc-title">5. Gestion de Cargos</h2>
+  <p class="doc-text">Configure el organigrama del partido. Cada cargo tiene un nivel jerarquico y permisos asignables.</p>
+  <div class="doc-step"><b>1</b> Use <strong>"Sembrar por defecto"</strong> para crear los 6 cargos iniciales.</div>
+  <div class="doc-step"><b>2</b> Use <strong>"+ Nuevo Cargo"</strong> para crear cargos personalizados.</div>
+  <div class="doc-step"><b>3</b> Edite los <strong>permisos</strong> de cada cargo segun las necesidades.</div>
+  <div class="doc-warn">⚠️ El nivel determina la jerarquia: un directivo solo puede crear sub-directivos con nivel superior numerico (menor rango).</div>
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Pantalla: /admin/cargos</span></div>
+    <div class="demo-body" id="cargos-body">
+      <div class="sim-layout">
+        ${adminSidebar('cargos')}
+        <div class="sim-main">
+          <div class="sim-topbar">Dashboard › <strong>Cargos</strong></div>
+          <div class="sim-content" id="cargos-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  renderCargosContent();
+}
+
+function renderCargosContent(){
+  const c=document.getElementById('cargos-content');if(!c)return;
+  let rows='';
+  state.cargos.sort((a,b)=>a.nivel-b.nivel).forEach((cg,i)=>{
+    const perms=(cg.permisos||[]).map(p=>`<span class="badge badge-gr" style="margin:1px">${p}</span>`).join(' ');
+    rows+=`<tr>
+      <td><span class="badge badge-b">${cg.nivel}</span></td>
+      <td style="font-weight:600">${cg.nombre}</td>
+      <td style="max-width:300px">${perms}</td>
+      <td>
+        <button style="background:none;border:none;color:#2563eb;cursor:pointer;font-size:0.78rem;margin-right:0.3rem" onclick="cargoEdit('${cg._id}')">Editar</button>
+        <button style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:0.78rem" onclick="cargoDel('${cg._id}')">Eliminar</button>
+      </td>
+    </tr>`;
+  });
+  const body=document.getElementById('cargos-body');
+  c.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem">
+      <h3 style="margin:0">Cargos del Partido</h3>
+      <div style="display:flex;gap:0.5rem">
+        <button class="sim-btn-sm" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1" onclick="cargoSeed()">Sembrar por defecto</button>
+        <button class="sim-btn-sm" style="background:#2563eb;color:#fff" onclick="cargoNew()">+ Nuevo Cargo</button>
+      </div>
+    </div>
+    <div class="sim-tw"><table class="sim-t"><thead><tr><th>Nivel</th><th>Nombre</th><th>Permisos</th><th style="width:120px">Acciones</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:1rem">No hay cargos. Use "Sembrar por defecto".</td></tr>'}</tbody></table></div>`;
+  // Render modal if open
+  if(cargoModal){
+    const overlay=document.createElement('div');overlay.className='sim-overlay';
+    const permChecks=PERMISOS.map(p=>`<label style="display:flex;align-items:center;gap:0.3rem;font-size:0.78rem;cursor:pointer">
+      <input type="checkbox" class="cargo-perm" value="${p.key}" ${(cargoModal.permisos||[]).includes(p.key)?'checked':''}/>${p.label}
+    </label>`).join('');
+    overlay.innerHTML=`<div class="sim-modal">
+      <h4>${cargoModal._id?'Editar':'Nuevo'} Cargo</h4>
+      <div class="sim-field"><label class="sim-label">Nombre</label><input class="sim-input" id="cargo-nombre" value="${cargoModal.nombre||''}"/></div>
+      <div class="sim-field"><label class="sim-label">Nivel (1=mayor rango)</label><input class="sim-input" type="number" id="cargo-nivel" value="${cargoModal.nivel||''}" min="1"/></div>
+      <div class="sim-field"><label class="sim-label">Permisos</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem">${permChecks}</div></div>
+      <div style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:0.75rem">
+        <button class="sim-btn-sm" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1" onclick="cargoModal=null;renderCargosContent()">Cancelar</button>
+        <button class="sim-btn-sm" style="background:#2563eb;color:#fff" onclick="cargoSave()">Guardar</button>
+      </div>
+    </div>`;
+    overlay.addEventListener('click',e=>{if(e.target===overlay){cargoModal=null;renderCargosContent();}});
+    body.style.position='relative';
+    body.appendChild(overlay);
+  }
+}
+function cargoSeed(){
+  const defaults=[
+    {nombre:'Presidente del Partido',nivel:1,permisos:PERMISOS.map(p=>p.key)},
+    {nombre:'Secretario General',nivel:2,permisos:['directivos:crear','directivos:ver','personeros:invitar','personeros:ver','personeros:asignar','dashboard:ver','reportes:exportar']},
+    {nombre:'Coordinador General',nivel:3,permisos:['directivos:crear','directivos:ver','personeros:invitar','personeros:ver','personeros:asignar','dashboard:ver','reportes:exportar']},
+    {nombre:'Coordinador Regional',nivel:4,permisos:['directivos:crear','directivos:ver','personeros:invitar','personeros:ver','dashboard:ver']},
+    {nombre:'Coordinador Distrital',nivel:5,permisos:['directivos:crear','directivos:ver','personeros:invitar','personeros:ver','dashboard:ver']},
+    {nombre:'Coord. Centro de Votacion',nivel:6,permisos:['personeros:invitar','personeros:ver','dashboard:ver']},
+  ];
+  defaults.forEach(d=>{if(!state.cargos.find(c=>c.nombre===d.nombre))state.cargos.push({_id:uid(),...d});});
+  renderCargosContent();toast(document.getElementById('cargos-body'),'6 cargos creados');
+}
+function cargoNew(){cargoModal={nombre:'',nivel:'',permisos:[]};renderCargosContent();}
+function cargoEdit(id){const c=state.cargos.find(x=>x._id===id);if(c)cargoModal={...c,permisos:[...(c.permisos||[])]};renderCargosContent();}
+function cargoDel(id){state.cargos=state.cargos.filter(c=>c._id!==id);renderCargosContent();toast(document.getElementById('cargos-body'),'Cargo eliminado');}
+function cargoSave(){
+  const n=document.getElementById('cargo-nombre').value;
+  const nv=parseInt(document.getElementById('cargo-nivel').value);
+  const perms=Array.from(document.querySelectorAll('.cargo-perm:checked')).map(cb=>cb.value);
+  if(!n||!nv){alert('Nombre y nivel requeridos');return;}
+  if(cargoModal._id){const c=state.cargos.find(x=>x._id===cargoModal._id);if(c){c.nombre=n;c.nivel=nv;c.permisos=perms;}}
+  else{state.cargos.push({_id:uid(),nombre:n,nivel:nv,permisos:perms});}
+  cargoModal=null;renderCargosContent();toast(document.getElementById('cargos-body'),'Cargo guardado');
+}
+
+// =============================================
+// 6. DIRECTIVOS
+// =============================================
+let dirModal=null;
+function renderDirectivos(el){
+  el.innerHTML=`
+  <h2 class="doc-title">6. Gestion de Directivos</h2>
+  <p class="doc-text">Registre dirigentes del partido. Cada directivo recibe credenciales (DNI + contrasena) y un link unico de invitacion.</p>
+  <div class="doc-step"><b>1</b> Presione <strong>"+ Nuevo Directivo"</strong>.</div>
+  <div class="doc-step"><b>2</b> Ingrese el DNI y presione <strong>"Buscar"</strong> para consultar RENIEC.</div>
+  <div class="doc-step"><b>3</b> Seleccione el cargo, asigne contrasena y presione <strong>"Guardar"</strong>.</div>
+  <div class="doc-note">💡 Cada directivo obtiene un link de invitacion unico. Use "Copiar link" para compartirlo.</div>
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Pantalla: /admin/directivos</span></div>
+    <div class="demo-body" id="dir-body">
+      <div class="sim-layout">
+        ${adminSidebar('directivos')}
+        <div class="sim-main">
+          <div class="sim-topbar">Dashboard › <strong>Directivos</strong></div>
+          <div class="sim-content" id="dir-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  renderDirContent();
+}
+
+function renderDirContent(){
+  const c=document.getElementById('dir-content');if(!c)return;
+  let rows='';
+  state.directivos.forEach(d=>{
+    const cargo=state.cargos.find(c=>c._id===d.cargoId);
+    rows+=`<tr>
+      <td style="font-family:monospace">${d.dni}</td>
+      <td style="font-weight:500">${d.nombres} ${d.ap} ${d.am||''}</td>
+      <td><span class="badge badge-b">${cargo?.nombre||'—'}</span></td>
+      <td>${d.registradoPor||'Admin'}</td>
+      <td>${d.telefono||'—'}</td>
+      <td><button class="sim-btn-sm" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;font-size:0.7rem" onclick="navigator.clipboard.writeText('${location.origin}/registro/${d.linkCode}');toast(document.getElementById('dir-body'),'Link copiado!')">Copiar link</button></td>
+      <td>
+        <button style="background:none;border:none;color:#2563eb;cursor:pointer;font-size:0.78rem" onclick="dirEdit('${d._id}')">Editar</button>
+        <button style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:0.78rem;margin-left:0.3rem" onclick="dirDel('${d._id}')">Eliminar</button>
+      </td>
+    </tr>`;
+  });
+  const body=document.getElementById('dir-body');
+  c.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem">
+      <h3 style="margin:0">Directivos del Partido</h3>
+      <button class="sim-btn-sm" style="background:#2563eb;color:#fff" onclick="dirNew()">+ Nuevo Directivo</button>
+    </div>
+    <div class="sim-tw"><table class="sim-t"><thead><tr><th>DNI</th><th>Nombre</th><th>Cargo</th><th>Registrado por</th><th>Telefono</th><th>Link</th><th style="width:120px">Acciones</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:1rem">No hay directivos. Cree cargos primero.</td></tr>'}</tbody></table></div>`;
+  if(dirModal){
+    const overlay=document.createElement('div');overlay.className='sim-overlay';
+    const cargoOpts=state.cargos.sort((a,b)=>a.nivel-b.nivel).map(c=>`<option value="${c._id}" ${dirModal.cargoId===c._id?'selected':''}>${c.nombre} (Nivel ${c.nivel})</option>`).join('');
+    overlay.innerHTML=`<div class="sim-modal">
+      <h4>${dirModal._id?'Editar':'Nuevo'} Directivo</h4>
+      <div style="display:flex;gap:0.5rem;align-items:flex-end;margin-bottom:0.5rem">
+        <div style="flex:1"><label class="sim-label">DNI</label><input class="sim-input" id="dir-dni" value="${dirModal.dni||''}" maxlength="8" ${dirModal._id?'disabled':''}/></div>
+        ${dirModal._id?'':`<button class="sim-btn-sm" style="background:#2563eb;color:#fff;height:34px" onclick="dirLookup()">Buscar</button>`}
+        <span id="dir-dni-status" style="font-size:0.8rem"></span>
+      </div>
+      <div class="row"><div><label class="sim-label">Nombres</label><input class="sim-input" id="dir-nombres" value="${dirModal.nombres||''}"/></div>
+      <div><label class="sim-label">Ap. Paterno</label><input class="sim-input" id="dir-ap" value="${dirModal.ap||''}"/></div></div>
+      <div class="row"><div><label class="sim-label">Ap. Materno</label><input class="sim-input" id="dir-am" value="${dirModal.am||''}"/></div>
+      <div><label class="sim-label">Telefono</label><input class="sim-input" id="dir-tel" value="${dirModal.telefono||''}"/></div></div>
+      <div class="row"><div><label class="sim-label">Correo</label><input class="sim-input" id="dir-correo" value="${dirModal.correo||''}"/></div>
+      <div><label class="sim-label">Cargo</label><select class="sim-input" id="dir-cargo"><option value="">Seleccionar...</option>${cargoOpts}</select></div></div>
+      <div class="row"><div><label class="sim-label">Region</label><input class="sim-input" id="dir-region" value="${dirModal.region||''}" placeholder="Ej: Lima"/></div>
+      <div><label class="sim-label">Contrasena${dirModal._id?' (vacio=no cambiar)':''}</label><input class="sim-input" type="password" id="dir-pass" placeholder="${dirModal._id?'••••':'Min 4 chars'}"/></div></div>
+      <div style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:0.75rem">
+        <button class="sim-btn-sm" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1" onclick="dirModal=null;renderDirContent()">Cancelar</button>
+        <button class="sim-btn-sm" style="background:#2563eb;color:#fff" onclick="dirSave()">Guardar</button>
+      </div>
+    </div>`;
+    overlay.addEventListener('click',e=>{if(e.target===overlay){dirModal=null;renderDirContent();}});
+    body.style.position='relative';body.appendChild(overlay);
+  }
+}
+function dirNew(){if(state.cargos.length===0){alert('Primero cree cargos en la seccion Cargos');return;}dirModal={dni:'',nombres:'',ap:'',am:'',telefono:'',correo:'',cargoId:'',region:''};renderDirContent();}
+function dirEdit(id){const d=state.directivos.find(x=>x._id===id);if(d)dirModal={...d};renderDirContent();}
+function dirDel(id){state.directivos=state.directivos.filter(d=>d._id!==id);renderDirContent();toast(document.getElementById('dir-body'),'Directivo eliminado');}
+function dirLookup(){
+  const dni=document.getElementById('dir-dni').value.replace(/\D/g,'');
+  if(!/^\d{8}$/.test(dni)){document.getElementById('dir-dni-status').innerHTML='<span style="color:#dc2626">8 digitos</span>';return;}
+  document.getElementById('dir-dni-status').innerHTML='<span style="color:#2563eb">⏳</span>';
+  setTimeout(()=>{
+    const r=lookupDni(dni);
+    document.getElementById('dir-nombres').value=r.nombres;
+    document.getElementById('dir-ap').value=r.ap;
+    document.getElementById('dir-am').value=r.am;
+    document.getElementById('dir-dni-status').innerHTML='<span style="color:#16a34a">✓ OK</span>';
+    dirModal.nombres=r.nombres;dirModal.ap=r.ap;dirModal.am=r.am;dirModal.dni=dni;
+  },400);
+}
+function dirSave(){
+  const dni=document.getElementById('dir-dni').value;
+  const nombres=document.getElementById('dir-nombres').value;
+  const ap=document.getElementById('dir-ap').value;
+  const am=document.getElementById('dir-am').value;
+  const tel=document.getElementById('dir-tel').value;
+  const correo=document.getElementById('dir-correo').value;
+  const cargoId=document.getElementById('dir-cargo').value;
+  const region=document.getElementById('dir-region').value;
+  const pass=document.getElementById('dir-pass').value;
+  if(!dni||!nombres||!ap||!cargoId){alert('DNI, nombres, apellido y cargo son requeridos');return;}
+  if(!dirModal._id&&(!pass||pass.length<4)){alert('Contrasena minimo 4 caracteres');return;}
+  if(dirModal._id){const d=state.directivos.find(x=>x._id===dirModal._id);if(d){d.nombres=nombres;d.ap=ap;d.am=am;d.telefono=tel;d.correo=correo;d.cargoId=cargoId;d.region=region;}}
+  else{const lc=Math.random().toString(36).slice(2,10);state.directivos.push({_id:uid(),dni,nombres,ap,am,telefono:tel,correo,cargoId,region,linkCode:lc,registradoPor:null,password:pass});}
+  dirModal=null;renderDirContent();toast(document.getElementById('dir-body'),'Directivo guardado');
+}
+
+// =============================================
+// 7. DIRECTIVO LOGIN
+// =============================================
+function renderDirectivoLogin(el){
+  el.innerHTML=`
+  <h2 class="doc-title">7. Inicio de Sesion — Directivo</h2>
+  <p class="doc-text">Los directivos acceden con su DNI y la contrasena que les asigno el administrador.</p>
+  <div class="doc-step"><b>1</b> Ingrese el <strong>DNI</strong> del directivo.</div>
+  <div class="doc-step"><b>2</b> Ingrese la <strong>contrasena</strong> asignada.</div>
+  <div class="doc-note">💡 Primero cree un directivo en la seccion "Directivos" del admin. Luego use ese DNI y contrasena aqui.</div>
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Pantalla: /directivo/login</span></div>
+    <div class="demo-body">
+      <div class="sim-page gradient">
+        <div class="sim-card">
+          <div style="font-size:2.5rem;margin-bottom:0.3rem">🏛️</div>
+          <h3 style="color:#1e3a5f;margin-bottom:0.15rem">Portal de Directivos</h3>
+          <p style="color:#64748b;font-size:0.85rem;margin-bottom:1.25rem">Elecciones 2026</p>
+          <div class="sim-field"><label class="sim-label">DNI</label><input class="sim-input" id="dlogin-dni" maxlength="8" placeholder="Ingrese su DNI"/></div>
+          <div class="sim-field"><label class="sim-label">Contrasena</label><input class="sim-input" id="dlogin-pass" type="password" placeholder="Ingrese su contrasena"/></div>
+          <div id="dlogin-error" style="display:none" class="sim-error"></div>
+          <button class="sim-btn" onclick="doDirectivoLogin()">Ingresar</button>
+          <a href="javascript:navigate('login')" style="display:inline-block;margin-top:1rem;font-size:0.78rem;color:#64748b;text-decoration:none">Acceso administrador</a>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function doDirectivoLogin(){
+  const dni=document.getElementById('dlogin-dni').value;
+  const pass=document.getElementById('dlogin-pass').value;
+  const err=document.getElementById('dlogin-error');
+  const d=state.directivos.find(x=>x.dni===dni&&x.password===pass);
+  if(d){err.style.display='none';window._currentDirectivo=d;navigate('dir-dash');}
+  else{err.style.display='block';err.textContent='DNI o contrasena incorrectos. Cree un directivo primero en la seccion Admin > Directivos.';}
+}
+
+// =============================================
+// 8. DIRECTIVO DASHBOARD
+// =============================================
+function renderDirectivoDash(el){
+  const d=window._currentDirectivo||state.directivos[0];
+  if(!d){el.innerHTML=`<h2 class="doc-title">8. Dashboard del Directivo</h2><div class="doc-warn">⚠️ No hay directivo activo. Cree uno en "Directivos" e inicie sesion en "Login Directivo".</div>`;return;}
+  const cargo=state.cargos.find(c=>c._id===d.cargoId);
+  const myInvs=state.invitaciones.filter(i=>i.invitadoPor===d.dni);
+  const registrados=myInvs.filter(i=>i.estado==='registrado').length;
+  const link=location.origin+'/registro/'+d.linkCode;
+
+  el.innerHTML=`
+  <h2 class="doc-title">8. Dashboard del Directivo</h2>
+  <p class="doc-text">El directivo ve su link de invitacion, estadisticas y acceso a las funciones segun sus permisos.</p>
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Pantalla: /directivo/dashboard</span></div>
+    <div class="demo-body" id="ddash-body">
+      <div class="sim-layout">
+        ${dirSidebar('dir-dash',d)}
+        <div class="sim-main">
+          <div class="sim-topbar">${cargo?.nombre||'Directivo'}</div>
+          <div class="sim-content">
+            <h3 style="margin-bottom:0.15rem">Bienvenido, ${d.nombres}</h3>
+            <p style="color:#64748b;font-size:0.85rem;margin-bottom:1rem">${cargo?.nombre||''}</p>
+
+            <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem;margin-bottom:1rem">
+              <h4 style="font-size:0.9rem;margin-bottom:0.4rem">Tu link de invitacion</h4>
+              <p style="font-size:0.8rem;color:#64748b;margin-bottom:0.5rem">Comparte este link con las personas que quieres invitar como personeros:</p>
+              <div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap">
+                <code style="flex:1;background:#f8fafc;padding:0.35rem 0.5rem;border-radius:4px;font-size:0.75rem;word-break:break-all;border:1px solid #e2e8f0">${link}</code>
+                <button class="sim-btn-sm" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;font-size:0.72rem" onclick="navigator.clipboard.writeText('${link}');toast(document.getElementById('ddash-body'),'Link copiado!')">Copiar</button>
+                <button class="sim-btn-sm" style="background:#25d366;color:#fff;font-size:0.72rem" onclick="toast(document.getElementById('ddash-body'),'Abriendo WhatsApp...')">WhatsApp</button>
+              </div>
+            </div>
+
+            <div class="sim-stats">
+              <div class="sim-stat"><div class="num">${myInvs.length}</div><div class="lbl">Invitados</div></div>
+              <div class="sim-stat"><div class="num" style="color:#16a34a">${registrados}</div><div class="lbl">Registrados</div></div>
+              <div class="sim-stat"><div class="num" style="color:#d97706">${myInvs.length-registrados}</div><div class="lbl">Pendientes</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function dirSidebar(active,d){
+  const cargo=state.cargos.find(c=>c._id===d?.cargoId);
+  const perms=cargo?.permisos||[];
+  let items=[{icon:'🏠',label:'Inicio',id:'dir-dash',show:true}];
+  if(perms.includes('personeros:invitar'))items.push({icon:'📨',label:'Invitar Personeros',id:'dir-invitar',show:true});
+  let nav='';items.filter(i=>i.show).forEach(i=>{
+    nav+=`<button class="sim-sb-item ${active===i.id?'active':''}" onclick="navigate('${i.id}')">${i.icon} ${i.label}</button>`;
+  });
+  return`<div class="sim-sidebar dir">
+    <div class="sim-sb-header">🏛️ Portal Directivo</div>
+    <div class="sim-sb-nav">${nav}</div>
+    <div class="sim-sb-footer"><div class="name">${d?.nombres||''} ${d?.ap||''}</div><div class="role">${cargo?.nombre||'Directivo'}</div></div>
+  </div>`;
+}
+
+// =============================================
+// 9. INVITAR PERSONEROS
+// =============================================
+let invRows=[];
+function initInvRows(){invRows=[];for(let i=0;i<8;i++)invRows.push({tel:'',nombres:'',status:''});}
+initInvRows();
+
+function renderInvitar(el){
+  const d=window._currentDirectivo||state.directivos[0];
+  if(!d){el.innerHTML=`<h2 class="doc-title">9. Invitar Personeros</h2><div class="doc-warn">⚠️ No hay directivo activo. Cree uno e inicie sesion primero.</div>`;return;}
+  el.innerHTML=`
+  <h2 class="doc-title">9. Invitar Personeros</h2>
+  <p class="doc-text">El directivo registra los telefonos de las personas que quiere invitar. Luego comparte su link por WhatsApp.</p>
+  <div class="doc-step"><b>1</b> Ingrese el <strong>telefono</strong> (9+ digitos) de cada persona.</div>
+  <div class="doc-step"><b>2</b> Opcionalmente, ingrese su <strong>nombre</strong>.</div>
+  <div class="doc-step"><b>3</b> Presione <strong>"REGISTRAR INVITACIONES"</strong>.</div>
+  <div class="doc-step"><b>4</b> <strong>Comparta su link</strong> por WhatsApp con los invitados.</div>
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Pantalla: /directivo/invitar</span></div>
+    <div class="demo-body" id="inv-body">
+      <div class="sim-layout">
+        ${dirSidebar('dir-invitar',d)}
+        <div class="sim-main">
+          <div class="sim-topbar">Portal › <strong>Invitar Personeros</strong></div>
+          <div class="sim-content" id="inv-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  renderInvContent();
+}
+
+function renderInvContent(){
+  const c=document.getElementById('inv-content');if(!c)return;
+  const d=window._currentDirectivo||state.directivos[0];if(!d)return;
+  const valid=invRows.filter(r=>r.tel.length>=9&&r.status!=='saved');
+  const link=location.origin+'/registro/'+d.linkCode;
+  const myInvs=state.invitaciones.filter(i=>i.invitadoPor===d.dni);
+  let rows='';
+  invRows.forEach((r,i)=>{
+    rows+=`<tr style="background:${r.status==='saved'?'#f0fdf4':r.status==='dup'?'#fffbeb':'transparent'}">
+      <td style="text-align:center;color:#94a3b8;font-size:0.75rem">${i+1}</td>
+      <td><input class="sim-t input" data-ii="${i}" data-ic="tel" value="${r.tel}" placeholder="999999999" ${r.status==='saved'?'disabled':''}/></td>
+      <td><input class="sim-t input" data-ii="${i}" data-ic="nombres" value="${r.nombres}" placeholder="Nombre (opcional)" ${r.status==='saved'?'disabled':''}/></td>
+      <td style="font-size:0.75rem;color:${r.status==='saved'?'#16a34a':r.status==='dup'?'#d97706':'#94a3b8'}">${r.status==='saved'?'Registrado':r.status==='dup'?'Ya invitado':''}</td>
+      <td>${r.tel&&r.status!=='saved'?`<button style="background:none;border:none;color:#dc2626;cursor:pointer" onclick="invRows.splice(${i},1);if(invRows.length<3)invRows.push({tel:'',nombres:'',status:''});renderInvContent()">×</button>`:''}</td>
+    </tr>`;
+  });
+  let prevRows='';
+  myInvs.forEach(inv=>{
+    prevRows+=`<tr><td>${inv.telefono}</td><td>${inv.nombres||'—'}</td><td><span class="badge ${inv.estado==='registrado'?'badge-g':'badge-a'}">${inv.estado}</span></td></tr>`;
+  });
+  c.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;flex-wrap:wrap;gap:0.5rem">
+      <h3 style="margin:0">Invitar Personeros</h3>
+      <div style="display:flex;gap:0.5rem">
+        <button class="sim-btn-sm" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1" onclick="initInvRows();renderInvContent()">Limpiar</button>
+        <button class="sim-btn-sm" style="background:#2563eb;color:#fff;opacity:${valid.length?1:0.5}" ${valid.length?'':'disabled'} onclick="invSave()">REGISTRAR INVITACIONES (${valid.length})</button>
+      </div>
+    </div>
+    <div class="sim-linkcard">Despues de registrar, envia este link: <code>${link}</code>
+      <button class="sim-btn-sm" style="background:#fff;color:#475569;border:1px solid #cbd5e1;font-size:0.7rem;margin-left:0.3rem" onclick="navigator.clipboard.writeText('${link}');toast(document.getElementById('inv-body'),'Copiado!')">Copiar</button>
+      <button class="sim-btn-sm" style="background:#25d366;color:#fff;font-size:0.7rem;margin-left:0.2rem" onclick="toast(document.getElementById('inv-body'),'Abriendo WhatsApp...')">WhatsApp</button>
+    </div>
+    <div id="inv-result"></div>
+    <div class="sim-tw"><table class="sim-t"><thead><tr><th style="width:30px">#</th><th>Telefono *</th><th>Nombre (opcional)</th><th style="width:80px">Estado</th><th style="width:25px"></th></tr></thead><tbody>${rows}</tbody></table></div>
+    ${myInvs.length?`<h4 style="margin-top:1rem;font-size:0.9rem">Invitados anteriores (${myInvs.length})</h4>
+    <div class="sim-tw"><table class="sim-t"><thead><tr><th>Telefono</th><th>Nombre</th><th>Estado</th></tr></thead><tbody>${prevRows}</tbody></table></div>`:''}`;
+  // Bind
+  c.querySelectorAll('input[data-ii]').forEach(inp=>{
+    const i=parseInt(inp.dataset.ii),col=inp.dataset.ic;
+    inp.addEventListener('input',()=>{if(col==='tel')invRows[i].tel=inp.value.replace(/\D/g,'');else invRows[i][col]=inp.value;});
+    inp.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key==='Tab'&&!e.shiftKey){
+        e.preventDefault();
+        if(col==='tel'){const n=c.querySelector(`input[data-ii="${i}"][data-ic="nombres"]`);n?.focus();}
+        else{if(i>=invRows.length-2)invRows.push({tel:'',nombres:'',status:''},{tel:'',nombres:'',status:''});renderInvContent();setTimeout(()=>{const n=c.querySelector(`input[data-ii="${i+1}"][data-ic="tel"]`);n?.focus();},50);}
+      }
+    });
+  });
+}
+function invSave(){
+  const d=window._currentDirectivo||state.directivos[0];if(!d)return;
+  let created=0;
+  invRows.forEach(r=>{
+    if(r.tel.length>=9&&r.status!=='saved'&&r.status!=='dup'){
+      if(state.invitaciones.find(i=>i.telefono===r.tel&&i.invitadoPor===d.dni)){r.status='dup';return;}
+      state.invitaciones.push({_id:uid(),telefono:r.tel,nombres:r.nombres,invitadoPor:d.dni,linkCode:d.linkCode,estado:'pendiente'});
+      r.status='saved';created++;
+    }
+  });
+  renderInvContent();
+  const res=document.getElementById('inv-result');
+  if(res)res.innerHTML=`<div class="sim-success" style="margin-bottom:0.5rem">${created} invitacion${created!==1?'es':''} registrada${created!==1?'s':''}</div>`;
+}
+
+// =============================================
+// 10. AUTO-REGISTRO
+// =============================================
+let arStep='init'; // init|phone|form|success
+let arDirectivo=null;
+let arTel='';
+let arForm={dni:'',nombres:'',ap:'',am:'',correo:''};
+let arDniSt='';
+
+function renderAutoRegistro(el){
+  // Find a directivo with invitations
+  const d=state.directivos[0];
+  const inv=d?state.invitaciones.find(i=>i.invitadoPor===d.dni&&i.estado==='pendiente'):null;
+
+  el.innerHTML=`
+  <h2 class="doc-title">10. Auto-registro del Personero</h2>
+  <p class="doc-text">El invitado accede por un link, verifica su telefono, ingresa su DNI (consulta RENIEC) y completa su registro.</p>
+  <div class="doc-step"><b>1</b> El invitado abre el <strong>link</strong> recibido por WhatsApp.</div>
+  <div class="doc-step"><b>2</b> Ingresa su <strong>numero de celular</strong> para verificar la invitacion.</div>
+  <div class="doc-step"><b>3</b> Ingresa su <strong>DNI</strong> (Enter para consultar RENIEC) y <strong>correo</strong>.</div>
+  <div class="doc-step"><b>4</b> Presiona <strong>"GRABAR"</strong>.</div>
+  ${!d?'<div class="doc-warn">⚠️ Para probar esta demo, primero cree un directivo e invite personas en las secciones anteriores.</div>':''}
+  ${d&&!inv?'<div class="doc-warn">⚠️ Para probar completo, invite personas en "Invitar" primero. Puede probar el flujo visual de todas formas.</div>':''}
+  ${d?`<div class="doc-note">💡 ${inv?`Pruebe con el telefono <strong>${inv.telefono}</strong> que fue invitado por ${d.nombres}.`:`Cree invitaciones primero para probar el flujo completo.`}</div>`:''}
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Pantalla: /registro/${d?.linkCode||'XXXXXXXX'}</span></div>
+    <div class="demo-body" id="ar-body"></div>
+  </div>`;
+  arStep='init';arTel='';arForm={dni:'',nombres:'',ap:'',am:'',correo:''};arDniSt='';
+  arDirectivo=d||null;
+  if(d){
+    const cargo=state.cargos.find(c=>c._id===d.cargoId);
+    arDirectivo={...d,cargoNombre:cargo?.nombre||''};
+    arStep='phone';
+  }
+  renderARContent();
+}
+
+function renderARContent(){
+  const b=document.getElementById('ar-body');if(!b)return;
+
+  if(!arDirectivo){
+    b.innerHTML=`<div class="sim-page gradient"><div class="sim-card"><div style="font-size:2rem">❌</div><h3 style="margin:0.5rem 0">Link no valido</h3><p style="color:#475569;font-size:0.85rem">Cree un directivo primero.</p></div></div>`;
+    return;
+  }
+
+  // Step indicator
+  const stepNum=arStep==='phone'?1:arStep==='form'?2:3;
+  const steps=['Verificacion','Datos','Listo'];
+  let stepHtml='<div class="sim-steps">';
+  steps.forEach((s,i)=>{
+    const n=i+1;const done=n<stepNum;const act=n===stepNum;
+    if(i>0)stepHtml+=`<div class="sim-step-line" style="background:${done||act?'#2563eb':'#e2e8f0'}"></div>`;
+    stepHtml+=`<div class="sim-step-dot" style="background:${done||act?'#2563eb':'#e2e8f0'};color:${done||act?'#fff':'#94a3b8'}">${done?'✓':n}</div>`;
+    stepHtml+=`<span style="font-size:0.68rem;color:${act?'#1e293b':'#94a3b8'};font-weight:${act?600:400};align-self:center">${s}</span>`;
+  });
+  stepHtml+='</div>';
+
+  if(arStep==='phone'){
+    b.innerHTML=`<div class="sim-page gradient"><div class="sim-card">
+      ${stepHtml}
+      <div style="font-size:2rem;margin-bottom:0.3rem">🗳️</div>
+      <h3 style="color:#1e3a5f;margin-bottom:0.15rem">Registro de Personero</h3>
+      <p style="color:#64748b;font-size:0.82rem;margin-bottom:0.75rem">Elecciones 2026</p>
+      <div class="sim-invite">Has sido invitado por <strong>${arDirectivo.nombres} ${arDirectivo.ap}</strong>${arDirectivo.cargoNombre?` (${arDirectivo.cargoNombre})`:''}</div>
+      <div class="sim-field"><label class="sim-label">Ingresa tu numero de celular</label><input class="sim-input" id="ar-tel" value="${arTel}" placeholder="999999999"/></div>
+      <div id="ar-tel-error" style="display:none" class="sim-error"></div>
+      <button class="sim-btn" onclick="arVerifyPhone()">Continuar</button>
+    </div></div>`;
+  } else if(arStep==='form'){
+    b.innerHTML=`<div class="sim-page gradient"><div class="sim-card" style="text-align:left">
+      ${stepHtml}
+      <div style="text-align:center"><div style="font-size:2rem">📝</div><h3 style="color:#1e3a5f;margin:0.2rem 0">Completa tu registro</h3>
+      <p style="color:#64748b;font-size:0.82rem;margin-bottom:0.75rem">Invitado por ${arDirectivo.nombres} ${arDirectivo.ap}</p></div>
+      <div style="display:flex;gap:0.4rem;align-items:flex-end;margin-bottom:0.4rem">
+        <div style="flex:1"><label class="sim-label">DNI</label><input class="sim-input" id="ar-dni" value="${arForm.dni}" maxlength="8" placeholder="12345678"/></div>
+        <button class="sim-btn-sm" style="background:#2563eb;color:#fff;height:34px" onclick="arLookupDni()">Buscar</button>
+      </div>
+      <div id="ar-dni-status" style="font-size:0.78rem;margin-bottom:0.5rem"></div>
+      <div class="sim-field"><label class="sim-label">Nombres</label><input class="sim-input" id="ar-nombres" value="${arForm.nombres}"/></div>
+      <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem">
+        <div style="flex:1"><label class="sim-label">Ap. Paterno</label><input class="sim-input" id="ar-ap" value="${arForm.ap}"/></div>
+        <div style="flex:1"><label class="sim-label">Ap. Materno</label><input class="sim-input" id="ar-am" value="${arForm.am}"/></div>
+      </div>
+      <div class="sim-field"><label class="sim-label">Correo electronico *</label><input class="sim-input" id="ar-correo" type="email" value="${arForm.correo}" placeholder="tucorreo@ejemplo.com"/></div>
+      <div id="ar-form-error" style="display:none" class="sim-error"></div>
+      <button class="sim-btn" onclick="arSubmit()">GRABAR</button>
+    </div></div>`;
+    // Bind Enter on DNI
+    document.getElementById('ar-dni')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();arLookupDni();}});
+  } else {
+    b.innerHTML=`<div class="sim-page gradient"><div class="sim-card">
+      ${stepHtml}
+      <div style="font-size:2.5rem;margin-bottom:0.3rem">🎉</div>
+      <h3 style="color:#16a34a;margin:0.3rem 0">Registro exitoso!</h3>
+      <p style="color:#475569;font-size:0.88rem">Te has registrado como personero para las Elecciones 2026.</p>
+      <p style="color:#475569;font-size:0.85rem">Pronto recibiras mas informacion por WhatsApp.</p>
+      <button class="sim-btn" style="margin-top:1rem;background:#16a34a" onclick="arStep='phone';arTel='';arForm={dni:'',nombres:'',ap:'',am:'',correo:''};renderARContent()">Probar de nuevo</button>
+    </div></div>`;
+  }
+}
+
+function arVerifyPhone(){
+  arTel=(document.getElementById('ar-tel')?.value||'').replace(/\D/g,'');
+  const err=document.getElementById('ar-tel-error');
+  if(arTel.length<9){err.style.display='block';err.textContent='Ingrese un numero de al menos 9 digitos.';return;}
+  // Check invitation
+  const inv=state.invitaciones.find(i=>i.telefono===arTel&&i.linkCode===arDirectivo.linkCode);
+  if(!inv){
+    // Allow demo anyway but show note
+    err.style.display='block';err.textContent='No encontramos tu invitacion. Para la demo, continuaremos de todas formas.';
+    setTimeout(()=>{arStep='form';renderARContent();},1500);
+    return;
+  }
+  if(inv.estado==='registrado'){err.style.display='block';err.textContent='Este numero ya se registro como personero.';return;}
+  arStep='form';renderARContent();
+}
+
+function arLookupDni(){
+  const dni=(document.getElementById('ar-dni')?.value||'').replace(/\D/g,'');
+  arForm.dni=dni;
+  const st=document.getElementById('ar-dni-status');
+  if(!/^\d{8}$/.test(dni)){st.innerHTML='<span style="color:#dc2626">DNI debe tener 8 digitos</span>';return;}
+  st.innerHTML='<span style="color:#2563eb">⏳ Consultando...</span>';
+  setTimeout(()=>{
+    const r=lookupDni(dni);
+    arForm.nombres=r.nombres;arForm.ap=r.ap;arForm.am=r.am;
+    document.getElementById('ar-nombres').value=r.nombres;
+    document.getElementById('ar-ap').value=r.ap;
+    document.getElementById('ar-am').value=r.am;
+    st.innerHTML='<span style="color:#16a34a">✓ Datos encontrados</span>';
+  },500);
+}
+
+function arSubmit(){
+  const dni=document.getElementById('ar-dni')?.value||'';
+  const nombres=document.getElementById('ar-nombres')?.value||'';
+  const ap=document.getElementById('ar-ap')?.value||'';
+  const am=document.getElementById('ar-am')?.value||'';
+  const correo=document.getElementById('ar-correo')?.value||'';
+  const err=document.getElementById('ar-form-error');
+  if(!/^\d{8}$/.test(dni)||!nombres||!ap){err.style.display='block';err.textContent='DNI, nombres y apellido paterno requeridos';return;}
+  if(!correo||!correo.includes('@')){err.style.display='block';err.textContent='Correo electronico requerido';return;}
+  // Create personero
+  if(!state.personeros.find(p=>p.dni===dni)){
+    state.personeros.push({_id:uid(),dni,nombres,apellidoPaterno:ap,apellidoMaterno:am,telefono:arTel,correo,assignmentStatus:'pendiente',assignedMesa:null});
+  }
+  // Mark invitation
+  const inv=state.invitaciones.find(i=>i.telefono===arTel&&i.linkCode===arDirectivo.linkCode);
+  if(inv)inv.estado='registrado';
+  // Create WhatsApp messages
+  state.mensajes.push({tipo:'notificacion_invitador',dest:arDirectivo.telefono||'',msg:`${nombres} ${ap} se ha registrado como personero!`});
+  state.mensajes.push({tipo:'bienvenida_invitado',dest:arTel,msg:`Bienvenido/a ${nombres}! Te has registrado como personero.`});
+  arStep='success';renderARContent();
+}
+
+// =============================================
+// 11. MAPA DE CALOR
+// =============================================
+function renderMapaCalor(el){
+  const regions=[
+    {name:'AMAZONAS',code:'01',lat:230,left:180,mesas:412,pct:45},
+    {name:'ANCASH',code:'02',lat:260,left:130,mesas:1834,pct:50},
+    {name:'APURIMAC',code:'03',lat:330,left:170,mesas:583,pct:53},
+    {name:'AREQUIPA',code:'04',lat:380,left:175,mesas:2105,pct:70},
+    {name:'AYACUCHO',code:'05',lat:330,left:145,mesas:789,pct:49},
+    {name:'CAJAMARCA',code:'06',lat:210,left:140,mesas:1923,pct:45},
+    {name:'CALLAO',code:'07',lat:305,left:105,mesas:1456,pct:75},
+    {name:'CUSCO',code:'08',lat:340,left:200,mesas:1678,pct:60},
+    {name:'HUANCAVELICA',code:'09',lat:315,left:155,mesas:534,pct:40},
+    {name:'HUANUCO',code:'10',lat:260,left:155,mesas:945,pct:50},
+    {name:'ICA',code:'11',lat:335,left:120,mesas:1123,pct:70},
+    {name:'JUNIN',code:'12',lat:290,left:160,mesas:1567,pct:60},
+    {name:'LA LIBERTAD',code:'13',lat:235,left:130,mesas:2345,pct:70},
+    {name:'LAMBAYEQUE',code:'14',lat:210,left:115,mesas:1678,pct:70},
+    {name:'LIMA',code:'15',lat:300,left:115,mesas:12456,pct:70},
+    {name:'LORETO',code:'16',lat:170,left:195,mesas:1234,pct:30},
+    {name:'MADRE DE DIOS',code:'17',lat:310,left:230,mesas:234,pct:25},
+    {name:'MOQUEGUA',code:'18',lat:395,left:195,mesas:312,pct:65},
+    {name:'PASCO',code:'19',lat:270,left:155,mesas:456,pct:48},
+    {name:'PIURA',code:'20',lat:185,left:110,mesas:2567,pct:55},
+    {name:'PUNO',code:'21',lat:370,left:220,mesas:1890,pct:42},
+    {name:'SAN MARTIN',code:'22',lat:215,left:170,mesas:1023,pct:52},
+    {name:'TACNA',code:'23',lat:410,left:200,mesas:456,pct:68},
+    {name:'TUMBES',code:'24',lat:170,left:95,mesas:345,pct:60},
+    {name:'UCAYALI',code:'25',lat:255,left:200,mesas:678,pct:35},
+  ];
+
+  function heatColor(pct){
+    if(pct>=70)return'#16a34a';if(pct>=55)return'#84cc16';if(pct>=40)return'#eab308';if(pct>=25)return'#f97316';return'#dc2626';
+  }
+
+  let dots='';
+  regions.forEach(r=>{
+    const color=heatColor(r.pct);
+    const size=Math.max(12,Math.min(30,r.mesas/500));
+    dots+=`<div class="map-dot" style="position:absolute;top:${r.lat}px;left:${r.left}px;width:${size}px;height:${size}px;background:${color};border-radius:50%;cursor:pointer;opacity:0.85;border:2px solid rgba(255,255,255,0.8);z-index:2;transition:transform 0.2s"
+      onmouseenter="this.style.transform='scale(1.5)';document.getElementById('map-tooltip').innerHTML='<strong>${r.name}</strong><br>${r.mesas} mesas · ${r.pct}% cobertura';document.getElementById('map-tooltip').style.display='block'"
+      onmouseleave="this.style.transform='scale(1)';document.getElementById('map-tooltip').style.display='none'"
+      onclick="document.getElementById('map-detail').innerHTML='<strong>${r.name}</strong>: ${r.mesas} mesas, ${Math.round(r.mesas*r.pct/100)} asignadas (${r.pct}%)'"></div>`;
+  });
+
+  el.innerHTML=`
+  <h2 class="doc-title">11. Mapa de Calor — Cobertura Nacional (Propuesta)</h2>
+  <p class="doc-text">Visualizacion geografica de la cobertura de personeros sobre el mapa del Peru. Los circulos representan regiones: el tamano indica la cantidad de mesas y el color indica el nivel de cobertura.</p>
+  <div class="doc-step"><b>1</b> Pase el mouse sobre un <strong>circulo</strong> para ver el detalle de la region.</div>
+  <div class="doc-step"><b>2</b> Haga <strong>clic</strong> en un circulo para seleccionar la region.</div>
+  <div class="doc-step"><b>3</b> Use el <strong>filtro de rango</strong> para resaltar solo las regiones con cobertura en un rango especifico.</div>
+  <div class="doc-note">💡 En la implementacion real se usaria Leaflet.js con el GeoJSON del Peru para dibujar las regiones como poligonos coloreados.</div>
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Propuesta: Mapa de Calor</span></div>
+    <div class="demo-body" id="mapa-body">
+      <div class="sim-layout">
+        ${adminSidebar('mapa')}
+        <div class="sim-main">
+          <div class="sim-topbar">Dashboard › <strong>Mapa de Calor</strong></div>
+          <div class="sim-content">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;flex-wrap:wrap;gap:0.5rem">
+              <h3 style="margin:0">Cobertura Nacional</h3>
+              <div style="display:flex;gap:0.5rem;align-items:center;font-size:0.78rem">
+                <span>Filtrar:</span>
+                <button class="sim-btn-sm" style="background:#dc2626;color:#fff;font-size:0.7rem" onclick="filterMap(0,25)">&lt;25%</button>
+                <button class="sim-btn-sm" style="background:#f97316;color:#fff;font-size:0.7rem" onclick="filterMap(25,40)">25-40%</button>
+                <button class="sim-btn-sm" style="background:#eab308;color:#fff;font-size:0.7rem" onclick="filterMap(40,55)">40-55%</button>
+                <button class="sim-btn-sm" style="background:#84cc16;color:#fff;font-size:0.7rem" onclick="filterMap(55,70)">55-70%</button>
+                <button class="sim-btn-sm" style="background:#16a34a;color:#fff;font-size:0.7rem" onclick="filterMap(70,101)">&gt;70%</button>
+                <button class="sim-btn-sm" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;font-size:0.7rem" onclick="filterMap(0,101)">Todos</button>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:1rem;flex-wrap:wrap">
+              <div style="position:relative;width:320px;height:440px;background:linear-gradient(180deg,#e0f2fe 0%,#bae6fd 50%,#7dd3fc 100%);border-radius:10px;border:1px solid #cbd5e1;flex-shrink:0;overflow:hidden">
+                <!-- Peru outline simplified -->
+                <svg viewBox="0 0 320 440" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;opacity:0.2">
+                  <path d="M95,165 L110,155 L125,160 L140,148 L165,152 L185,145 L200,155 L215,165 L230,175 L240,195 L235,220 L240,245 L230,270 L220,290 L210,305 L195,320 L185,340 L195,355 L205,370 L210,390 L200,410 L185,415 L170,405 L155,390 L140,370 L130,345 L120,325 L110,310 L105,290 L110,270 L115,250 L110,230 L105,210 L100,190 L95,175Z" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"/>
+                </svg>
+                ${dots}
+                <div id="map-tooltip" style="display:none;position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,0.85);color:#fff;padding:0.4rem 0.6rem;border-radius:6px;font-size:0.75rem;z-index:10;pointer-events:none"></div>
+              </div>
+
+              <div style="flex:1;min-width:250px">
+                <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem;margin-bottom:0.75rem">
+                  <div style="font-size:0.8rem;font-weight:600;color:#475569;margin-bottom:0.4rem">Leyenda</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:0.4rem;font-size:0.72rem">
+                    <span style="display:flex;align-items:center;gap:0.2rem"><span style="width:12px;height:12px;border-radius:50%;background:#dc2626;display:inline-block"></span> &lt;25%</span>
+                    <span style="display:flex;align-items:center;gap:0.2rem"><span style="width:12px;height:12px;border-radius:50%;background:#f97316;display:inline-block"></span> 25-40%</span>
+                    <span style="display:flex;align-items:center;gap:0.2rem"><span style="width:12px;height:12px;border-radius:50%;background:#eab308;display:inline-block"></span> 40-55%</span>
+                    <span style="display:flex;align-items:center;gap:0.2rem"><span style="width:12px;height:12px;border-radius:50%;background:#84cc16;display:inline-block"></span> 55-70%</span>
+                    <span style="display:flex;align-items:center;gap:0.2rem"><span style="width:12px;height:12px;border-radius:50%;background:#16a34a;display:inline-block"></span> &gt;70%</span>
+                  </div>
+                </div>
+                <div id="map-detail" style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem;font-size:0.85rem;color:#475569;min-height:40px">Haga clic en una region para ver detalles</div>
+                <div class="sim-stats" style="margin-top:0.75rem">
+                  <div class="sim-stat"><div class="num" style="font-size:1.2rem">${regions.reduce((a,r)=>a+r.mesas,0).toLocaleString()}</div><div class="lbl">Total Mesas</div></div>
+                  <div class="sim-stat"><div class="num" style="font-size:1.2rem;color:#16a34a">${regions.reduce((a,r)=>a+Math.round(r.mesas*r.pct/100),0).toLocaleString()}</div><div class="lbl">Asignadas</div></div>
+                  <div class="sim-stat"><div class="num" style="font-size:1.2rem;color:#2563eb">${Math.round(regions.reduce((a,r)=>a+r.pct,0)/regions.length)}%</div><div class="lbl">Promedio</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+window.filterMap=function(min,max){
+  document.querySelectorAll('.map-dot').forEach(dot=>{
+    const text=dot.getAttribute('onclick')||'';
+    const match=text.match(/(\d+)%/);
+    const pct=match?parseInt(match[1]):0;
+    dot.style.opacity=(pct>=min&&pct<max)?'0.9':'0.15';
+  });
+};
+
+// =============================================
+// 12. CHAT INTERNO
+// =============================================
+let chatMessages=[];
+let chatChannel='general';
+const chatChannels=[
+  {id:'general',name:'# General',desc:'Todos los directivos'},
+  {id:'lima',name:'# Lima',desc:'Coordinacion Lima'},
+  {id:'arequipa',name:'# Arequipa',desc:'Coordinacion Arequipa'},
+  {id:'urgente',name:'# Urgente',desc:'Avisos importantes'},
+];
+
+function initChatMessages(){
+  chatMessages=[
+    {ch:'general',user:'Juan Garcia',cargo:'Presidente',text:'Bienvenidos al canal general del partido. Recuerden que la meta es cubrir el 80% de las mesas.',time:'09:15',avatar:'👤'},
+    {ch:'general',user:'Maria Rodriguez',cargo:'Coord. Regional',text:'Buenos dias. En Lima ya vamos al 70% de cobertura.',time:'09:32',avatar:'👩'},
+    {ch:'general',user:'Pedro Martinez',cargo:'Coord. Distrital',text:'En San Juan de Lurigancho necesitamos mas personeros. Solo tenemos 45% de cobertura.',time:'09:45',avatar:'👨'},
+    {ch:'general',user:'Ana Fernandez',cargo:'Coord. Regional',text:'Arequipa reporta 65%. Estamos invitando mas gente esta semana.',time:'10:02',avatar:'👩‍💼'},
+    {ch:'lima',user:'Maria Rodriguez',cargo:'Coord. Regional',text:'Equipo Lima: necesitamos enfocarnos en los distritos del sur.',time:'10:15',avatar:'👩'},
+    {ch:'lima',user:'Carlos Quispe',cargo:'Coord. Distrital',text:'Villa El Salvador ya tiene 80%. Puedo apoyar en Villa Maria del Triunfo.',time:'10:28',avatar:'👨'},
+    {ch:'arequipa',user:'Ana Fernandez',cargo:'Coord. Regional',text:'Equipo Arequipa: la meta de esta semana es llegar al 75%.',time:'08:45',avatar:'👩‍💼'},
+    {ch:'urgente',user:'Juan Garcia',cargo:'Presidente',text:'🚨 IMPORTANTE: La fecha limite de registro de personeros es el 15 de mayo. Debemos acelerar las invitaciones.',time:'11:00',avatar:'👤'},
+  ];
+}
+initChatMessages();
+
+function renderChatInterno(el){
+  el.innerHTML=`
+  <h2 class="doc-title">12. Chat Interno entre Directivos (Propuesta)</h2>
+  <p class="doc-text">Sistema de mensajeria interna para comunicacion entre directivos del partido, organizado en canales tematicos y geograficos.</p>
+  <div class="doc-step"><b>1</b> Seleccione un <strong>canal</strong> en la lista izquierda.</div>
+  <div class="doc-step"><b>2</b> Lea los mensajes del canal seleccionado.</div>
+  <div class="doc-step"><b>3</b> Escriba un mensaje y presione <strong>Enter</strong> o el boton <strong>Enviar</strong>.</div>
+  <div class="doc-note">💡 En la implementacion real se usarian WebSockets para mensajes en tiempo real. Los canales se crearian automaticamente por region/distrito.</div>
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Propuesta: Chat Interno</span></div>
+    <div class="demo-body" id="chat-body">
+      <div class="sim-layout">
+        ${adminSidebar('chat')}
+        <div class="sim-main" id="chat-main"></div>
+      </div>
+    </div>
+  </div>`;
+  renderChatContent();
+}
+
+function renderChatContent(){
+  const main=document.getElementById('chat-main');if(!main)return;
+  const ch=chatChannels.find(c=>c.id===chatChannel)||chatChannels[0];
+  const msgs=chatMessages.filter(m=>m.ch===chatChannel);
+
+  let channelList='';
+  chatChannels.forEach(c=>{
+    const count=chatMessages.filter(m=>m.ch===c.id).length;
+    channelList+=`<button style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:0.5rem 0.6rem;background:${chatChannel===c.id?'#eff6ff':'transparent'};border:none;border-radius:6px;cursor:pointer;text-align:left;font-family:inherit;font-size:0.8rem;color:${chatChannel===c.id?'#1d4ed8':'#475569'};font-weight:${chatChannel===c.id?'600':'400'}" onclick="chatChannel='${c.id}';renderChatContent()">
+      <span>${c.name}</span>
+      <span style="background:#e2e8f0;border-radius:10px;padding:0.1rem 0.4rem;font-size:0.7rem;color:#64748b">${count}</span>
+    </button>`;
+  });
+
+  let msgList='';
+  msgs.forEach(m=>{
+    msgList+=`<div style="display:flex;gap:0.5rem;margin-bottom:0.75rem">
+      <div style="width:32px;height:32px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">${m.avatar}</div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:baseline;gap:0.4rem">
+          <span style="font-weight:600;font-size:0.82rem;color:#1e293b">${m.user}</span>
+          <span style="font-size:0.68rem;color:#94a3b8">${m.cargo}</span>
+          <span style="font-size:0.68rem;color:#cbd5e1;margin-left:auto">${m.time}</span>
+        </div>
+        <div style="font-size:0.83rem;color:#334155;margin-top:0.15rem;line-height:1.4">${m.text}</div>
+      </div>
+    </div>`;
+  });
+
+  main.innerHTML=`
+    <div class="sim-topbar">Dashboard › <strong>Chat Interno</strong></div>
+    <div style="display:flex;height:380px">
+      <div style="width:180px;border-right:1px solid #e2e8f0;padding:0.5rem;overflow-y:auto;background:#fafbfc">
+        <div style="font-size:0.72rem;font-weight:600;color:#94a3b8;text-transform:uppercase;padding:0.3rem 0.6rem;margin-bottom:0.3rem">Canales</div>
+        ${channelList}
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column">
+        <div style="padding:0.5rem 0.75rem;border-bottom:1px solid #e2e8f0;font-size:0.85rem;font-weight:600;color:#1e293b">${ch.name} <span style="font-weight:400;color:#94a3b8;font-size:0.78rem">— ${ch.desc}</span></div>
+        <div style="flex:1;overflow-y:auto;padding:0.75rem" id="chat-msgs">${msgList||'<div style="color:#94a3b8;font-size:0.85rem;text-align:center;margin-top:2rem">No hay mensajes en este canal</div>'}</div>
+        <div style="padding:0.5rem;border-top:1px solid #e2e8f0;display:flex;gap:0.4rem">
+          <input class="sim-input" id="chat-input" placeholder="Escribe un mensaje..." style="flex:1;font-size:0.82rem;padding:0.4rem 0.6rem"/>
+          <button class="sim-btn-sm" style="background:#2563eb;color:#fff" onclick="chatSend()">Enviar</button>
+        </div>
+      </div>
+    </div>`;
+  // Scroll to bottom
+  const msgsDiv=document.getElementById('chat-msgs');
+  if(msgsDiv)msgsDiv.scrollTop=msgsDiv.scrollHeight;
+  // Bind enter key
+  document.getElementById('chat-input')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();chatSend();}});
+}
+
+function chatSend(){
+  const input=document.getElementById('chat-input');
+  const text=input?.value?.trim();if(!text)return;
+  const d=window._currentDirectivo||state.directivos[0];
+  const user=d?d.nombres+' '+d.ap:'Tu';
+  const cargo=d?state.cargos.find(c=>c._id===d.cargoId)?.nombre||'':'';
+  const now=new Date();
+  chatMessages.push({ch:chatChannel,user,cargo,text,time:now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0'),avatar:'😊'});
+  renderChatContent();
+}
+
+// =============================================
+// 13. REPORTES ANALITICOS
+// =============================================
+function renderReportes(el){
+  // Generate report data from state
+  const totalPersoneros=state.personeros.length||8;
+  const dirCount=state.directivos.length||1;
+  const invCount=state.invitaciones.length||5;
+  const regCount=state.invitaciones.filter(i=>i.estado==='registrado').length||2;
+  const convRate=invCount>0?Math.round(regCount/invCount*100):40;
+
+  // Simulated weekly data
+  const weeks=['Sem 1','Sem 2','Sem 3','Sem 4','Sem 5','Sem 6'];
+  const weekData=[12,28,45,67,89,totalPersoneros||105];
+  const maxW=Math.max(...weekData);
+
+  // By directivo performance
+  const dirPerf=state.directivos.length>0?state.directivos.map(d=>{
+    const inv=state.invitaciones.filter(i=>i.invitadoPor===d.dni);
+    const reg=inv.filter(i=>i.estado==='registrado');
+    const cargo=state.cargos.find(c=>c._id===d.cargoId);
+    return {name:d.nombres+' '+d.ap,cargo:cargo?.nombre||'',invited:inv.length,registered:reg.length,rate:inv.length>0?Math.round(reg.length/inv.length*100):0};
+  }):[
+    {name:'Juan Garcia',cargo:'Presidente',invited:15,registered:12,rate:80},
+    {name:'Maria Rodriguez',cargo:'Coord. Regional',invited:28,registered:18,rate:64},
+    {name:'Pedro Martinez',cargo:'Coord. Distrital',invited:22,registered:9,rate:41},
+    {name:'Ana Fernandez',cargo:'Coord. Regional',invited:19,registered:14,rate:74},
+  ];
+
+  let barChart='';
+  weekData.forEach((v,i)=>{
+    const h=Math.round(v/maxW*140);
+    barChart+=`<div style="display:flex;flex-direction:column;align-items:center;gap:0.2rem;flex:1">
+      <span style="font-size:0.7rem;font-weight:600;color:#1e293b">${v}</span>
+      <div style="width:100%;max-width:40px;height:${h}px;background:linear-gradient(180deg,#2563eb,#3b82f6);border-radius:4px 4px 0 0;transition:height 0.3s"></div>
+      <span style="font-size:0.65rem;color:#94a3b8">${weeks[i]}</span>
+    </div>`;
+  });
+
+  let perfRows='';
+  dirPerf.sort((a,b)=>b.registered-a.registered).forEach((d,i)=>{
+    const barW=d.invited>0?Math.round(d.registered/d.invited*100):0;
+    perfRows+=`<tr>
+      <td style="font-weight:500">${i+1}. ${d.name}</td>
+      <td><span class="badge badge-b">${d.cargo}</span></td>
+      <td style="text-align:center">${d.invited}</td>
+      <td style="text-align:center;font-weight:600;color:#16a34a">${d.registered}</td>
+      <td style="width:120px"><div style="display:flex;align-items:center;gap:0.3rem"><div style="flex:1;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden"><div style="width:${barW}%;height:100%;background:${barW>=60?'#16a34a':barW>=40?'#eab308':'#dc2626'};border-radius:4px"></div></div><span style="font-size:0.72rem;font-weight:600;color:${barW>=60?'#16a34a':barW>=40?'#eab308':'#dc2626'}">${d.rate}%</span></div></td>
+    </tr>`;
+  });
+
+  // Donut chart for status
+  const statuses=[
+    {label:'Pendiente',count:Math.round(totalPersoneros*0.4),color:'#f59e0b'},
+    {label:'Asignado',count:Math.round(totalPersoneros*0.3),color:'#10b981'},
+    {label:'Confirmado',count:Math.round(totalPersoneros*0.2),color:'#8b5cf6'},
+    {label:'Sin mesa',count:Math.round(totalPersoneros*0.1),color:'#94a3b8'},
+  ];
+  let donutOffset=0;
+  let donutPaths='';
+  const total=statuses.reduce((a,s)=>a+s.count,0)||1;
+  statuses.forEach(s=>{
+    const pct=s.count/total;
+    const angle=pct*360;
+    const rad=d=>d*Math.PI/180;
+    const r=50;
+    const x1=60+r*Math.sin(rad(donutOffset));
+    const y1=60-r*Math.cos(rad(donutOffset));
+    const x2=60+r*Math.sin(rad(donutOffset+angle));
+    const y2=60-r*Math.cos(rad(donutOffset+angle));
+    const large=angle>180?1:0;
+    donutPaths+=`<path d="M60,60 L${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} Z" fill="${s.color}" opacity="0.85"/>`;
+    donutOffset+=angle;
+  });
+
+  let statusLegend='';
+  statuses.forEach(s=>{
+    statusLegend+=`<div style="display:flex;align-items:center;gap:0.3rem;font-size:0.78rem"><span style="width:10px;height:10px;border-radius:2px;background:${s.color};display:inline-block"></span>${s.label}: <strong>${s.count}</strong></div>`;
+  });
+
+  el.innerHTML=`
+  <h2 class="doc-title">13. Reportes Analiticos (Propuesta)</h2>
+  <p class="doc-text">Metricas de rendimiento por directivo, tendencias de registro y distribucion de estados. Permite identificar que directivos son mas efectivos en la convocatoria.</p>
+  <div class="doc-step"><b>1</b> Revise el <strong>grafico de tendencia</strong> para ver el crecimiento semanal de registros.</div>
+  <div class="doc-step"><b>2</b> Consulte el <strong>ranking de directivos</strong> para ver quien tiene mejor tasa de conversion.</div>
+  <div class="doc-step"><b>3</b> Use el boton <strong>"Exportar PDF"</strong> para descargar el reporte.</div>
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Propuesta: Reportes</span></div>
+    <div class="demo-body" id="report-body">
+      <div class="sim-layout">
+        ${adminSidebar('reportes')}
+        <div class="sim-main">
+          <div class="sim-topbar">Dashboard › <strong>Reportes Analiticos</strong></div>
+          <div class="sim-content">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem">
+              <h3 style="margin:0">Reportes Analiticos</h3>
+              <button class="sim-btn-sm" style="background:#dc2626;color:#fff" onclick="toast(document.getElementById('report-body'),'Generando PDF...')">📄 Exportar PDF</button>
+            </div>
+
+            <!-- KPIs -->
+            <div class="sim-stats">
+              <div class="sim-stat"><div class="num" style="font-size:1.3rem">${totalPersoneros}</div><div class="lbl">Personeros</div></div>
+              <div class="sim-stat"><div class="num" style="font-size:1.3rem">${dirCount}</div><div class="lbl">Directivos</div></div>
+              <div class="sim-stat"><div class="num" style="font-size:1.3rem">${invCount}</div><div class="lbl">Invitaciones</div></div>
+              <div class="sim-stat"><div class="num" style="font-size:1.3rem;color:${convRate>=50?'#16a34a':'#d97706'}">${convRate}%</div><div class="lbl">Tasa Conversion</div></div>
+            </div>
+
+            <div style="display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap">
+              <!-- Bar chart -->
+              <div style="flex:1;min-width:280px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem">
+                <div style="font-size:0.85rem;font-weight:600;color:#1e293b;margin-bottom:0.5rem">Registros por Semana</div>
+                <div style="display:flex;align-items:flex-end;gap:0.3rem;height:170px;padding-top:10px">
+                  ${barChart}
+                </div>
+              </div>
+
+              <!-- Donut chart -->
+              <div style="min-width:200px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem">
+                <div style="font-size:0.85rem;font-weight:600;color:#1e293b;margin-bottom:0.5rem">Estado de Personeros</div>
+                <div style="display:flex;align-items:center;gap:0.75rem">
+                  <svg viewBox="0 0 120 120" style="width:100px;height:100px">${donutPaths}<circle cx="60" cy="60" r="28" fill="#fff"/><text x="60" y="63" text-anchor="middle" style="font-size:14px;font-weight:700;fill:#1e293b">${total}</text></svg>
+                  <div style="display:flex;flex-direction:column;gap:0.25rem">${statusLegend}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Performance table -->
+            <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem;margin-top:1rem">
+              <div style="font-size:0.85rem;font-weight:600;color:#1e293b;margin-bottom:0.5rem">Ranking de Directivos por Efectividad</div>
+              <div class="sim-tw"><table class="sim-t"><thead><tr>
+                <th>Directivo</th><th>Cargo</th><th style="text-align:center">Invitados</th><th style="text-align:center">Registrados</th><th>Conversion</th>
+              </tr></thead><tbody>${perfRows}</tbody></table></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// =============================================
+// 14. APP MOVIL
+// =============================================
+let mobileScreen='home';
+function renderAppMovil(el){
+  el.innerHTML=`
+  <h2 class="doc-title">14. App Movil para Directivos (Propuesta)</h2>
+  <p class="doc-text">Vista optimizada para celular que permite a los directivos invitar personeros, ver estadisticas y compartir su link directamente desde el telefono.</p>
+  <div class="doc-step"><b>1</b> Navegue entre las pantallas usando los <strong>botones inferiores</strong>.</div>
+  <div class="doc-step"><b>2</b> Pruebe las funciones de <strong>invitar</strong>, <strong>compartir</strong> y ver <strong>estadisticas</strong>.</div>
+  <div class="doc-note">💡 Esta propuesta se implementaria como PWA (Progressive Web App) reutilizando el mismo backend. No requiere publicar en tiendas de aplicaciones.</div>
+
+  <div class="demo-frame">
+    <div class="demo-header"><span>DEMO INTERACTIVA</span><span>Propuesta: App Movil (PWA)</span></div>
+    <div class="demo-body" style="display:flex;justify-content:center;padding:1.5rem;background:#1e293b;min-height:500px">
+      <div id="phone-frame" style="width:320px;height:580px;background:#fff;border-radius:32px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,0.4);display:flex;flex-direction:column;border:6px solid #334155">
+        <!-- Status bar -->
+        <div style="background:#1e3a5f;color:#fff;padding:0.3rem 1rem;display:flex;justify-content:space-between;font-size:0.65rem">
+          <span>9:41</span>
+          <span>📶 🔋</span>
+        </div>
+        <!-- App header -->
+        <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);color:#fff;padding:0.75rem 1rem">
+          <div style="font-size:0.75rem;opacity:0.7">Personeros 2026</div>
+          <div style="font-size:1rem;font-weight:700" id="mob-title">Inicio</div>
+        </div>
+        <!-- Content -->
+        <div style="flex:1;overflow-y:auto;padding:0.75rem" id="mob-content"></div>
+        <!-- Bottom nav -->
+        <div style="display:flex;border-top:1px solid #e2e8f0;background:#fff">
+          <button onclick="mobileScreen='home';renderMobileContent()" style="flex:1;padding:0.5rem;border:none;background:none;cursor:pointer;font-size:0.6rem;text-align:center;font-family:inherit" id="mob-nav-home">
+            <div style="font-size:1.1rem">🏠</div>Inicio
+          </button>
+          <button onclick="mobileScreen='invite';renderMobileContent()" style="flex:1;padding:0.5rem;border:none;background:none;cursor:pointer;font-size:0.6rem;text-align:center;font-family:inherit" id="mob-nav-invite">
+            <div style="font-size:1.1rem">📨</div>Invitar
+          </button>
+          <button onclick="mobileScreen='stats';renderMobileContent()" style="flex:1;padding:0.5rem;border:none;background:none;cursor:pointer;font-size:0.6rem;text-align:center;font-family:inherit" id="mob-nav-stats">
+            <div style="font-size:1.1rem">📊</div>Reportes
+          </button>
+          <button onclick="mobileScreen='qr';renderMobileContent()" style="flex:1;padding:0.5rem;border:none;background:none;cursor:pointer;font-size:0.6rem;text-align:center;font-family:inherit" id="mob-nav-qr">
+            <div style="font-size:1.1rem">🔗</div>Mi Link
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  mobileScreen='home';
+  renderMobileContent();
+}
+
+function renderMobileContent(){
+  const c=document.getElementById('mob-content');
+  const title=document.getElementById('mob-title');
+  if(!c||!title)return;
+
+  // Highlight active nav
+  ['home','invite','stats','qr'].forEach(n=>{
+    const btn=document.getElementById('mob-nav-'+n);
+    if(btn)btn.style.color=mobileScreen===n?'#2563eb':'#94a3b8';
+  });
+
+  const d=window._currentDirectivo||state.directivos[0];
+  const name=d?d.nombres:'Juan Carlos';
+  const myInvs=d?state.invitaciones.filter(i=>i.invitadoPor===d.dni):[];
+  const regCount=myInvs.filter(i=>i.estado==='registrado').length;
+  const link=d?location.origin+'/registro/'+d.linkCode:'https://tudominio.com/registro/demo1234';
+
+  if(mobileScreen==='home'){
+    title.textContent='Inicio';
+    c.innerHTML=`
+      <div style="text-align:center;margin-bottom:1rem">
+        <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 0.4rem">👤</div>
+        <div style="font-weight:600;font-size:0.9rem">Hola, ${name}</div>
+        <div style="font-size:0.72rem;color:#64748b">Directivo del Partido</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem">
+        <div style="background:#eff6ff;border-radius:10px;padding:0.6rem;text-align:center"><div style="font-size:1.3rem;font-weight:700;color:#2563eb">${myInvs.length||15}</div><div style="font-size:0.65rem;color:#64748b">Invitados</div></div>
+        <div style="background:#f0fdf4;border-radius:10px;padding:0.6rem;text-align:center"><div style="font-size:1.3rem;font-weight:700;color:#16a34a">${regCount||12}</div><div style="font-size:0.65rem;color:#64748b">Registrados</div></div>
+      </div>
+      <button onclick="mobileScreen='invite';renderMobileContent()" style="width:100%;padding:0.6rem;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;margin-bottom:0.5rem">📨 Invitar Personeros</button>
+      <button onclick="window.open('https://wa.me/?text='+encodeURIComponent('Te invito a ser personero: '+location.origin+'/registro/demo1234'))" style="width:100%;padding:0.6rem;background:#25d366;color:#fff;border:none;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer">📱 Compartir por WhatsApp</button>
+    `;
+  } else if(mobileScreen==='invite'){
+    title.textContent='Invitar';
+    let invItems='';
+    for(let i=0;i<3;i++){
+      invItems+=`<div style="display:flex;gap:0.4rem;margin-bottom:0.4rem">
+        <input class="sim-input" placeholder="Telefono" style="flex:1;font-size:0.8rem;padding:0.35rem 0.4rem" id="mob-tel-${i}"/>
+        <input class="sim-input" placeholder="Nombre" style="flex:1;font-size:0.8rem;padding:0.35rem 0.4rem" id="mob-name-${i}"/>
+      </div>`;
+    }
+    c.innerHTML=`
+      <p style="font-size:0.78rem;color:#64748b;margin-bottom:0.5rem">Ingresa los telefonos de las personas que quieres invitar:</p>
+      ${invItems}
+      <button style="width:100%;padding:0.5rem;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:0.82rem;font-weight:600;cursor:pointer;margin-top:0.3rem" onclick="toast(document.getElementById('phone-frame'),'Invitaciones registradas!')">REGISTRAR</button>
+      <div style="margin-top:0.75rem;padding-top:0.5rem;border-top:1px solid #e2e8f0">
+        <div style="font-size:0.75rem;font-weight:600;color:#475569;margin-bottom:0.3rem">Ultimas invitaciones</div>
+        ${(myInvs.length>0?myInvs:([{telefono:'987654321',nombres:'Pedro',estado:'registrado'},{telefono:'911222333',nombres:'Maria',estado:'pendiente'}])).slice(0,4).map(inv=>
+          `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.75rem;border-bottom:1px solid #f1f5f9"><span>${inv.nombres||inv.telefono}</span><span class="badge ${inv.estado==='registrado'?'badge-g':'badge-a'}" style="font-size:0.65rem">${inv.estado}</span></div>`
+        ).join('')}
+      </div>
+    `;
+  } else if(mobileScreen==='stats'){
+    title.textContent='Reportes';
+    const bars=[3,5,8,12,15,regCount||18];
+    const mx=Math.max(...bars);
+    let miniChart='';
+    bars.forEach((v,i)=>{
+      miniChart+=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.15rem">
+        <span style="font-size:0.6rem;color:#475569">${v}</span>
+        <div style="width:100%;max-width:28px;height:${Math.round(v/mx*80)}px;background:#2563eb;border-radius:3px 3px 0 0"></div>
+        <span style="font-size:0.55rem;color:#94a3b8">S${i+1}</span>
+      </div>`;
+    });
+    c.innerHTML=`
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem">
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.5rem;text-align:center"><div style="font-size:1.1rem;font-weight:700">${myInvs.length||15}</div><div style="font-size:0.6rem;color:#64748b">Invitados</div></div>
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.5rem;text-align:center"><div style="font-size:1.1rem;font-weight:700;color:#16a34a">${regCount||12}</div><div style="font-size:0.6rem;color:#64748b">Registrados</div></div>
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.5rem;text-align:center"><div style="font-size:1.1rem;font-weight:700;color:#d97706">${(myInvs.length||15)-(regCount||12)}</div><div style="font-size:0.6rem;color:#64748b">Pendientes</div></div>
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.5rem;text-align:center"><div style="font-size:1.1rem;font-weight:700;color:#2563eb">${myInvs.length>0?Math.round(regCount/myInvs.length*100):80}%</div><div style="font-size:0.6rem;color:#64748b">Conversion</div></div>
+      </div>
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:0.5rem">
+        <div style="font-size:0.75rem;font-weight:600;margin-bottom:0.3rem">Registros por Semana</div>
+        <div style="display:flex;align-items:flex-end;gap:0.2rem;height:100px">${miniChart}</div>
+      </div>
+    `;
+  } else if(mobileScreen==='qr'){
+    title.textContent='Mi Link';
+    // Generate a simple QR pattern (decorative)
+    let qrCells='';
+    for(let r=0;r<15;r++){
+      for(let c=0;c<15;c++){
+        const isCorner=(r<4&&c<4)||(r<4&&c>10)||(r>10&&c<4);
+        const isBorder=isCorner&&(r===0||r===3||c===0||c===3||(r>0&&r<3&&c>0&&c<3)||(r===1&&c===1)||(r===2&&c===2));
+        const fill=isCorner||Math.random()>0.55?'#1e293b':'#fff';
+        qrCells+=`<rect x="${c*8+4}" y="${r*8+4}" width="7" height="7" fill="${fill}" rx="1"/>`;
+      }
+    }
+    c.innerHTML=`
+      <div style="text-align:center">
+        <p style="font-size:0.78rem;color:#64748b;margin-bottom:0.75rem">Comparte tu link o codigo QR con los invitados:</p>
+        <div style="background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:1rem;display:inline-block;margin-bottom:0.75rem">
+          <svg viewBox="0 0 128 128" style="width:140px;height:140px">${qrCells}</svg>
+        </div>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.4rem 0.6rem;font-size:0.65rem;word-break:break-all;margin-bottom:0.5rem;color:#475569;font-family:monospace">${link}</div>
+        <button onclick="navigator.clipboard.writeText('${link}');toast(document.getElementById('phone-frame'),'Link copiado!')" style="width:100%;padding:0.5rem;background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;border-radius:8px;font-size:0.8rem;cursor:pointer;margin-bottom:0.4rem">📋 Copiar Link</button>
+        <button onclick="toast(document.getElementById('phone-frame'),'Abriendo WhatsApp...')" style="width:100%;padding:0.5rem;background:#25d366;color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer">📱 Enviar por WhatsApp</button>
+      </div>
+    `;
+  }
+}
+
+// =============================================
+// INIT
+// =============================================
+renderAll();
+</script>
+</body>
+</html>
