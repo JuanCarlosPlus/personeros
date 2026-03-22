@@ -1,6 +1,65 @@
+import jwt from 'jsonwebtoken';
 import Personero from '../models/Personero.js';
 import Mesa from '../models/Mesa.js';
+import Invitacion from '../models/Invitacion.js';
+import Directivo from '../models/Directivo.js';
+import MensajeWhatsapp from '../models/MensajeWhatsapp.js';
 import { lookupDni } from '../services/dniService.js';
+import { config } from '../config/env.js';
+
+// POST /api/v1/personeros/login  — login con DNI + últimos 3 dígitos del teléfono
+export async function loginPersonero(req, res, next) {
+  try {
+    const { dni, codigoTel } = req.body;
+    if (!dni || !codigoTel) {
+      return res.status(400).json({ error: 'DNI y código de teléfono requeridos' });
+    }
+    const personero = await Personero.findOne({ dni, active: true });
+    if (!personero) {
+      return res.status(401).json({ error: 'No se encontró un personero con ese DNI' });
+    }
+    // Verificar últimos 3 dígitos del teléfono
+    const tel = (personero.telefono || '').replace(/\D/g, '');
+    if (tel.length < 3 || tel.slice(-3) !== codigoTel) {
+      return res.status(401).json({ error: 'Código de teléfono incorrecto' });
+    }
+    const token = jwt.sign(
+      { id: personero._id, type: 'personero' },
+      config.jwtSecret,
+      { expiresIn: config.jwtExpiresIn }
+    );
+    res.json({ token, personero: { _id: personero._id, dni: personero.dni, nombres: personero.nombres, apellidoPaterno: personero.apellidoPaterno, apellidoMaterno: personero.apellidoMaterno } });
+  } catch (err) { next(err); }
+}
+
+// GET /api/v1/personeros/mi-estado  — estado del personero autenticado
+export async function miEstado(req, res, next) {
+  try {
+    const personero = req.personero;
+    let mesaInfo = null;
+    if (personero.assignedMesa) {
+      mesaInfo = await Mesa.findOne({ MESA: personero.assignedMesa }).lean();
+    }
+    res.json({
+      dni: personero.dni,
+      nombres: personero.nombres,
+      apellidoPaterno: personero.apellidoPaterno,
+      apellidoMaterno: personero.apellidoMaterno,
+      telefono: personero.telefono,
+      correo: personero.correo,
+      assignmentStatus: personero.assignmentStatus,
+      assignedMesa: personero.assignedMesa,
+      mesa: mesaInfo ? {
+        mesa: mesaInfo.MESA,
+        local: mesaInfo.NOMBRE_LOCAL,
+        direccion: mesaInfo.DIRECCION,
+        distrito: mesaInfo.DISTRITO,
+        provincia: mesaInfo.PROVINCIA,
+        departamento: mesaInfo.DEPARTAMETO,
+      } : null,
+    });
+  } catch (err) { next(err); }
+}
 
 // GET /api/v1/personeros/dni/:dni  — lookup DNI en RENIEC
 export async function dniLookup(req, res, next) {
@@ -184,6 +243,55 @@ export async function confirmar(req, res, next) {
   } catch (err) { next(err); }
 }
 
+// POST /api/v1/personeros/bulk  — registro masivo
+export async function bulkCreate(req, res, next) {
+  try {
+    const { personeros } = req.body;
+    if (!Array.isArray(personeros) || personeros.length === 0) {
+      return res.status(400).json({ error: 'Se requiere un array de personeros' });
+    }
+
+    const created = [];
+    const existing = [];
+    const errors = [];
+
+    for (const p of personeros) {
+      try {
+        if (!p.dni || !/^\d{8}$/.test(p.dni)) {
+          errors.push({ dni: p.dni || '?', error: 'DNI inválido' });
+          continue;
+        }
+        if (!p.telefono || !p.telefono.trim()) {
+          errors.push({ dni: p.dni, error: 'Teléfono requerido' });
+          continue;
+        }
+
+        const exists = await Personero.findOne({ dni: p.dni });
+        if (exists) {
+          existing.push({ dni: p.dni, nombres: exists.nombres, apellidoPaterno: exists.apellidoPaterno });
+          continue;
+        }
+
+        const doc = await Personero.create({
+          dni: p.dni,
+          nombres: p.nombres || '',
+          apellidoPaterno: p.apellidoPaterno || '',
+          apellidoMaterno: p.apellidoMaterno || '',
+          telefono: p.telefono,
+          correo: p.correo || '',
+          source: 'manual',
+          active: true,
+        });
+        created.push({ dni: doc.dni, nombres: doc.nombres, apellidoPaterno: doc.apellidoPaterno });
+      } catch (e) {
+        errors.push({ dni: p.dni || '?', error: e.message });
+      }
+    }
+
+    res.status(201).json({ created, existing, errors });
+  } catch (err) { next(err); }
+}
+
 // GET /api/v1/personeros/stats
 export async function stats(req, res, next) {
   try {
@@ -195,5 +303,65 @@ export async function stats(req, res, next) {
     ]);
     const pendientes = total - asignados - confirmados - sinMesa;
     res.json({ total, pendientes, asignados, confirmados, sinMesa });
+  } catch (err) { next(err); }
+}
+
+// POST /api/v1/personeros/registro-publico  — auto-registro desde link de invitación (SIN auth)
+export async function registerPublic(req, res, next) {
+  try {
+    const { dni, nombres, apellidoPaterno, apellidoMaterno, telefono, correo, linkCode } = req.body;
+
+    if (!dni || !/^\d{8}$/.test(dni)) return res.status(400).json({ error: 'DNI inválido' });
+    if (!nombres || !apellidoPaterno) return res.status(400).json({ error: 'Nombres y apellido paterno requeridos' });
+    if (!correo || !correo.includes('@')) return res.status(400).json({ error: 'Correo electrónico requerido' });
+    if (!telefono) return res.status(400).json({ error: 'Teléfono requerido' });
+    if (!linkCode) return res.status(400).json({ error: 'Link de invitación requerido' });
+
+    // Verificar invitación válida
+    const invitacion = await Invitacion.findOne({ telefono, linkCode, estado: 'pendiente' });
+    if (!invitacion) return res.status(400).json({ error: 'No se encontró una invitación válida para este teléfono' });
+
+    // Buscar directivo invitador
+    const directivo = await Directivo.findOne({ linkCode, activo: true });
+
+    // Crear o actualizar personero
+    const personero = await Personero.findOneAndUpdate(
+      { dni },
+      {
+        dni, nombres, apellidoPaterno, apellidoMaterno: apellidoMaterno || '',
+        telefono, correo, source: 'autoregistro',
+        referente: directivo?.dni || invitacion.invitadoPor,
+        active: true,
+      },
+      { new: true, upsert: true, runValidators: true }
+    );
+
+    // Marcar invitación como registrada
+    invitacion.estado = 'registrado';
+    invitacion.personeroId = personero._id;
+    await invitacion.save();
+
+    // Crear mensajes WhatsApp pendientes
+    const nombreInvitado = `${nombres} ${apellidoPaterno}`.trim();
+
+    // 1. Notificar al invitador
+    if (directivo?.telefono) {
+      await MensajeWhatsapp.create({
+        tipo: 'notificacion_invitador',
+        telefonoDestino: directivo.telefono,
+        mensaje: `¡${nombreInvitado} se ha registrado como personero gracias a tu invitación!`,
+        referencia: personero._id.toString(),
+      });
+    }
+
+    // 2. Bienvenida al invitado
+    await MensajeWhatsapp.create({
+      tipo: 'bienvenida_invitado',
+      telefonoDestino: telefono,
+      mensaje: `¡Bienvenido/a ${nombres}! Te has registrado como personero para las Elecciones 2026. Pronto recibirás más información.`,
+      referencia: personero._id.toString(),
+    });
+
+    res.status(201).json({ message: 'Registro exitoso', personero });
   } catch (err) { next(err); }
 }

@@ -10,6 +10,13 @@ import authRoutes from './routes/auth.js';
 import coverageRoutes from './routes/coverage.js';
 import personeroRoutes from './routes/personeros.js';
 import coordinadorRoutes from './routes/coordinadores.js';
+import cargoRoutes from './routes/cargos.js';
+import directivoRoutes from './routes/directivos.js';
+import invitacionRoutes from './routes/invitaciones.js';
+import whatsappRoutes from './routes/whatsapp.js';
+import jefeLocalRoutes from './routes/jefeLocal.js';
+import reporteRoutes from './routes/reportes.js';
+import chatRoutes from './routes/chat.js';
 import './models/Ubicacion.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -33,6 +40,13 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/coverage', coverageRoutes);
 app.use('/api/v1/personeros', personeroRoutes);
 app.use('/api/v1/coordinadores', coordinadorRoutes);
+app.use('/api/v1/cargos', cargoRoutes);
+app.use('/api/v1/directivos', directivoRoutes);
+app.use('/api/v1/invitaciones', invitacionRoutes);
+app.use('/api/v1/whatsapp', whatsappRoutes);
+app.use('/api/v1/jefe-local', jefeLocalRoutes);
+app.use('/api/v1/reportes', reporteRoutes);
+app.use('/api/v1/chat', chatRoutes);
 
 // Static in production
 if (config.nodeEnv === 'production') {

@@ -73,4 +73,72 @@ export const personeroAPI = {
   confirmar: (mesaCodigo) =>
     api.post('/personeros/confirmar', { mesaCodigo }),
   stats: () => api.get('/personeros/stats'),
+  bulkCreate: (personeros) => api.post('/personeros/bulk', { personeros }),
+  registerPublic: (data) => api.post('/personeros/registro-publico', data),
+  login: (dni, codigoTel) => api.post('/personeros/login', { dni, codigoTel }),
+  miEstado: () => api.get('/personeros/mi-estado'),
+};
+
+// Cargos
+export const cargoAPI = {
+  list: () => api.get('/cargos'),
+  permisos: () => api.get('/cargos/permisos'),
+  create: (data) => api.post('/cargos', data),
+  update: (id, data) => api.put(`/cargos/${id}`, data),
+  remove: (id) => api.delete(`/cargos/${id}`),
+  seed: () => api.post('/cargos/seed'),
+};
+
+// Directivos
+export const directivoAPI = {
+  login: (dni, password) => api.post('/directivos/login', { dni, password }),
+  list: (params) => api.get('/directivos', { params }),
+  create: (data) => api.post('/directivos', data),
+  update: (id, data) => api.put(`/directivos/${id}`, data),
+  remove: (id) => api.delete(`/directivos/${id}`),
+  getMe: () => api.get('/directivos/me'),
+  dniLookup: (dni) => api.get(`/directivos/dni/${dni}`),
+};
+
+// Invitaciones
+export const invitacionAPI = {
+  bulkCreate: (invitaciones) => api.post('/invitaciones/bulk', { invitaciones }),
+  list: (params) => api.get('/invitaciones', { params }),
+  stats: () => api.get('/invitaciones/stats'),
+  porLink: (linkCode) => api.get(`/invitaciones/por-link/${linkCode}`),
+  verificar: (telefono, linkCode) => api.get(`/invitaciones/verificar/${telefono}/${linkCode}`),
+};
+
+// WhatsApp (para el robot)
+export const whatsappAPI = {
+  cola: () => api.get('/whatsapp/cola'),
+  marcarEnviado: (id) => api.patch(`/whatsapp/${id}/enviado`),
+  marcarError: (id) => api.patch(`/whatsapp/${id}/error`),
+};
+
+// Jefe de Local
+export const jefeLocalAPI = {
+  solicitarCodigo: (telefono) => api.post('/jefe-local/solicitar-codigo', { telefono }),
+  verificarCodigo: (telefono, codigo) => api.post('/jefe-local/verificar-codigo', { telefono, codigo }),
+  miLocal: () => api.get('/jefe-local/mi-local'),
+  asignar: (personeroId, mesaCodigo) => api.post('/jefe-local/asignar', { personeroId, mesaCodigo }),
+  desasignar: (mesaCodigo) => api.post('/jefe-local/desasignar', { mesaCodigo }),
+  // Admin
+  list: () => api.get('/jefe-local'),
+  crear: (data) => api.post('/jefe-local/crear', data),
+  remove: (id) => api.delete(`/jefe-local/${id}`),
+};
+
+// Chat
+export const chatAPI = {
+  canales: () => api.get('/chat/canales'),
+  mensajes: (canal, desde) => api.get(`/chat/mensajes/${canal}`, { params: desde ? { desde } : {} }),
+  enviar: (canal, texto) => api.post('/chat/mensajes', { canal, texto }),
+};
+
+// Reportes
+export const reporteAPI = {
+  directivos: () => api.get('/reportes/directivos'),
+  tendencia: () => api.get('/reportes/tendencia'),
+  estados: () => api.get('/reportes/estados'),
 };

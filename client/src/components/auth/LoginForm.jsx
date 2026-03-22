@@ -60,6 +60,7 @@ export default function LoginForm() {
             {loading ? 'Ingresando...' : 'Ingresar'}
           </button>
         </form>
+        <a href="/directivo/login" style={s.link}>Acceso para directivos del partido</a>
       </div>
     </div>
   );
@@ -113,5 +114,13 @@ const s = {
     fontWeight: 600,
     marginTop: '0.5rem',
     transition: 'opacity 0.2s',
+    cursor: 'pointer',
+  },
+  link: {
+    display: 'inline-block',
+    marginTop: '1.25rem',
+    fontSize: '0.8rem',
+    color: '#64748b',
+    textDecoration: 'none',
   },
 };

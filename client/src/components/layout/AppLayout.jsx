@@ -18,8 +18,15 @@ export default function AppLayout({ children, breadcrumbs = [] }) {
         <nav style={s.nav}>
           <NavBtn icon="📊" label="Dashboard" path="/" open={sidebarOpen} navigate={navigate} />
           <NavBtn icon="👥" label="Personeros" path="/personeros" open={sidebarOpen} navigate={navigate} />
+          <NavBtn icon="📋" label="Registro Masivo" path="/personeros/registro-masivo" open={sidebarOpen} navigate={navigate} />
           {user?.role === 'admin' && (
-            <NavBtn icon="⚙️" label="Config" path="/config" open={sidebarOpen} navigate={navigate} />
+            <>
+              <NavBtn icon="🏛️" label="Cargos" path="/admin/cargos" open={sidebarOpen} navigate={navigate} />
+              <NavBtn icon="👔" label="Directivos" path="/admin/directivos" open={sidebarOpen} navigate={navigate} />
+              <NavBtn icon="🏢" label="Jefes de Local" path="/admin/jefes-local" open={sidebarOpen} navigate={navigate} />
+              <NavBtn icon="📈" label="Reportes" path="/admin/reportes" open={sidebarOpen} navigate={navigate} />
+              <NavBtn icon="💬" label="Chat" path="/admin/chat" open={sidebarOpen} navigate={navigate} />
+            </>
           )}
         </nav>
 
