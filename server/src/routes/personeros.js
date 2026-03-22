@@ -13,6 +13,7 @@ import {
   desasignar,
   confirmar,
   stats,
+  deletePersonero,
 } from '../controllers/personeroController.js';
 
 const router = Router();
@@ -35,4 +36,5 @@ router.post('/', createOrUpdate);
 router.post('/asignar', asignar);
 router.post('/desasignar', desasignar);
 router.post('/confirmar', confirmar);
+router.delete('/:id', deletePersonero);
 export default router;

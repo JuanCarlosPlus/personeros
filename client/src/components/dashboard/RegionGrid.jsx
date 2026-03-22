@@ -76,12 +76,12 @@ export default function RegionGrid() {
 
   // Botón de modo:
   //   Nacional  → clic → muestra Extranjero
-  //   Extranjero → clic → navega directo a Lima (/dept/14)
+  //   Extranjero → clic → vuelve a Nacional (regiones del Perú)
   const handleModeBtn = () => {
     if (mode === 'nacional') {
       setMode('extranjero');
     } else {
-      navigate('/dept/14'); // "click nuevamente → regiones de Lima"
+      setMode('nacional');
     }
   };
 
@@ -89,7 +89,7 @@ export default function RegionGrid() {
   const sectionTitle    = isExtranjero
     ? `🌐 Voto Exterior — Países (${filtered.length})`
     : `Regiones / Departamentos (${filtered.length})`;
-  const modeBtnLabel    = isExtranjero ? '📍 Lima' : '🌐 Extranjero';
+  const modeBtnLabel    = isExtranjero ? '📍 Nacional' : '🌐 Extranjero';
   const modeBtnStyle    = isExtranjero
     ? { ...s.modeBtn, background: '#f59e0b' }
     : { ...s.modeBtn, background: '#6366f1' };

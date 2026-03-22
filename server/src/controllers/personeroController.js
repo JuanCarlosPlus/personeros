@@ -132,6 +132,27 @@ export async function list(req, res, next) {
   } catch (err) { next(err); }
 }
 
+// DELETE /api/v1/personeros/:id  — eliminar (soft delete)
+export async function deletePersonero(req, res, next) {
+  try {
+    const personero = await Personero.findById(req.params.id);
+    if (!personero) return res.status(404).json({ error: 'Personero no encontrado' });
+
+    // Si está asignado a una mesa, liberar la mesa
+    if (personero.assignedMesa) {
+      await Mesa.findOneAndUpdate(
+        { MESA: personero.assignedMesa },
+        { status: 0, personeroId: null, assignedAt: null, confirmedAt: null }
+      );
+    }
+
+    personero.active = false;
+    await personero.save();
+
+    res.json({ message: 'Personero eliminado', dni: personero.dni });
+  } catch (err) { next(err); }
+}
+
 // GET /api/v1/personeros/sugeridos/:ubigeo/:idLocal/:mesa
 export async function sugeridos(req, res, next) {
   try {

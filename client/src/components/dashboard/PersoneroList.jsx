@@ -62,7 +62,7 @@ export default function PersoneroList() {
             <table style={s.table}>
               <thead>
                 <tr>
-                  {['DNI', 'Nombre', 'Teléfono', 'Correo', 'Ubigeo', 'Mesa asignada', 'Estado'].map(h => (
+                  {['DNI', 'Nombre', 'Teléfono', 'Correo', 'Ubigeo', 'Mesa asignada', 'Estado', ''].map(h => (
                     <th key={h} style={s.th}>{h}</th>
                   ))}
                 </tr>
@@ -85,12 +85,24 @@ export default function PersoneroList() {
                           {st.label}
                         </span>
                       </td>
+                      <td style={s.td}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm(`Eliminar a ${p.nombres} ${p.apellidoPaterno}?`)) {
+                              personeroAPI.remove(p._id).then(() => load()).catch(err => alert(err.response?.data?.error || 'Error'));
+                            }
+                          }}
+                          style={s.deleteBtn}
+                          title="Eliminar personero"
+                        >🗑️</button>
+                      </td>
                     </tr>
                   );
                 })}
                 {data.data.length === 0 && (
                   <tr>
-                    <td colSpan={7} style={{ ...s.td, textAlign: 'center', color: '#94a3b8', padding: '2rem' }}>
+                    <td colSpan={8} style={{ ...s.td, textAlign: 'center', color: '#94a3b8', padding: '2rem' }}>
                       No se encontraron personeros
                     </td>
                   </tr>
@@ -145,4 +157,8 @@ const s = {
     fontSize: '0.85rem', color: '#374151',
   },
   pageInfo: { color: '#64748b', fontSize: '0.85rem' },
+  deleteBtn: {
+    background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem',
+    padding: '0.2rem 0.4rem', borderRadius: '4px', opacity: 0.6,
+  },
 };

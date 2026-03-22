@@ -91,6 +91,7 @@ export const personeroAPI = {
   stats: () => api.get('/personeros/stats'),
   bulkCreate: (personeros) => api.post('/personeros/bulk', { personeros }),
   registerPublic: (data) => api.post('/personeros/registro-publico', data),
+  remove: (id) => api.delete(`/personeros/${id}`),
   login: (dni, codigoTel) => api.post('/personeros/login', { dni, codigoTel }),
   miEstado: () => personeroAxios.get('/personeros/mi-estado'),
 };
