@@ -30,7 +30,7 @@ api.interceptors.response.use(
 export default api;
 
 // Instancia separada para personero (usa personeroToken)
-const personeroAxios = axios.create({ baseURL: '/api/v1', timeout: 30000 });
+const personeroAxios = axios.create({ baseURL: API_URL, timeout: 30000 });
 personeroAxios.interceptors.request.use((config) => {
   const token = localStorage.getItem('personeroToken');
   if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -38,7 +38,7 @@ personeroAxios.interceptors.request.use((config) => {
 });
 
 // Instancia separada para jefe de local (usa jefeLocalToken)
-const jefeLocalAxios = axios.create({ baseURL: '/api/v1', timeout: 30000 });
+const jefeLocalAxios = axios.create({ baseURL: API_URL, timeout: 30000 });
 jefeLocalAxios.interceptors.request.use((config) => {
   const token = localStorage.getItem('jefeLocalToken');
   if (token) config.headers.Authorization = `Bearer ${token}`;
