@@ -14,7 +14,7 @@ export async function loginPersonero(req, res, next) {
     if (!dni || !codigoTel) {
       return res.status(400).json({ error: 'DNI y código de teléfono requeridos' });
     }
-    const personero = await Personero.findOne({ dni, active: true });
+    const personero = await Personero.findOne({ dni, active: { $ne: false } });
     if (!personero) {
       return res.status(401).json({ error: 'No se encontró un personero con ese DNI' });
     }
@@ -105,7 +105,7 @@ export async function createOrUpdate(req, res, next) {
 export async function list(req, res, next) {
   try {
     const { nivel1, nivel2, nivel3, status, search, page = 1, limit = 50 } = req.query;
-    const filter = { active: true };
+    const filter = { active: { $ne: false } };
 
     if (nivel1) filter.nivel1 = nivel1;
     if (nivel2) filter.nivel2 = nivel2;
@@ -317,10 +317,10 @@ export async function bulkCreate(req, res, next) {
 export async function stats(req, res, next) {
   try {
     const [total, asignados, confirmados, sinMesa] = await Promise.all([
-      Personero.countDocuments({ active: true }),
-      Personero.countDocuments({ assignmentStatus: 'asignado',   active: true }),
-      Personero.countDocuments({ assignmentStatus: 'confirmado', active: true }),
-      Personero.countDocuments({ assignmentStatus: 'sin_mesa',   active: true }),
+      Personero.countDocuments({ active: { $ne: false } }),
+      Personero.countDocuments({ assignmentStatus: 'asignado',   active: { $ne: false } }),
+      Personero.countDocuments({ assignmentStatus: 'confirmado', active: { $ne: false } }),
+      Personero.countDocuments({ assignmentStatus: 'sin_mesa',   active: { $ne: false } }),
     ]);
     const pendientes = total - asignados - confirmados - sinMesa;
     res.json({ total, pendientes, asignados, confirmados, sinMesa });

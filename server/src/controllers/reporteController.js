@@ -29,7 +29,7 @@ export async function reporteDirectivos(req, res, next) {
 // GET /api/v1/reportes/tendencia — registros por semana
 export async function reporteTendencia(req, res, next) {
   try {
-    const personeros = await Personero.find({ active: true }).select('createdAt').lean();
+    const personeros = await Personero.find({ active: { $ne: false } }).select('createdAt').lean();
     const now = new Date();
     const weeks = [];
 
@@ -60,10 +60,10 @@ export async function reporteTendencia(req, res, next) {
 export async function reporteEstados(req, res, next) {
   try {
     const [total, asignados, confirmados, sinMesa] = await Promise.all([
-      Personero.countDocuments({ active: true }),
-      Personero.countDocuments({ assignmentStatus: 'asignado', active: true }),
-      Personero.countDocuments({ assignmentStatus: 'confirmado', active: true }),
-      Personero.countDocuments({ assignmentStatus: 'sin_mesa', active: true }),
+      Personero.countDocuments({ active: { $ne: false } }),
+      Personero.countDocuments({ assignmentStatus: 'asignado', active: { $ne: false } }),
+      Personero.countDocuments({ assignmentStatus: 'confirmado', active: { $ne: false } }),
+      Personero.countDocuments({ assignmentStatus: 'sin_mesa', active: { $ne: false } }),
     ]);
     const pendientes = total - asignados - confirmados - sinMesa;
 
