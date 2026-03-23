@@ -1,0 +1,38 @@
+# ============================================
+# Docker Compose - Sistema de Personeros 2026
+# ============================================
+# Este archivo levanta TODO: la app + la base de datos
+# Solo necesitas: docker compose up -d
+#
+# ANTES de ejecutar:
+# 1. Copia .env.example a .env:    cp server/.env.example .env
+# 2. Edita .env con tus valores:   nano .env
+
+services:
+  # --- Base de datos MongoDB ---
+  mongo:
+    image: mongo:7
+    container_name: personeros-mongo
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
+  # --- Aplicación (API + Frontend) ---
+  app:
+    build: .
+    container_name: personeros-app
+    restart: always
+    ports:
+      - "5001:5001"
+    env_file:
+      - .env
+    environment:
+      # Sobreescribe MONGO_URI para que apunte al container de mongo
+      MONGO_URI: mongodb://mongo:27017/personeros_db
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_data:

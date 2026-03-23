@@ -1,0 +1,7 @@
+node_modules
+.git
+.claude
+*.md
+server/node_modules
+client/node_modules
+server/.env
