@@ -8,4 +8,5 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET || 'personeros_jwt_secret_2026',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   factilizaToken: process.env.FACTILIZA_TOKEN || '',
+  corsOrigin: process.env.CORS_ORIGIN || true,
 };
